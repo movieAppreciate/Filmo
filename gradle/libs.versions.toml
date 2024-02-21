@@ -1,0 +1,328 @@
+[versions]
+# Version
+compileSdk = "34"
+minSdk = "24"
+targetSdk = "34"
+
+# Gradle
+# [Document](https://developer.android.com/build/releases/gradle-plugin)
+android_gradle_plugin = "8.2.2"
+
+# Kotlin
+# [Github](https://github.com/JetBrains/kotlin)
+# [Document](https://kotlinlang.org/docs/releases.html)
+kotlin = "1.9.22"
+# [Github](https://github.com/Kotlin/kotlinx.coroutines)
+kotlinx_coroutines = "1.8.0"
+# [Github](https://github.com/Kotlin/kotlinx.serialization)
+kotlinx_serialization = "1.6.3"
+# [Github](https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter)
+kotlin_serialization_converter = "1.0.0"
+# [Document](https://kotlinlang.org/docs/ksp-quickstart.html)
+# [Github](https://github.com/google/ksp)
+kotlin_ksp = "1.9.22-1.0.17"
+
+# AndroidX
+# [Document](https://developer.android.com/jetpack/androidx/releases/core)
+androidx_core = "1.12.0"
+androidx_core_splashscreen = "1.0.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/arch-core)
+androidx_arch_core = "2.2.0"
+# [Document](https://developer.android.com/jetpack/androidx/releases/appcompat)
+androidx_appcompat = "1.6.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/activity)
+androidx_activity = "1.8.2"
+# [Document](https://developer.android.com/jetpack/androidx/releases/fragment)
+androidx_fragment = "1.6.2"
+# [Document](https://developer.android.com/jetpack/androidx/releases/lifecycle)
+androidx_lifecycle = "2.7.0"
+# [Document](https://developer.android.com/jetpack/androidx/releases/navigation)
+androidx_navigation = "2.7.7"
+# [Document](https://developer.android.com/jetpack/androidx/releases/room)
+androidx_room = "2.6.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/datastore)
+androidx_datastore = "1.0.0"
+# [Document](https://developer.android.com/jetpack/androidx/releases/preference)
+androidx_preference = "1.2.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/webkit)
+androidx_webkit = "1.10.0"
+# [Document](https://developer.android.com/jetpack/androidx/releases/browser)
+androidx_browser = "1.7.0"
+# [Document](https://developer.android.com/jetpack/androidx/releases/recyclerview)
+androidx_recyclerview = "1.3.2"
+# [Document](https://developer.android.com/jetpack/androidx/releases/constraintlayout)
+androidx_constraintlayout = "2.1.4"
+# [Document](https://developer.android.com/jetpack/androidx/releases/viewpager2)
+androidx_viewpager2 = "1.1.0-beta02"
+# [Document](https://developer.android.com/jetpack/androidx/releases/paging)
+androidx_paging = "3.2.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/startup)
+androidx_startup = "1.1.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/test)
+androidx_test = "1.5.0"
+androidx_espresso = "3.5.1"
+androidx_junit = "1.1.5"
+androidx_runner = "1.5.2"
+androidx_rules = "1.5.0"
+anroidx_monitor = "1.6.1"
+
+# Android
+# [Document](https://developer.android.com/google/play/installreferrer/library)
+android_install_referrer = "2.2"
+# [Document](https://developer.android.com/guide/playcore)
+android_play_core = "2.1.0"
+# [Github](https://github.com/google/desugar_jdk_libs)
+android_desugar_jdk_libs = "2.0.4"
+
+# Google
+# [Github](https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md)
+material_components = "1.11.0"
+# [Github](https://github.com/google/accompanist)
+accompanist = "0.32.0"
+# [Document](https://developers.google.com/android/guides/setup)
+# [Document](https://developers.google.com/android/guides/google-services-plugin)
+google_services = "4.4.1"
+google_services_base = "18.3.0"
+# [Document](https://developers.google.com/identity/sign-in/android)
+google_services_auth = "21.0.0"
+
+# Firebase
+# [Document](https://firebase.google.com/docs/android/setup)
+# [Document](https://firebase.google.com/support/release-notes/android)
+firebase_bom = "32.7.2"
+firebase_crashlytics_plugin = "2.9.9"
+firebase_performance_plugin = "1.4.2"
+
+# Hilt
+# [Document](https://developer.android.com/training/dependency-injection/hilt-android)
+hilt = "2.50"
+# [Document](https://developer.android.com/jetpack/androidx/releases/hilt)
+androidx_hilt = "1.1.0"
+
+# Java
+# [Maven](https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api)
+javax_annotation = "1.3.2"
+# [Maven](https://mvnrepository.com/artifact/jakarta.inject/jakarta.inject-api)
+javax_inject = "2.0.1"
+# [Github](https://github.com/square/javapoet)
+java_poet = "1.13.0"
+
+# Network
+# [Github](https://github.com/square/okhttp)
+okhttp_bom = "4.12.0"
+# [Github](https://github.com/square/retrofit)
+retrofit = "2.9.0"
+
+# Protobuf, GRPC
+# [GitHub](https://github.com/protocolbuffers/protobuf)
+protobuf = "3.25.2"
+# [GitHub](https://github.com/google/protobuf-gradle-plugin)
+protobuf_plugin = "0.9.4"
+# [Github](https://github.com/googleapis/sdk-platform-java/tree/main/java-common-protos)
+protobuf_google_common = "2.22.0"
+
+# Image
+# [Github](https://github.com/airbnb/lottie-android)
+lottie = "6.3.0"
+# [Github](https://github.com/bumptech/glide)
+glide = "4.16.0"
+# [Github](https://github.com/zjupure/GlideWebpDecoder)
+glide_webp = "2.6.4.16.0"
+
+# Test
+# [Github](https://github.com/junit-team/junit5)
+junit5 = "5.10.2"
+junti5_android = "1.3.0"
+# [Github](https://github.com/kotest/kotest)
+# [Document](https://kotest.io/)
+kotest = "5.8.0"
+# [Document](https://mockk.io/)
+mockk = "1.13.9"
+# [Github](https://github.com/cashapp/turbine)
+turbine = "1.0.0"
+# [Github](https://github.com/google/truth)
+truth = "1.4.0"
+# [Github](https://pinterest.github.io/ktlint)
+# [Github](https://github.com/JLLeitschuh/ktlint-gradle)
+ktlint = "12.1.0"
+# [Github](https://github.com/mockito/mockito)
+mockito = "5.10.0"
+# [Github](https://github.com/mockito/mockito-kotlin)
+mockito_kotlin = "5.2.1"
+
+# Logger
+timber = "5.0.1"
+
+[libraries]
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlin-reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx_coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
+kotlinx-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "kotlin_ksp" }
+
+androidx-arch-core = { group = "androidx.arch.core", name = "core", version.ref = "androidx_arch_core" }
+androidx-arch-core-test = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidx_arch_core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx_appcompat" }
+androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx_activity" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx_core" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx_core_splashscreen" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx_fragment" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx_lifecycle" }
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidx_lifecycle" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx_lifecycle" }
+androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "androidx_lifecycle" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "androidx_lifecycle" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "androidx_lifecycle" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidx_navigation" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidx_navigation" }
+androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "androidx_room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx_room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx_room" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "androidx_datastore" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx_datastore" }
+androidx-preference = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidx_preference" }
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidx_webkit" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx_browser" }
+androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx_paging" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx_recyclerview" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx_constraintlayout" }
+androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx_startup" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx_viewpager2" }
+
+android-install-referrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "android_install_referrer" }
+android-play-core = { group = "com.google.android.play", name = "core", version.ref = "android_play_core" }
+android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android_desugar_jdk_libs" }
+
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material_components" }
+google-accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
+google-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "google_services" }
+google-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "google_services_base" }
+google-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google_services_auth" }
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase_bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }
+firebase-messages = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-test = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx_hilt" }
+
+javax-annotation = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax_annotation" }
+javax-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "javax_inject" }
+java-poet = { group = "com.squareup", name = "javapoet", version.ref = "java_poet" }
+
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp_bom" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp_bom" }
+
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlin_serialization_converter" }
+
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-anotations = { group = "com.github.bumptech.glide", name = "annotations", version.ref = "glide" }
+glide-okhttp3 = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "glide" }
+glide-webpdecoder = { group = "com.github.zjupure", name = "webpdecoder", version.ref = "glide_webp" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide" }
+
+protobuf-java = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
+protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-google = { group = "com.google.api.grpc", name = "proto-google-common-protos", version.ref = "protobuf_google_common" }
+
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx_test" }
+androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx_test" }
+androidx-test-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx_espresso" }
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx_junit" }
+androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx_junit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx_runner" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx_rules" }
+androidx-test-monitor = { group = "androidx.test", name = "monitor", version.ref = "anroidx_monitor" }
+
+junit5-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
+junit5-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
+junit5-android-test = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "junti5_android" }
+junit5-android-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "junti5_android" }
+kotest-runner = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+truth-ext = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito_kotlin" }
+
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# GradlePlugin
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android_gradle_plugin" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-serialization-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+kotlin-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "kotlin_ksp" }
+google-services-gradlePlugin = { group = "com.google.gms", name = "google-services", version.ref = "google_services" }
+firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase_crashlytics_plugin" }
+firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebase_performance_plugin" }
+hilt-android-gradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
+protobuf-gradlePlugin = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "protobuf_plugin" }
+ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
+androidx-navigation-safe-args-gradlePlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx_navigation" }
+junit5-gradlePlugin = { group = "de.mannodermaus.gradle.plugins", name = "android-junit5", version.ref = "junit5" }
+
+[bundles]
+
+lottie = [
+    "lottie",
+]
+
+glide = [
+    "glide", "glide-anotations", "glide-okhttp3", "glide-webpdecoder",
+]
+
+lifecycle = [
+    "androidx-lifecycle-runtime", "androidx-lifecycle-livedata", "androidx-lifecycle-viewmodel",
+    "androidx-lifecycle-common-java8", "androidx-lifecycle-service", "androidx-lifecycle-process",
+]
+
+navigation = [
+    "androidx-navigation-fragment", "androidx-navigation-ui",
+]
+
+datastore = [
+    "androidx-datastore", "androidx-datastore-preferences",
+]
+
+protobuf = [
+    "protobuf-java", "protobuf-kotlin"
+]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android_gradle_plugin" }
+android-library = { id = "com.android.library", version.ref = "android_gradle_plugin" }
+android-test = { id = "com.android.test", version.ref = "android_gradle_plugin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google_services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase_crashlytics_plugin" }
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebase_performance_plugin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin_ksp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf_plugin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx_navigation" }
+junit5 = { id = "de.mannodermaus.android-junit5", version = "1.8.2.1" }
