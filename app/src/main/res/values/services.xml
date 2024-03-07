@@ -2,6 +2,7 @@
 <resources>
     <string name="service_url" translatable="false">http://ec2-54-180-121-146.ap-northeast-2.compute.amazonaws.com:8080/</string>
     <string name="access_token" translatable="false"></string>
+    <string name="refresh_token" translatable="false"></string>
     <integer name="write_timeout">10</integer>
     <integer name="read_timeout">10</integer>
     <integer name="connect_timeout">10</integer>

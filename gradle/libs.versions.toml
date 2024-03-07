@@ -6,7 +6,7 @@ targetSdk = "34"
 
 # Gradle
 # [Document](https://developer.android.com/build/releases/gradle-plugin)
-android_gradle_plugin = "8.2.2"
+android_gradle_plugin = "8.3.0"
 
 # Kotlin
 # [Github](https://github.com/JetBrains/kotlin)
@@ -89,15 +89,15 @@ google_services_auth = "21.0.0"
 # Firebase
 # [Document](https://firebase.google.com/docs/android/setup)
 # [Document](https://firebase.google.com/support/release-notes/android)
-firebase_bom = "32.7.2"
+firebase_bom = "32.7.3"
 firebase_crashlytics_plugin = "2.9.9"
 firebase_performance_plugin = "1.4.2"
 
 # Hilt
 # [Document](https://developer.android.com/training/dependency-injection/hilt-android)
-hilt = "2.50"
+hilt = "2.51"
 # [Document](https://developer.android.com/jetpack/androidx/releases/hilt)
-androidx_hilt = "1.1.0"
+androidx_hilt = "1.2.0"
 
 # Java
 # [Maven](https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api)
@@ -123,7 +123,7 @@ protobuf_google_common = "2.22.0"
 
 # Image
 # [Github](https://github.com/airbnb/lottie-android)
-lottie = "6.3.0"
+lottie = "6.4.0"
 # [Github](https://github.com/bumptech/glide)
 glide = "4.16.0"
 # [Github](https://github.com/zjupure/GlideWebpDecoder)
@@ -132,16 +132,16 @@ glide_webp = "2.6.4.16.0"
 # Test
 # [Github](https://github.com/junit-team/junit5)
 junit5 = "5.10.2"
-junti5_android = "1.3.0"
+junti5_android = "1.4.0"
 # [Github](https://github.com/kotest/kotest)
 # [Document](https://kotest.io/)
 kotest = "5.8.0"
 # [Document](https://mockk.io/)
-mockk = "1.13.9"
+mockk = "1.13.10"
 # [Github](https://github.com/cashapp/turbine)
 turbine = "1.0.0"
 # [Github](https://github.com/google/truth)
-truth = "1.4.0"
+truth = "1.4.2"
 # [Github](https://pinterest.github.io/ktlint)
 # [Github](https://github.com/JLLeitschuh/ktlint-gradle)
 ktlint = "12.1.0"
@@ -151,7 +151,19 @@ mockito = "5.10.0"
 mockito_kotlin = "5.2.1"
 
 # Logger
+# [Github](https://github.com/JakeWharton/timber)
 timber = "5.0.1"
+
+# Flipper
+# [Document](https://fbflipper.com/docs/getting-started/android-native/)
+# [Github](https://github.com/facebook/flipper)
+flipper = "0.247.0"
+soloader = "0.10.5"
+
+# LeakCanary
+# [Document](https://square.github.io/leakcanary/)
+# [Github](https://github.com/square/leakcanary)
+leakcanary = "2.13"
 
 [libraries]
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
@@ -266,6 +278,14 @@ mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito_kotlin" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
+flipper-soloader = { group = "com.facebook.soloader", name = "soloader", version.ref = "soloader" }
+flipper-network = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
+flipper-leakcanary = { group = "com.facebook.flipper", name = "flipper-leakcanary2-plugin", version.ref = "flipper" }
+
+leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
+
 
 # GradlePlugin
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android_gradle_plugin" }

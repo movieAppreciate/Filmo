@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.navigation.safe.args)
+    alias(libs.plugins.protobuf)
     alias(libs.plugins.junit5)
 }
 
@@ -110,6 +111,10 @@ dependencies {
 
     implementation(libs.google.material)
 
+    implementation(libs.bundles.datastore)
+    implementation(libs.protobuf.java)
+    implementation(libs.protobuf.kotlin)
+
     // firebase
     implementation(platform(libs.firebase.bom))
 
@@ -127,10 +132,19 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
 
     // Logging
     implementation(libs.timber)
+
+    // LeakCanary
+    debugImplementation(libs.leakcanary)
+
+    // Flipper
+    debugImplementation(libs.flipper)
+    debugImplementation(libs.flipper.network)
+    debugImplementation(libs.flipper.soloader)
+    debugImplementation(libs.flipper.leakcanary)
 
     // Test
     testImplementation(libs.junit5.api)
@@ -157,7 +171,7 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     testImplementation(libs.hilt.test)
-    kspTest(libs.hilt.compiler)
+    kaptTest(libs.hilt.compiler)
 
     testImplementation(libs.okhttp.mockwebserver)
 
@@ -185,4 +199,33 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+val isArmProcessor: Boolean =
+    Runtime.getRuntime().exec("uname -p")
+        .inputStream
+        .bufferedReader()
+        .use { reader -> reader.readLine()?.trim() }
+        .let { processor -> processor == "arm" }
+
+protobuf {
+    val protocClassifier = if (isArmProcessor) ":osx-x86_64" else ""
+    val protobufVersion = libs.versions.protobuf.asProvider().get() + protocClassifier
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+
+    generateProtoTasks {
+        all().forEach {
+            it.plugins {
+                register("java") { option("lite") }
+                register("kotlin") { option("lite") }
+            }
+        }
+    }
 }

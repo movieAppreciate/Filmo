@@ -2,9 +2,8 @@ package com.teamfilmo.filmo.app.di
 
 import android.content.Context
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.app.policy.ServiceNetworkPolicy
-import com.teamfilmo.filmo.data.di.AccessToken
-import com.teamfilmo.filmo.data.di.BaseUrl
+import com.teamfilmo.filmo.data.remote.network.policy.BaseUrl
+import com.teamfilmo.filmo.data.remote.network.policy.ServiceNetworkPolicy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,12 +18,6 @@ object ServiceModule {
     fun provideBaseUrl(
         @ApplicationContext context: Context,
     ): String = context.getString(R.string.service_url)
-
-    @Provides
-    @AccessToken
-    fun provideAccessToken(
-        @ApplicationContext context: Context,
-    ): String = context.getString(R.string.access_token)
 
     @Provides
     fun provideNetworkPolicy(
