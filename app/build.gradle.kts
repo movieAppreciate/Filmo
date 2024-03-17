@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -24,6 +27,9 @@ object Version {
     private const val revision = 0
 }
 
+val properties = Properties()
+properties.load(FileInputStream(rootProject.file("local.properties")))
+
 android {
     namespace = "com.teamfilmo.filmo"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -39,6 +45,8 @@ android {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField("String", "GOOGLE_API_KEY", "\"${properties["GOOGLE_API_KEY"]}\"")
     }
 
     signingConfigs {
@@ -74,6 +82,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 
     packaging {
@@ -199,6 +208,14 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
+
+    // google-login
+    implementation("androidx.credentials:credentials:1.3.0-alpha01")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.google.services.auth)
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
+
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
 }
 
 kapt {
@@ -206,11 +223,12 @@ kapt {
 }
 
 val isArmProcessor: Boolean =
-    Runtime.getRuntime().exec("uname -p")
-        .inputStream
-        .bufferedReader()
-        .use { reader -> reader.readLine()?.trim() }
-        .let { processor -> processor == "arm" }
+    System.getenv("PROCESSOR_ARCHITECTURE").contains("arm")
+// Runtime.getRuntime().exec("uname -p")
+//    .inputStream
+//    .bufferedReader()
+//    .use { reader -> reader.readLine()?.trim() }
+//    .let { processor -> processor == "arm" }
 
 protobuf {
     val protocClassifier = if (isArmProcessor) ":osx-x86_64" else ""

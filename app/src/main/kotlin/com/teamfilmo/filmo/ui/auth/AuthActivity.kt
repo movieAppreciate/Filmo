@@ -2,16 +2,49 @@ package com.teamfilmo.filmo.ui.auth
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.util.click
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class AuthActivity() :
+    BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    private val authViewModel: AuthViewModel by viewModels()
+
+    @Inject
+    lateinit var credentialRequest: GetCredentialRequest
+
+    @Inject
+    lateinit var credentialManager: CredentialManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding.googleLogin.setOnClickListener {
+            lifecycleScope.launch {
+                try {
+                    requestGoogleLogin()
+                } catch (e: Exception) {
+                    Log.e("Google Login Error", e.message.toString())
+                    Snackbar.make(binding.root, "로그인 실패: ${e.message}", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun init() {
         super.init()
         binding.notice.text =
@@ -31,6 +64,22 @@ class AuthActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
                 append('\n')
                 append("(마케팅 정보 수신 동의 포함)에 동의하게 됩니다.")
+            }
+    }
+
+    private suspend fun requestGoogleLogin() {
+        runCatching {
+            credentialManager.getCredential(
+                request = credentialRequest,
+                context = this@AuthActivity,
+            )
+        }
+            .onSuccess {
+                val credential = it.credential
+                authViewModel.googleLogin(credential)
+            }
+            .onFailure {
+                Log.d("google login failed", it.message.toString())
             }
     }
 }
