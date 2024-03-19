@@ -1,25 +1,25 @@
-package com.teamfilmo.filmo.data.repository
+package com.teamfilmo.filmo.data.remote.source
 
-import com.teamfilmo.filmo.data.remote.source.AuthRemoteDataSource
+import com.teamfilmo.filmo.data.remote.service.AuthService
 import javax.inject.Inject
 
-class AuthRepository
+class AuthRemoteDataSource
     @Inject
     constructor(
-        private val authRemoteDataSource: AuthRemoteDataSource,
+        private val authService: AuthService,
     ) {
         suspend fun signUp(
             uid: String,
             type: String,
             profileURL: String?,
         ): Result<String> {
-            return authRemoteDataSource.signUp(uid, type, profileURL)
+            return authService.signUp(uid, type, profileURL)
         }
 
         suspend fun login(
             uid: String,
             type: String,
         ): Result<String> {
-            return authRemoteDataSource.login(uid, type)
+            return authService.login(uid, type)
         }
     }

@@ -47,19 +47,14 @@ object NetworkModule {
     ): Int = servicePolicy.retryCount
 
     @Provides
-    @ContentType
-    fun provideContentType(): String {
-        return "application/json"
-    }
-
-    @Provides
     @Singleton
     fun provideRetrofit(
         @BaseUrl baseUrl: String,
         @RetryCount retryCount: Int,
         okHttpClient: OkHttpClient,
+        @ContentType contentType: String,
     ): Retrofit {
-        val contentType = provideContentType().toMediaType()
+        val contentType = contentType.toMediaType()
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)

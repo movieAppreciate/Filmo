@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name" translatable="false">Filmo</string>
+    <string name="google_client_key" translatable="false">"1045469144317-4tjbdloqr279er4h5n8uvo2te6qpm2ht.apps.googleusercontent.com"</string>
 </resources>

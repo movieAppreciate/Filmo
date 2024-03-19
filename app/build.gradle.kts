@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -27,9 +24,6 @@ object Version {
     private const val revision = 0
 }
 
-val properties = Properties()
-properties.load(FileInputStream(rootProject.file("local.properties")))
-
 android {
     namespace = "com.teamfilmo.filmo"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -45,8 +39,6 @@ android {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
         vectorDrawables.useSupportLibrary = true
-
-        buildConfigField("String", "GOOGLE_API_KEY", "\"${properties["GOOGLE_API_KEY"]}\"")
     }
 
     signingConfigs {
@@ -82,7 +74,6 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
-        buildConfig = true
     }
 
     packaging {

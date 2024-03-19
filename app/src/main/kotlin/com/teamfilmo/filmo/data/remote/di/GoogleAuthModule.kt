@@ -1,42 +1,37 @@
 package com.teamfilmo.filmo.data.remote.di
 
 import android.content.Context
-import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.teamfilmo.filmo.BuildConfig
+import com.teamfilmo.filmo.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ViewModelComponent::class)
 object GoogleAuthModule {
     @Provides
-    @ActivityScoped
-    fun provideGoogleIdOption(): GetGoogleIdOption {
+    @ViewModelScoped
+    fun provideGoogleIdOption(
+        @ApplicationContext context: Context,
+    ): GetGoogleIdOption {
         return GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(BuildConfig.GOOGLE_API_KEY)
+            .setServerClientId(context.getString(R.string.google_client_key))
             .build()
     }
 
     @Provides
-    @ActivityScoped
-    fun provideCredentialRequest(): GetCredentialRequest {
+    @ViewModelScoped
+    fun provideCredentialRequest(
+        @ApplicationContext context: Context,
+    ): GetCredentialRequest {
         return GetCredentialRequest.Builder()
-            .addCredentialOption(provideGoogleIdOption())
+            .addCredentialOption(provideGoogleIdOption(context))
             .build()
-    }
-
-    @Provides
-    @ActivityScoped
-    fun provideCredentialManager(
-        @ActivityContext context: Context,
-    ): CredentialManager {
-        return CredentialManager.create(context)
     }
 }

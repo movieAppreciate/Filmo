@@ -7,18 +7,14 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.teamfilmo.filmo.data.repository.AuthRepository
 import javax.inject.Inject
 
-class MakeLoginRequestUseCase
+class MakeGoogleLoginRequestUseCase
     @Inject
     constructor(
         private val authRepository: AuthRepository,
     ) {
         suspend operator fun invoke(credential: Credential) {
             val userId = getUserIdFromCredential(credential)
-            val loginResult = authRepository.login(userId, "google")
-
-            if (loginResult.isFailure) {
-                authRepository.signUp(userId, "google", "")
-            }
+            authRepository.login(userId, "google")
         }
 
         private fun getUserIdFromCredential(credential: Credential): String {
