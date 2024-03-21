@@ -1,5 +1,4 @@
 package com.teamfilmo.filmo.ui.auth
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,8 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class AuthActivity() :
     BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     private val authViewModel: AuthViewModel by viewModels()
-
-    private lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +41,8 @@ class AuthActivity() :
 
     override fun init() {
         super.init()
-        context = this
-        NaverIdLoginSDK.apply {
-            showDevelopersLog(true)
-            initialize(context, applicationContext.getString(R.string.naver_client_id), applicationContext.getString(R.string.naver_client_secret), applicationContext.getString(R.string.naver_client_name))
-        }
+        NaverIdLoginSDK.initialize(this, getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name))
+        NaverIdLoginSDK.showDevelopersLog(true)
 
         binding.notice.text =
             buildSpannedString {

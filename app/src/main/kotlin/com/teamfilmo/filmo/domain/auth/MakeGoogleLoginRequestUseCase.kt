@@ -14,7 +14,7 @@ class MakeGoogleLoginRequestUseCase
     ) {
         suspend operator fun invoke(credential: Credential) {
             val userId = getUserIdFromCredential(credential)
-            authRepository.login(userId, "google", "")
+            authRepository.login(userId, "google")
         }
 
         private fun getUserIdFromCredential(credential: Credential): String {

@@ -9,6 +9,6 @@ class MakeNaverLoginRequestUseCase
         private val authRepository: AuthRepository,
     ) {
         suspend operator fun invoke(email: String) {
-            authRepository.login(email, "naver", "")
+            authRepository.login(email, "naver")
         }
     }

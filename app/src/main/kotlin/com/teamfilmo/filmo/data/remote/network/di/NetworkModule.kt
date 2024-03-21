@@ -46,6 +46,7 @@ object NetworkModule {
         servicePolicy: ServiceNetworkPolicy,
     ): Int = servicePolicy.retryCount
 
+
     @Provides
     @Singleton
     fun provideRetrofit(
