@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.repository
 
+import android.util.Log
 import com.teamfilmo.filmo.data.remote.source.AuthRemoteDataSource
 import javax.inject.Inject
 
@@ -19,7 +20,13 @@ class AuthRepository
         suspend fun login(
             uid: String,
             type: String,
+            profileURL: String?,
         ): Result<String> {
-            return authRemoteDataSource.login(uid, type)
+            return authRemoteDataSource.login(uid, type).also {
+                    result ->
+                if (result.isFailure) {
+                    authRemoteDataSource.signUp(uid, type, profileURL)
+                }
+            }
         }
     }

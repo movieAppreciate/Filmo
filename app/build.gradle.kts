@@ -207,6 +207,13 @@ dependencies {
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
 
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
+    // naver-login
+    implementation("com.navercorp.nid:oauth:5.9.0") // jdk 11
+    implementation("androidx.legacy:legacy-support-core-utils:1.0.0")
+    implementation("androidx.browser:browser:1.4.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
 }
 
 kapt {

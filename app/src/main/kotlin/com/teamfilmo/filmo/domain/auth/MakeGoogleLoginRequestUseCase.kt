@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.domain
+package com.teamfilmo.filmo.domain.auth
 
 import androidx.credentials.Credential
 import androidx.credentials.CustomCredential
@@ -14,7 +14,7 @@ class MakeGoogleLoginRequestUseCase
     ) {
         suspend operator fun invoke(credential: Credential) {
             val userId = getUserIdFromCredential(credential)
-            authRepository.login(userId, "google")
+            authRepository.login(userId, "google", "")
         }
 
         private fun getUserIdFromCredential(credential: Credential): String {

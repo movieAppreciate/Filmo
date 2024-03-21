@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Filmo</string>
     <string name="google_client_key" translatable="false">"1045469144317-4tjbdloqr279er4h5n8uvo2te6qpm2ht.apps.googleusercontent.com"</string>
+    <string name="naver_client_id">0GG3PLjzcYYDp0BZIZRT</string>
+    <string name="naver_client_secret">9_jGomWVZM</string>
+    <string name="naver_client_name">Filmo</string>
 </resources>
