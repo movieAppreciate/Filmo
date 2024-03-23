@@ -4,4 +4,6 @@
     <string name="naver_client_id">0GG3PLjzcYYDp0BZIZRT</string>
     <string name="naver_client_secret">9_jGomWVZM</string>
     <string name="naver_client_name">Filmo</string>
+    <string name="kakao_app_key">9681b2f2a11797cbec49c716406d0780</string>
+    <string name="scheme_kakao_app_key">kakao9681b2f2a11797cbec49c716406d0780</string>
 </resources>

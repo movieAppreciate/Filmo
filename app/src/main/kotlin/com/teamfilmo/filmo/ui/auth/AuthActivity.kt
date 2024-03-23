@@ -37,6 +37,10 @@ class AuthActivity() :
                 Log.d("naver login error", e.message.toString())
             }
         }
+
+        binding.kakaoLogin.setOnClickListener {
+            authViewModel.requestKakaoLogin(this)
+        }
     }
 
     override fun init() {
