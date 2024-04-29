@@ -26,6 +26,8 @@
             app:layout_constraintBottom_toTopOf="@id/naver_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
             bind:background="@{@drawable/bg_kakao}"
             bind:buttonIcon="@{@drawable/ic_kakao}"
             bind:buttonText='@{"카카오로 시작하기"}'
@@ -39,6 +41,7 @@
             app:layout_constraintBottom_toTopOf="@id/google_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/kakao_login"
             bind:background="@{@drawable/bg_naver}"
             bind:buttonIcon="@{@drawable/ic_naver}"
             bind:buttonText='@{"네이버로 시작하기"}'
@@ -48,56 +51,13 @@
             android:id="@+id/google_login"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@id/or"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/naver_login"
             bind:background="@{@drawable/bg_google}"
             bind:buttonIcon="@{@drawable/ic_google}"
             bind:buttonText='@{"구글로 시작하기"}' />
-
-        <TextView
-            android:id="@+id/or"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="또는"
-            android:textColor="#111927"
-            app:layout_constraintBottom_toTopOf="@id/email_login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:background="#E5E7EB"
-            app:layout_constraintBottom_toBottomOf="@id/or"
-            app:layout_constraintEnd_toStartOf="@id/or"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/or" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="#E5E7EB"
-            app:layout_constraintBottom_toBottomOf="@id/or"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/or"
-            app:layout_constraintTop_toTopOf="@id/or" />
-
-        <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
-            android:id="@+id/email_login"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="70dp"
-            app:layout_constraintBottom_toTopOf="@id/notice"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            bind:background="@{@drawable/bg_google}"
-            bind:buttonIcon="@{@drawable/ic_email}"
-            bind:buttonText='@{"이메일로 시작하기"}' />
 
         <TextView
             android:id="@+id/notice"

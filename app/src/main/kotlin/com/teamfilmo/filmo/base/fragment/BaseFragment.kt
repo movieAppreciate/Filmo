@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.base
+package com.teamfilmo.filmo.base.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +14,8 @@ abstract class BaseFragment<B : ViewBinding>(
     protected inline val TAG: String
         get() = this::class.java.simpleName
 
-    @Suppress("ktlint:standard:property-naming")
-    protected var _binding: B? = null
+    @Suppress("ktlint:standard:backing-property-naming")
+    private var _binding: B? = null
     protected val binding
         get() = requireNotNull(_binding)
 
@@ -33,13 +33,20 @@ abstract class BaseFragment<B : ViewBinding>(
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+        initViews()
+        initObserver()
     }
 
-    protected open fun init() = Unit
+    protected open fun initViews() = Unit
+
+    protected open fun initObserver() = Unit
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
-        _binding == null
+    }
+
+    protected fun bind(block: B.() -> Unit) {
+        binding.run(block)
     }
 }

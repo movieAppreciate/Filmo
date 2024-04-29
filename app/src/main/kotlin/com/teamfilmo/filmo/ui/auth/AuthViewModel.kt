@@ -12,7 +12,9 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
-import com.teamfilmo.filmo.base.BaseViewModel
+import com.teamfilmo.filmo.base.effect.NoEffect
+import com.teamfilmo.filmo.base.event.NoEvent
+import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.NaverLoginRequestUseCase
@@ -31,7 +33,7 @@ class AuthViewModel
         private val naverLoginRequestUseCase: NaverLoginRequestUseCase,
         private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
         private val kakaoLoginRequestUseCase: KakaoLoginRequestUseCase,
-    ) : BaseViewModel() {
+    ) : BaseViewModel<NoEffect, NoEvent>() {
         fun requestKakaoLogin(context: Context) {
             launch {
                 runCatching {

@@ -6,19 +6,18 @@ import android.text.method.LinkMovementMethod
 import androidx.activity.viewModels
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
-import com.navercorp.nid.NaverIdLoginSDK
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.base.BaseActivity
-import com.teamfilmo.filmo.databinding.ActivityMainBinding
+import com.teamfilmo.filmo.base.activity.BaseActivity
+import com.teamfilmo.filmo.databinding.ActivityAuthBinding
 import com.teamfilmo.filmo.util.click
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AuthActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class AuthActivity : BaseActivity<ActivityAuthBinding>(ActivityAuthBinding::inflate) {
     private val viewModel: AuthViewModel by viewModels()
 
-    override fun init() {
-        super.init()
+    override fun initViews() {
+        super.initViews()
 
         binding.googleLogin.setOnClickListener {
             viewModel.requestGoogleLogin(this@AuthActivity)
@@ -29,17 +28,15 @@ class AuthActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
 
         binding.kakaoLogin.setOnClickListener {
-            viewModel.requestKakaoLogin(this)
+            viewModel.requestKakaoLogin(this@AuthActivity)
         }
-
-        NaverIdLoginSDK.showDevelopersLog(true)
 
         binding.notice.text =
             buildSpannedString {
                 append("계정 생성 시 ")
                 click(
                     onClick = {
-                        val uri = Uri.parse("https://www.google.com")
+                        val uri = Uri.parse("https://axiomatic-tie-306.notion.site/7b56ec5868664b36b8a9f7e599c288e5?pvs=4")
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         startActivity(intent)
                     },
