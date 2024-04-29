@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.data.local.source
+package com.teamfilmo.filmo.data.source
 
 import kotlinx.coroutines.flow.Flow
 

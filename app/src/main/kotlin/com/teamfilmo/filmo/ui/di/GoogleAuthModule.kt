@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.data.remote.di
+package com.teamfilmo.filmo.ui.di
 
 import android.content.Context
 import androidx.credentials.GetCredentialRequest

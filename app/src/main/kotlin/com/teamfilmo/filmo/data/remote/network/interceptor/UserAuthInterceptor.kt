@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.remote.network.interceptor
 
-import com.teamfilmo.filmo.data.local.source.UserTokenSource
 import com.teamfilmo.filmo.data.remote.service.AuthService
+import com.teamfilmo.filmo.data.source.UserTokenSource
 import java.net.HttpURLConnection
 import javax.inject.Provider
 import kotlinx.coroutines.flow.firstOrNull

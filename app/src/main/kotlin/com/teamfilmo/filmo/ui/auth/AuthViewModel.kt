@@ -1,12 +1,8 @@
 package com.teamfilmo.filmo.ui.auth
 
 import android.content.Context
-import android.util.Log
-import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -16,147 +12,190 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
-import com.teamfilmo.filmo.domain.auth.MakeGoogleLoginRequestUseCase
-import com.teamfilmo.filmo.domain.auth.MakeKakaoLoginRequestUseCase
-import com.teamfilmo.filmo.domain.auth.MakeNaverLoginRequestUseCase
+import com.teamfilmo.filmo.base.BaseViewModel
+import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
+import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
+import com.teamfilmo.filmo.domain.auth.NaverLoginRequestUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 
 @HiltViewModel
 class AuthViewModel
     @Inject
     constructor(
-        private val makeNaverLoginRequestUseCase: MakeNaverLoginRequestUseCase,
-        private val makeGoogleLoginRequestUseCase: MakeGoogleLoginRequestUseCase,
-        private val makeKakaoLoginRequestUseCase: MakeKakaoLoginRequestUseCase,
-    ) : ViewModel() {
-        @Inject
-        lateinit var credentialRequest: GetCredentialRequest
-
+        private val credentialRequest: GetCredentialRequest,
+        private val naverLoginRequestUseCase: NaverLoginRequestUseCase,
+        private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
+        private val kakaoLoginRequestUseCase: KakaoLoginRequestUseCase,
+    ) : BaseViewModel() {
         fun requestKakaoLogin(context: Context) {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
-                    if (error != null) {
-                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                            return@loginWithKakaoTalk
+            launch {
+                runCatching {
+                    suspendCancellableCoroutine { continuation ->
+                        val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+                            if (error != null) {
+                                Timber.w("kakao login error ${error.message}")
+                                continuation.resumeWithException(error)
+                            } else if (token != null) {
+                                Timber.i("kakao login success, ${token.accessToken}")
+                                continuation.resume(token)
+                            }
                         }
-                        UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoLogincallback)
-                    } else if (token != null) {
-                        Log.d("kakao login success", "${token.accessToken}")
-                    }
-                }
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoLogincallback)
-            }
-        }
 
-        private fun getUserEmail() {
-            UserApiClient.instance.me { user, error ->
-                if (error != null) {
-                    Log.d("kakao login user info failed", error.message.toString())
-                } else if (user != null) {
-                    Log.d("kakao login user info success", "email : ${user.kakaoAccount?.email}")
-                    viewModelScope.launch {
-                        user.kakaoAccount?.email?.let { makeKakaoLoginRequestUseCase(it) }
+                        if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                            try {
+                                UserApiClient.instance.loginWithKakaoTalk(context, callback = kakaoLoginCallback)
+                            } catch (error: Throwable) {
+                                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                    continuation.resumeWithException(error)
+                                } else {
+                                    UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoLoginCallback)
+                                }
+                            }
+                        } else {
+                            UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoLoginCallback)
+                        }
                     }
-                }
-            }
-        }
+                }.getOrThrow()
 
-        private val kakaoLogincallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            if (error != null) {
-                Log.d("kakao login error", error.toString())
-            } else if (token != null) {
-                getUserEmail()
-                Log.i("kakao login success ", "${token.accessToken}")
+                val email =
+                    runCatching {
+                        suspendCancellableCoroutine { continuation ->
+                            UserApiClient.instance.me { user, error ->
+                                if (error != null) {
+                                    Timber.e("kakao login user info failed ${error.message}")
+                                    continuation.resumeWithException(error)
+                                } else if (user != null) {
+                                    Timber.i("kakao login user info success, email: ${user.kakaoAccount?.email}")
+                                    user.kakaoAccount?.email?.let { continuation.resume(it) } ?: continuation.resumeWithException(Exception("kakao login failed: email is null"))
+                                }
+                            }
+                        }
+                    }.getOrThrow()
+
+                kakaoLoginRequestUseCase(email)
+                    .onSuccess {
+                        Timber.d("kakao login success")
+                    }
+                    .onFailure {
+                        Timber.e("kakao login failed: ${it.message}")
+                    }
             }
         }
 
         fun requestNaverLogin(context: Context) {
-            NaverIdLoginSDK.authenticate(context, oauthLoginCallback)
-        }
+            launch {
+                val token =
+                    runCatching {
+                        suspendCancellableCoroutine { continuation ->
+                            val oauthLoginCallback =
+                                object : OAuthLoginCallback {
+                                    override fun onSuccess() {
+                                        Timber.d("naver login success, token: ${NaverIdLoginSDK.getAccessToken()}")
+                                        continuation.resume(NaverIdLoginSDK.getAccessToken().toString())
+                                    }
 
-        private val oauthLoginCallback =
-            object : OAuthLoginCallback {
-                override fun onSuccess() {
-                    // 접근 토큰
-                    Log.d("naver login success", NaverIdLoginSDK.getAccessToken().toString())
+                                    override fun onFailure(
+                                        httpStatus: Int,
+                                        message: String,
+                                    ) {
+                                        val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                                        val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+                                        Timber.e("naver login failed, code: $errorCode, description: $errorDescription")
+                                        continuation.resumeWithException(Exception("naver login failed, code: $errorCode, description: $errorDescription"))
+                                    }
 
-                    // todo : 뷰 모델에서 login/signUp api 호출
-                    NidOAuthLogin().callProfileApi(profileCallback)
-                }
+                                    override fun onError(
+                                        errorCode: Int,
+                                        message: String,
+                                    ) {
+                                        onFailure(errorCode, message)
+                                    }
+                                }
 
-                override fun onFailure(
-                    httpStatus: Int,
-                    message: String,
-                ) {
-                    val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                    val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                    Log.d("naver login error", "errorCode:$errorCode, errorDesc:$errorDescription")
-                }
+                            continuation.invokeOnCancellation {
+                                Timber.d("naver login canceled, ${it?.message}")
+                            }
 
-                override fun onError(
-                    errorCode: Int,
-                    message: String,
-                ) {
-                    onFailure(errorCode, message)
-                }
-            }
-
-        // 로그인 유저 정보 가져오기 위한 콜백
-        val profileCallback =
-            object : NidProfileCallback<NidProfileResponse> {
-                override fun onError(
-                    errorCode: Int,
-                    message: String,
-                ) {
-                    onFailure(errorCode, message)
-                }
-
-                override fun onFailure(
-                    httpStatus: Int,
-                    message: String,
-                ) {
-                    val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                    val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                    Log.d("naver login  failed", "code = $errorCode \n description = $errorDescription")
-                }
-
-                override fun onSuccess(result: NidProfileResponse) {
-                    val email = result.profile?.email
-                    if (email != null) {
-                        Log.d("naver login success : email ", email)
-                        viewModelScope.launch {
-                            makeNaverLoginRequestUseCase(email)
+                            NaverIdLoginSDK.authenticate(
+                                context,
+                                oauthLoginCallback,
+                            )
                         }
-                        // login api에 email을 넣어주기
-                    }
-                }
-            }
+                    }.getOrThrow()
 
-        fun requestGoogleLogin(context: Context) {
-            val credentialManager = CredentialManager.create(context)
-            viewModelScope.launch {
-                runCatching {
-                    credentialManager.getCredential(
-                        request = credentialRequest,
-                        context = context,
-                    )
-                }
+                val email =
+                    runCatching {
+                        suspendCancellableCoroutine { continuation ->
+                            val profileCallback =
+                                object : NidProfileCallback<NidProfileResponse> {
+                                    override fun onError(
+                                        errorCode: Int,
+                                        message: String,
+                                    ) {
+                                        onFailure(errorCode, message)
+                                    }
+
+                                    override fun onFailure(
+                                        httpStatus: Int,
+                                        message: String,
+                                    ) {
+                                        val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                                        val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+                                        Timber.e("naver login failed, code: $errorCode, description: $errorDescription")
+                                        continuation.resumeWithException(
+                                            Exception("naver login failed, code: $errorCode, description: $errorDescription"),
+                                        )
+                                    }
+
+                                    override fun onSuccess(result: NidProfileResponse) {
+                                        val email = result.profile?.email
+                                        if (email != null) {
+                                            continuation.resume(email)
+                                        } else {
+                                            continuation.resumeWithException(Exception("naver login failed: email is null"))
+                                        }
+                                    }
+                                }
+
+                            NidOAuthLogin().callProfileApi(profileCallback)
+                        }
+                    }.getOrThrow()
+
+                naverLoginRequestUseCase(email)
                     .onSuccess {
-                        val credential = it.credential
-                        googleLogin(credential)
+                        Timber.d("naver login success")
                     }
                     .onFailure {
-                        Log.d("google login failed", it.message.toString())
+                        Timber.e("naver login failed: ${it.message}")
                     }
             }
         }
 
-        private fun googleLogin(credential: Credential) {
-            viewModelScope.launch {
-                makeGoogleLoginRequestUseCase(credential)
+        fun requestGoogleLogin(context: Context) {
+            launch {
+                val credentialManager = CredentialManager.create(context)
+
+                val response =
+                    runCatching {
+                        credentialManager.getCredential(
+                            request = credentialRequest,
+                            context = context,
+                        )
+                    }.getOrThrow()
+
+                val credential = response.credential
+                googleLoginRequestUseCase(credential)
+                    .onSuccess {
+                        Timber.d("google login success")
+                    }
+                    .onFailure {
+                        Timber.e("google login failed: ${it.message}")
+                    }
             }
         }
     }

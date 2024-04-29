@@ -46,6 +46,9 @@ object NetworkModule {
         servicePolicy: ServiceNetworkPolicy,
     ): Int = servicePolicy.retryCount
 
+    @ContentType
+    @Provides
+    fun provideContentType(): String = "application/json"
 
     @Provides
     @Singleton

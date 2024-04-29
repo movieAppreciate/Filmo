@@ -1,10 +1,10 @@
-package com.teamfilmo.filmo.data.local.source.impl
+package com.teamfilmo.filmo.data.local.source
 
 import androidx.datastore.core.DataStore
 import com.teamfilmo.filmo.data.local.model.UserToken
 import com.teamfilmo.filmo.data.local.model.copy
 import com.teamfilmo.filmo.data.local.model.userToken
-import com.teamfilmo.filmo.data.local.source.UserTokenSource
+import com.teamfilmo.filmo.data.source.UserTokenSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -6,12 +6,12 @@ targetSdk = "34"
 
 # Gradle
 # [Document](https://developer.android.com/build/releases/gradle-plugin)
-android_gradle_plugin = "8.3.0"
+android_gradle_plugin = "8.3.1"
 
 # Kotlin
 # [Github](https://github.com/JetBrains/kotlin)
 # [Document](https://kotlinlang.org/docs/releases.html)
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 # [Github](https://github.com/Kotlin/kotlinx.coroutines)
 kotlinx_coroutines = "1.8.0"
 # [Github](https://github.com/Kotlin/kotlinx.serialization)
@@ -20,7 +20,7 @@ kotlinx_serialization = "1.6.3"
 kotlin_serialization_converter = "1.0.0"
 # [Document](https://kotlinlang.org/docs/ksp-quickstart.html)
 # [Github](https://github.com/google/ksp)
-kotlin_ksp = "1.9.22-1.0.17"
+kotlin_ksp = "1.9.23-1.0.19"
 
 # AndroidX
 # [Document](https://developer.android.com/jetpack/androidx/releases/core)
@@ -47,7 +47,7 @@ androidx_preference = "1.2.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/webkit)
 androidx_webkit = "1.10.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/browser)
-androidx_browser = "1.7.0"
+androidx_browser = "1.8.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/recyclerview)
 androidx_recyclerview = "1.3.2"
 # [Document](https://developer.android.com/jetpack/androidx/releases/constraintlayout)
@@ -58,6 +58,11 @@ androidx_viewpager2 = "1.1.0-beta02"
 androidx_paging = "3.2.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/startup)
 androidx_startup = "1.1.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/credentials)
+androidx_credentials = "1.3.0-alpha01"
+# [Document](https://developer.android.com/jetpack/androidx/releases/security)
+androidx_security-crypto = "1.1.0-alpha06"
+
 # [Document](https://developer.android.com/jetpack/androidx/releases/test)
 androidx_test = "1.5.0"
 androidx_espresso = "3.5.1"
@@ -85,11 +90,14 @@ google_services = "4.4.1"
 google_services_base = "18.3.0"
 # [Document](https://developers.google.com/identity/sign-in/android)
 google_services_auth = "21.0.0"
+# [Document](https://developers.google.com/identity/android-credential-manager)
+# [Guide](https://developer.android.com/training/sign-in/credential-manager)
+google_identity = "1.1.0"
 
 # Firebase
 # [Document](https://firebase.google.com/docs/android/setup)
 # [Document](https://firebase.google.com/support/release-notes/android)
-firebase_bom = "32.7.3"
+firebase_bom = "32.8.0"
 firebase_crashlytics_plugin = "2.9.9"
 firebase_performance_plugin = "1.4.2"
 
@@ -115,7 +123,7 @@ retrofit = "2.9.0"
 
 # Protobuf, GRPC
 # [GitHub](https://github.com/protocolbuffers/protobuf)
-protobuf = "3.25.2"
+protobuf = "3.25.3"
 # [GitHub](https://github.com/google/protobuf-gradle-plugin)
 protobuf_plugin = "0.9.4"
 # [Github](https://github.com/googleapis/sdk-platform-java/tree/main/java-common-protos)
@@ -165,6 +173,14 @@ soloader = "0.10.5"
 # [Github](https://github.com/square/leakcanary)
 leakcanary = "2.13"
 
+# Naver
+# [Document](https://developers.naver.com/docs/login/android/android.md)
+naver = "5.9.0"
+
+# kakao
+# [Document](https://developers.kakao.com/docs/latest/ko/android/getting-started)
+kakao = "2.20.0"
+
 [libraries]
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -203,6 +219,9 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx_constraintlayout" }
 androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx_startup" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx_viewpager2" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidx_credentials" }
+androidx-credentials-play-service-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidx_credentials" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx_security-crypto" }
 
 android-install-referrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "android_install_referrer" }
 android-play-core = { group = "com.google.android.play", name = "core", version.ref = "android_play_core" }
@@ -214,6 +233,7 @@ google-accompanist-permissions = { group = "com.google.accompanist", name = "acc
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "google_services" }
 google-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "google_services_base" }
 google-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google_services_auth" }
+google-identity = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "google_identity" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase_bom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
@@ -286,6 +306,15 @@ flipper-leakcanary = { group = "com.facebook.flipper", name = "flipper-leakcanar
 
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 
+naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naver" }
+
+kakao-all = { group = "com.kakao.sdk", name = "v2-all", version.ref = "kakao" }
+kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+kakao-share = { group = "com.kakao.sdk", name = "v2-share", version.ref = "kakao" }
+kakao-talk = { group = "com.kakao.sdk", name = "v2-talk", version.ref = "kakao" }
+kakao-friend = { group = "com.kakao.sdk", name = "v2-friend", version.ref = "kakao" }
+kakao-navi = { group = "com.kakao.sdk", name = "v2-navi", version.ref = "kakao" }
+kakao-cert = { group = "com.kakao.sdk", name = "v2-cert", version.ref = "kakao" }
 
 # GradlePlugin
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android_gradle_plugin" }
@@ -326,6 +355,10 @@ datastore = [
 
 protobuf = [
     "protobuf-java", "protobuf-kotlin"
+]
+
+kakao = [
+    "kakao-all", "kakao-user", "kakao-share", "kakao-talk", "kakao-friend", "kakao-navi", "kakao-cert",
 ]
 
 [plugins]

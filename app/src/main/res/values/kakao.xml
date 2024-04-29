@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kakao_app_key" translatable="false">9681b2f2a11797cbec49c716406d0780</string>
+    <string name="scheme_kakao_app_key" translatable="false">kakao9681b2f2a11797cbec49c716406d0780</string>
+</resources>

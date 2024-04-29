@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".app.FilmoApp"
@@ -19,7 +19,6 @@
         <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Filmo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,15 +32,28 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-
                 <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="@string/scheme_kakao_app_key" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false">
+            <meta-data
+                android:name="com.teamfilmo.filmo.app.initializer.NaverInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="com.teamfilmo.filmo.app.initializer.KakaoInitializer"
+                android:value="androidx.startup" />
+        </provider>
 
     </application>
 

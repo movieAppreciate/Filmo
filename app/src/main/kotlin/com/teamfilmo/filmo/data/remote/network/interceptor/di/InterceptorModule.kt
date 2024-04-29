@@ -1,12 +1,12 @@
 package com.teamfilmo.filmo.data.remote.network.interceptor.di
 
-import com.teamfilmo.filmo.data.local.source.UserTokenSource
 import com.teamfilmo.filmo.data.remote.network.interceptor.AuthInterceptor
 import com.teamfilmo.filmo.data.remote.network.interceptor.HeaderInterceptor
 import com.teamfilmo.filmo.data.remote.network.interceptor.LoggingInterceptor
 import com.teamfilmo.filmo.data.remote.network.interceptor.UserAuthInterceptor
 import com.teamfilmo.filmo.data.remote.network.policy.ContentType
 import com.teamfilmo.filmo.data.remote.service.AuthService
+import com.teamfilmo.filmo.data.source.UserTokenSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="naver_client_id" translatable="false">0GG3PLjzcYYDp0BZIZRT</string>
+    <string name="naver_client_secret" translatable="false">9_jGomWVZM</string>
+    <string name="naver_client_name" translatable="false">Filmo</string>
+</resources>

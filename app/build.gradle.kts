@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.bundles.navigation)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.browser)
 
     implementation(libs.google.material)
 
@@ -117,6 +118,19 @@ dependencies {
 
     // firebase
     implementation(platform(libs.firebase.bom))
+
+    // google-login
+    implementation(libs.google.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.service.auth)
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.google.identity)
+
+    // naver
+    implementation(libs.naver.oauth)
+
+    // kakao
+    implementation(libs.bundles.kakao)
 
     // network
     implementation(platform(libs.okhttp.bom))
@@ -199,30 +213,6 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
-
-    // google-login
-    implementation("androidx.credentials:credentials:1.3.0-alpha01")
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.google.services.auth)
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
-
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
-
-    // naver-login
-    implementation("com.navercorp.nid:oauth:5.9.0") // jdk 11
-    implementation("androidx.legacy:legacy-support-core-utils:1.0.0")
-    implementation("androidx.browser:browser:1.4.0")
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
-
-    // kakao-login9
-    implementation("com.kakao.sdk:v2-all:2.20.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
-    implementation("com.kakao.sdk:v2-user:2.20.0") // 카카오 로그인 API 모듈
-    implementation("com.kakao.sdk:v2-share:2.20.0") // 카카오톡 공유 API 모듈
-    implementation("com.kakao.sdk:v2-talk:2.20.0") // 카카오톡 채널, 카카오톡 소셜, 카카오톡 메시지 API 모듈
-    implementation("com.kakao.sdk:v2-friend:2.20.0") // 피커 API 모듈
-    implementation("com.kakao.sdk:v2-navi:2.20.0") // 카카오내비 API 모듈
-    implementation("com.kakao.sdk:v2-cert:2.20.0") // 카카오톡 인증 서비스 API 모듈
 }
 
 kapt {
@@ -230,12 +220,12 @@ kapt {
 }
 
 val isArmProcessor: Boolean =
-    System.getenv("PROCESSOR_ARCHITECTURE").contains("arm")
-// Runtime.getRuntime().exec("uname -p")
-//    .inputStream
-//    .bufferedReader()
-//    .use { reader -> reader.readLine()?.trim() }
-//    .let { processor -> processor == "arm" }
+//    System.getenv("PROCESSOR_ARCHITECTURE").contains("arm")
+    Runtime.getRuntime().exec("uname -p")
+        .inputStream
+        .bufferedReader()
+        .use { reader -> reader.readLine()?.trim() }
+        .let { processor -> processor == "arm" }
 
 protobuf {
     val protocClassifier = if (isArmProcessor) ":osx-x86_64" else ""

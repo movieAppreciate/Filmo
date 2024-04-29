@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.startup.Initializer
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.data.local.source.UserTokenSource
+import com.teamfilmo.filmo.data.source.UserTokenSource
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

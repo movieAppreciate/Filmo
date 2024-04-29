@@ -1,14 +1,15 @@
 package com.teamfilmo.filmo.data.repository
 
-import com.teamfilmo.filmo.data.remote.source.AuthRemoteDataSource
+import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
+import com.teamfilmo.filmo.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class AuthRepository
+class AuthRepositoryImpl
     @Inject
     constructor(
         private val authRemoteDataSource: AuthRemoteDataSource,
-    ) {
-        suspend fun signUp(
+    ) : AuthRepository {
+        override suspend fun signUp(
             uid: String,
             type: String,
             profileURL: String?,
@@ -16,7 +17,7 @@ class AuthRepository
             return authRemoteDataSource.signUp(uid, type, profileURL)
         }
 
-        suspend fun login(
+        override suspend fun login(
             uid: String,
             type: String,
         ): Result<String> {

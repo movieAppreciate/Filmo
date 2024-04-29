@@ -1,14 +1,19 @@
 package com.teamfilmo.filmo.app
 
 import android.app.Application
-import com.kakao.sdk.common.KakaoSdk
-import com.teamfilmo.filmo.R
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+import timber.log.Timber
 
 @HiltAndroidApp
 class FilmoApp : Application() {
+    @Inject
+    lateinit var timberTree: Timber.Tree
+
     override fun onCreate() {
         super.onCreate()
-        KakaoSdk.init(this, getString(R.string.kakao_app_key))
+
+        Timber.plant(timberTree)
+        Timber.d("App onCreate")
     }
 }
