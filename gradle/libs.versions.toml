@@ -6,7 +6,7 @@ targetSdk = "34"
 
 # Gradle
 # [Document](https://developer.android.com/build/releases/gradle-plugin)
-android_gradle_plugin = "8.3.1"
+android_gradle_plugin = "8.3.2"
 
 # Kotlin
 # [Github](https://github.com/JetBrains/kotlin)
@@ -16,15 +16,13 @@ kotlin = "1.9.23"
 kotlinx_coroutines = "1.8.0"
 # [Github](https://github.com/Kotlin/kotlinx.serialization)
 kotlinx_serialization = "1.6.3"
-# [Github](https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter)
-kotlin_serialization_converter = "1.0.0"
 # [Document](https://kotlinlang.org/docs/ksp-quickstart.html)
 # [Github](https://github.com/google/ksp)
 kotlin_ksp = "1.9.23-1.0.19"
 
 # AndroidX
 # [Document](https://developer.android.com/jetpack/androidx/releases/core)
-androidx_core = "1.12.0"
+androidx_core = "1.13.0"
 androidx_core_splashscreen = "1.0.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/arch-core)
 androidx_arch_core = "2.2.0"
@@ -41,7 +39,7 @@ androidx_navigation = "2.7.7"
 # [Document](https://developer.android.com/jetpack/androidx/releases/room)
 androidx_room = "2.6.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/datastore)
-androidx_datastore = "1.0.0"
+androidx_datastore = "1.1.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/preference)
 androidx_preference = "1.2.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/webkit)
@@ -58,11 +56,12 @@ androidx_viewpager2 = "1.1.0-beta02"
 androidx_paging = "3.2.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/startup)
 androidx_startup = "1.1.1"
+# [Document](https://developer.android.com/jetpack/androidx/releases/work)
+androidx_work = "2.9.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/credentials)
-androidx_credentials = "1.3.0-alpha01"
+androidx_credentials = "1.3.0-alpha03"
 # [Document](https://developer.android.com/jetpack/androidx/releases/security)
 androidx_security-crypto = "1.1.0-alpha06"
-
 # [Document](https://developer.android.com/jetpack/androidx/releases/test)
 androidx_test = "1.5.0"
 androidx_espresso = "3.5.1"
@@ -82,8 +81,6 @@ android_desugar_jdk_libs = "2.0.4"
 # Google
 # [Github](https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md)
 material_components = "1.11.0"
-# [Github](https://github.com/google/accompanist)
-accompanist = "0.32.0"
 # [Document](https://developers.google.com/android/guides/setup)
 # [Document](https://developers.google.com/android/guides/google-services-plugin)
 google_services = "4.4.1"
@@ -97,13 +94,13 @@ google_identity = "1.1.0"
 # Firebase
 # [Document](https://firebase.google.com/docs/android/setup)
 # [Document](https://firebase.google.com/support/release-notes/android)
-firebase_bom = "32.8.0"
+firebase_bom = "32.8.1"
 firebase_crashlytics_plugin = "2.9.9"
 firebase_performance_plugin = "1.4.2"
 
 # Hilt
 # [Document](https://developer.android.com/training/dependency-injection/hilt-android)
-hilt = "2.51"
+hilt = "2.51.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/hilt)
 androidx_hilt = "1.2.0"
 
@@ -119,15 +116,15 @@ java_poet = "1.13.0"
 # [Github](https://github.com/square/okhttp)
 okhttp_bom = "4.12.0"
 # [Github](https://github.com/square/retrofit)
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 
 # Protobuf, GRPC
 # [GitHub](https://github.com/protocolbuffers/protobuf)
-protobuf = "3.25.3"
+protobuf = "4.26.1"
 # [GitHub](https://github.com/google/protobuf-gradle-plugin)
 protobuf_plugin = "0.9.4"
 # [Github](https://github.com/googleapis/sdk-platform-java/tree/main/java-common-protos)
-protobuf_google_common = "2.22.0"
+protobuf_google_common = "2.37.1"
 
 # Image
 # [Github](https://github.com/airbnb/lottie-android)
@@ -141,22 +138,15 @@ glide_webp = "2.6.4.16.0"
 # [Github](https://github.com/junit-team/junit5)
 junit5 = "5.10.2"
 junti5_android = "1.4.0"
-# [Github](https://github.com/kotest/kotest)
-# [Document](https://kotest.io/)
-kotest = "5.8.0"
 # [Document](https://mockk.io/)
 mockk = "1.13.10"
 # [Github](https://github.com/cashapp/turbine)
-turbine = "1.0.0"
+turbine = "1.1.0"
 # [Github](https://github.com/google/truth)
 truth = "1.4.2"
 # [Github](https://pinterest.github.io/ktlint)
 # [Github](https://github.com/JLLeitschuh/ktlint-gradle)
 ktlint = "12.1.0"
-# [Github](https://github.com/mockito/mockito)
-mockito = "5.10.0"
-# [Github](https://github.com/mockito/mockito-kotlin)
-mockito_kotlin = "5.2.1"
 
 # Logger
 # [Github](https://github.com/JakeWharton/timber)
@@ -215,10 +205,13 @@ androidx-preference = { group = "androidx.preference", name = "preference-ktx", 
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidx_webkit" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx_browser" }
 androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx_paging" }
+
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx_recyclerview" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx_constraintlayout" }
 androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx_startup" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx_viewpager2" }
+andoridx-work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidx_work" }
+androidx-work-multiprocess = { group = "androidx.work", name = "work-multiprocess", version.ref = "androidx_work" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidx_credentials" }
 androidx-credentials-play-service-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidx_credentials" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx_security-crypto" }
@@ -228,8 +221,6 @@ android-play-core = { group = "com.google.android.play", name = "core", version.
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android_desugar_jdk_libs" }
 
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material_components" }
-google-accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
-google-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "google_services" }
 google-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "google_services_base" }
 google-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google_services_auth" }
@@ -257,8 +248,9 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp_bom" }
 
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-converter-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlin_serialization_converter" }
+retrofit-bom = { group = "com.squareup.retrofit2", name = "retrofit-bom", version.ref = "retrofit" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit" }
+retrofit-converter-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization" }
 
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 
@@ -286,16 +278,12 @@ junit5-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.
 junit5-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
 junit5-android-test = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "junti5_android" }
 junit5-android-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "junti5_android" }
-kotest-runner = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
-kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 truth-ext = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }
-mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito_kotlin" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 

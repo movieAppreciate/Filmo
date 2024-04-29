@@ -9,7 +9,8 @@ abstract class BaseActivity<B : ViewBinding>(
     private val inflate: (LayoutInflater) -> B,
 ) : AppCompatActivity() {
     @Suppress("ktlint:standard:property-naming")
-    protected val TAG: String = this::class.java.simpleName
+    protected inline val TAG: String
+        get() = this::class.java.simpleName
 
     protected lateinit var binding: B
 

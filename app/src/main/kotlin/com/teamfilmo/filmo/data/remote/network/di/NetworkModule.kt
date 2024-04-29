@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.data.remote.network.di
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.teamfilmo.filmo.data.remote.network.adapter.ResultCallAdapter
 import com.teamfilmo.filmo.data.remote.network.policy.BaseUrl
 import com.teamfilmo.filmo.data.remote.network.policy.ConnectTimeout
@@ -18,6 +17,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)

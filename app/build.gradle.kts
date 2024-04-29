@@ -5,10 +5,10 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.junit5)
+    alias(libs.plugins.hilt)
 }
 
 @Suppress("ktlint:standard:property-naming")
@@ -136,6 +136,7 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    implementation(platform(libs.retrofit.bom))
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.serialization)
 
@@ -165,7 +166,7 @@ dependencies {
     testRuntimeOnly(libs.junit5.engine)
 
     testImplementation(libs.kotlin.test.junit)
-    testImplementation(libs.kotlin.reflection)
+    // testRuntimeOnly(libs.kotlin.reflection)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
@@ -196,7 +197,7 @@ dependencies {
     androidTestRuntimeOnly(libs.junit5.android.runner)
 
     androidTestImplementation(libs.kotlin.test.junit)
-    androidTestImplementation(libs.kotlin.reflection)
+    // androidTestRuntimeOnly(libs.kotlin.reflection)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.turbine)
 
@@ -219,17 +220,8 @@ kapt {
     correctErrorTypes = true
 }
 
-val isArmProcessor: Boolean =
-//    System.getenv("PROCESSOR_ARCHITECTURE").contains("arm")
-    Runtime.getRuntime().exec("uname -p")
-        .inputStream
-        .bufferedReader()
-        .use { reader -> reader.readLine()?.trim() }
-        .let { processor -> processor == "arm" }
-
 protobuf {
-    val protocClassifier = if (isArmProcessor) ":osx-x86_64" else ""
-    val protobufVersion = libs.versions.protobuf.asProvider().get() + protocClassifier
+    val protobufVersion = libs.versions.protobuf.asProvider().get()
 
     protoc {
         artifact = "com.google.protobuf:protoc:$protobufVersion"

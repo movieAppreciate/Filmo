@@ -11,7 +11,8 @@ abstract class BaseFragment<B : ViewBinding>(
     private val inflater: (LayoutInflater, ViewGroup?, Boolean) -> B,
 ) : Fragment() {
     @Suppress("ktlint:standard:property-naming")
-    protected val TAG: String = this::class.java.simpleName
+    protected inline val TAG: String
+        get() = this::class.java.simpleName
 
     @Suppress("ktlint:standard:property-naming")
     protected var _binding: B? = null
