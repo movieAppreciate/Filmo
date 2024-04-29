@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Filmo" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.Filmo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Body.lg</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Body.md</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Body.sm</item>
+        <item name="textAppearanceHeadingLarge">@style/TextAppearance.AppCompat.Heading.lg</item>
+        <item name="textAppearanceHeadingMedium">@style/TextAppearance.AppCompat.Heading.md</item>
+        <item name="textAppearanceHeadingSmall">@style/TextAppearance.AppCompat.Heading.sm</item>
+        <item name="textAppearanceSubHeadingLarge">@style/TextAppearance.AppCompat.SubHeading.lg
+        </item>
+        <item name="textAppearanceSubHeadingMedium">@style/TextAppearance.AppCompat.SubHeading.md
+        </item>
+        <item name="textAppearanceSubHeadingSmall">@style/TextAppearance.AppCompat.SubHeading.sm
+        </item>
+    </style>
 </resources>

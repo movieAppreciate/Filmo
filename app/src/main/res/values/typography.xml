@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.AppCompat.Heading">
+        <item name="android:font">@font/bold</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.SubHeading">
+        <item name="android:font">@font/medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body">
+        <item name="android:font">@font/regular</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Heading.lg">
+        <item name="android:textSize">24dp</item>
+        <item name="android:lineHeight">8dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Heading.md">
+        <item name="android:textSize">20dp</item>
+        <item name="android:lineHeight">10dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Heading.sm">
+        <item name="android:textSize">16dp</item>
+        <item name="android:lineHeight">8dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.SubHeading.lg">
+        <item name="android:textSize">20dp</item>
+        <item name="android:lineHeight">10dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.SubHeading.md">
+        <item name="android:textSize">16dp</item>
+        <item name="android:lineHeight">8dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.SubHeading.sm">
+        <item name="android:textSize">14dp</item>
+        <item name="android:lineHeight">7dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body.lg">
+        <item name="android:textSize">16dp</item>
+        <item name="android:lineHeight">8dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body.md">
+        <item name="android:textSize">14dp</item>
+        <item name="android:lineHeight">7dp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body.sm">
+        <item name="android:textSize">12dp</item>
+        <item name="android:lineHeight">6dp</item>
+    </style>
+    
+</resources>
