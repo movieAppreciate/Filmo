@@ -41,7 +41,7 @@ val Project.isAndroidProject: Boolean
 allprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     configure<KtlintExtension> {
-        version.set("1.1.1")
+        version.set("1.2.1")
         outputColorName.set("RED")
         android.set(true)
     }
