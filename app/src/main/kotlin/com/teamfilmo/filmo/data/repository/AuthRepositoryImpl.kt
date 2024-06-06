@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
 import com.teamfilmo.filmo.domain.repository.AuthRepository
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import javax.inject.Inject
 
 class AuthRepositoryImpl
@@ -20,7 +21,7 @@ class AuthRepositoryImpl
         override suspend fun login(
             uid: String,
             type: String,
-        ): Result<String> {
+        ): Result<AuthResponse> {
             return authRemoteDataSource.login(uid, type)
         }
     }

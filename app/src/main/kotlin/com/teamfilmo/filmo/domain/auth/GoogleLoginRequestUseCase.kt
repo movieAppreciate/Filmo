@@ -5,6 +5,7 @@ import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.teamfilmo.filmo.domain.repository.AuthRepository
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import javax.inject.Inject
 
 class GoogleLoginRequestUseCase
@@ -12,7 +13,7 @@ class GoogleLoginRequestUseCase
     constructor(
         private val authRepository: AuthRepository,
     ) {
-        suspend operator fun invoke(credential: Credential): Result<String> {
+        suspend operator fun invoke(credential: Credential): Result<AuthResponse> {
             val userId = getUserIdFromCredential(credential)
             return authRepository.login(userId, AuthType.GOOGLE.value)
         }

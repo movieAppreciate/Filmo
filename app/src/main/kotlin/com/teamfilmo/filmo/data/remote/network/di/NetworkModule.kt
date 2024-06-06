@@ -59,12 +59,13 @@ object NetworkModule {
         @ContentType contentType: String,
     ): Retrofit {
         val contentType = contentType.toMediaType()
+        val jsonConfig = Json { ignoreUnknownKeys = true }
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(jsonConfig.asConverterFactory(contentType))
             .build()
     }
 }

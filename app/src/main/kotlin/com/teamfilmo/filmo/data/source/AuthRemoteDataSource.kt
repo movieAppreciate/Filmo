@@ -1,5 +1,7 @@
 package com.teamfilmo.filmo.data.source
 
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
+
 interface AuthRemoteDataSource {
     suspend fun signUp(
         uid: String,
@@ -10,5 +12,5 @@ interface AuthRemoteDataSource {
     suspend fun login(
         uid: String,
         type: String,
-    ): Result<String>
+    ): Result<AuthResponse>
 }

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.network.interceptor
 
+import android.util.Log
 import com.teamfilmo.filmo.data.remote.service.AuthService
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import java.net.HttpURLConnection
@@ -29,6 +30,8 @@ class UserAuthInterceptor(
 
             val accessToken =
                 dataStore.get().getUserToken().firstOrNull()?.let { it.ifEmpty { null } }
+
+            Log.d("로그인 access token", accessToken.toString())
 
             val response = chain.proceedWithToken(request, accessToken)
 

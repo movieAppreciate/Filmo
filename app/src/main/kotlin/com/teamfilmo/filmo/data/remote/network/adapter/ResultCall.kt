@@ -12,7 +12,7 @@ class ResultCall<T : Any>(
     private val retryCount: Int = 0,
 ) : Call<Result<T>> {
     override fun enqueue(callback: Callback<Result<T>>) {
-        call.enqueue(
+        call.clone().enqueue(
             object : Callback<T> {
                 override fun onResponse(
                     call: Call<T>,

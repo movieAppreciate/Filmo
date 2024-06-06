@@ -1,5 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.ui.model.report.Report
+import com.teamfilmo.filmo.ui.model.report.ReportInfo
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -120,7 +122,7 @@ interface ReportService {
          */
         @Query("keyword")
         keyword: String? = null,
-    ): Result<String>
+    ): Result<ReportInfo>
 
     /**
      * 다른 유저의 감상문 검색
@@ -144,7 +146,7 @@ interface ReportService {
          */
         @Path("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<Report>
 
     /**
      * 감상문 삭제

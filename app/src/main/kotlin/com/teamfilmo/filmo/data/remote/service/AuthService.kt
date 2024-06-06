@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -44,7 +45,7 @@ interface AuthService {
          */
         @Query("type")
         type: String,
-    ): Result<String>
+    ): Result<AuthResponse>
 
     /**
      * 토큰 재발급

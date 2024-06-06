@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base application theme. -->
 
-    <style name="Theme.Filmo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!--        <item name="textAppearanceHeadingLarge">@style/TextAppearance.AppCompat.Heading.lg</item>-->
-        <!--        <item name="textAppearanceHeadingMedium">@style/TextAppearance.AppCompat.Heading.md</item>-->
-        <!--        <item name="textAppearanceHeadingSmall">@style/TextAppearance.AppCompat.Heading.sm</item>-->
-        <!--        <item name="textAppearanceSubHeadingLarge">@style/TextAppearance.AppCompat.SubHeading.lg-->
-        <!--        </item>-->
-        <!--        <item name="textAppearanceSubHeadingMedium">@style/TextAppearance.AppCompat.SubHeading.md-->
-        <!--        </item>-->
-        <!--        <item name="textAppearanceSubHeadingSmall">@style/TextAppearance.AppCompat.SubHeading.sm-->
-        <!--        </item>-->
-        <!--        <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Body.lg</item>-->
-        <!--        <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Body.md</item>-->
-        <!--        <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Body.sm</item>-->
+    <style name="Theme.Filmo" parent="Theme.AppCompat.DayNight.NoActionBar"/>
+<!--                <item name="textAppearanceHeadingLarge">@style/TextAppearance.AppCompat.Heading.lg</item>-->
+<!--                <item name="textAppearanceHeadingMedium">@style/TextAppearance.AppCompat.Heading.md</item>-->
+<!--                <item name="textAppearanceHeadingSmall">@style/TextAppearance.AppCompat.Heading.sm</item>-->
+<!--                <item name="textAppearanceSubHeadingLarge">@style/TextAppearance.AppCompat.SubHeading.lg-->
+<!--                </item>-->
+<!--                <item name="textAppearanceSubHeadingMedium">@style/TextAppearance.AppCompat.SubHeading.md-->
+<!--                </item>-->
+<!--                <item name="textAppearanceSubHeadingSmall">@style/TextAppearance.AppCompat.SubHeading.sm-->
+<!--                </item>-->
+<!--                <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Body.lg</item>-->
+<!--                <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Body.md</item>-->
+<!--                <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Body.sm</item>-->
+    <style name="Base.Theme.Filmo" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Circle50">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="Circle10">
+        <item name="cornerSize">10%</item>
     </style>
 </resources>

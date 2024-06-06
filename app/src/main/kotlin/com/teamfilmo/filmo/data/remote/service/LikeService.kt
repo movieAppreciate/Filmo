@@ -15,11 +15,12 @@ interface LikeService {
          */
         @Query("reportId")
         reportId: String,
-        /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
+    ): Result<String>
+
+    @POST("/like/cancel")
+    suspend fun cancel(
+        @Query("reportId")
+        reportId: String,
     ): Result<String>
 
     /**
@@ -32,7 +33,7 @@ interface LikeService {
          */
         @Query("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<Int>
 
     /**
      * 좋아요 확인
@@ -44,10 +45,5 @@ interface LikeService {
          */
         @Query("reportId")
         reportId: String,
-        /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
-    ): Result<String>
+    ): Result<Boolean>
 }

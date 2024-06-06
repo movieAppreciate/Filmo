@@ -89,6 +89,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.swiperefreshlayout)
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
     // Kotlin
@@ -108,7 +109,6 @@ dependencies {
     implementation(libs.bundles.navigation)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
-    implementation(libs.androidx.browser)
 
     implementation(libs.google.material)
 
@@ -166,7 +166,7 @@ dependencies {
     testRuntimeOnly(libs.junit5.engine)
 
     testImplementation(libs.kotlin.test.junit)
-    // testRuntimeOnly(libs.kotlin.reflection)
+    testImplementation(libs.kotlin.reflection)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
@@ -197,7 +197,7 @@ dependencies {
     androidTestRuntimeOnly(libs.junit5.android.runner)
 
     androidTestImplementation(libs.kotlin.test.junit)
-    // androidTestRuntimeOnly(libs.kotlin.reflection)
+    androidTestImplementation(libs.kotlin.reflection)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.turbine)
 

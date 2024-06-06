@@ -14,18 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Filmo"
-
         tools:targetApi="31">
+        <activity android:name=".ui.report.MainPageActivity"
+            android:theme="@style/Theme.Filmo"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="true"
             android:theme="@style/Theme.Filmo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
 
-            </intent-filter>
         </activity>
+        <activity android:name=".ui.search.SearchActivity" />
+        <activity android:name=".ui.notification.NotificationActivity" />
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -35,6 +40,7 @@
 
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
 
                 <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
                 <data

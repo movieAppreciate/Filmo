@@ -1,11 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="gap_8">8dp</dimen>
-    <dimen name="gap_16">16dp</dimen>
-    <dimen name="gap_20">20dp</dimen>
-
-    <dimen name="display_padding">@dimen/gap_20</dimen>
-    <dimen name="navigation_padding_vertical">@dimen/gap_8</dimen>
-    <dimen name="navigation_padding_horizontal">@dimen/gap_20</dimen>
-
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

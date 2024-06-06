@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.databinding.DataBindingUtil.setContentView
 import com.teamfilmo.filmo.R
 
 class MainActivity : ComponentActivity() {

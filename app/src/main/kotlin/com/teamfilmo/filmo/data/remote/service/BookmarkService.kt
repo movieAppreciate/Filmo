@@ -1,5 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
+import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
+import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -9,19 +12,14 @@ interface BookmarkService {
     /**
      * 북마크 등록
      */
-    @POST("/bookmark/register")
+    @POST("/bookmark/regist")
     suspend fun registerBookmark(
-        /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
         /**
          * 북마크하려는 감상문 아이디
          */
         @Query("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<BookmarkResponse>
 
     /**
      * 북마크 리스트 조회
@@ -29,16 +27,23 @@ interface BookmarkService {
     @GET("/bookmark/list")
     suspend fun getBookmarkList(
         /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
-        /**
          * 마지막으로 조회된 북마크 아이디, 최초는 빈값
          */
         @Query("bookmarkId")
-        bookmarkId: String? = null,
-    ): Result<String>
+        bookmarkId: Int? = null,
+    ): Result<BookmarkList>
+
+    /**
+     * 북마크 수 조희
+     */
+    @GET("/bookmark/count")
+    suspend fun getBookmarkCount(
+        /**
+         * 조회하려는 감상문 아이디
+         */
+        @Query("reportId")
+        reportId: String,
+    ): Result<BookmarkCount>
 
     /**
      * 북마크 삭제
@@ -49,6 +54,6 @@ interface BookmarkService {
          * 북마크 아이디
          */
         @Query("bookmarkId")
-        bookmarkId: String,
+        bookmarkId: Int,
     ): Result<String>
 }
