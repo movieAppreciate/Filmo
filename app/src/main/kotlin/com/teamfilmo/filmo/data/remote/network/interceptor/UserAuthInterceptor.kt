@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.data.remote.network.interceptor
 
-import android.util.Log
 import com.teamfilmo.filmo.data.remote.service.AuthService
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import java.net.HttpURLConnection
@@ -12,6 +11,7 @@ import kotlinx.coroutines.sync.withLock
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import timber.log.Timber
 
 class UserAuthInterceptor(
     private val dataStore: Provider<UserTokenSource>,
@@ -31,7 +31,7 @@ class UserAuthInterceptor(
             val accessToken =
                 dataStore.get().getUserToken().firstOrNull()?.let { it.ifEmpty { null } }
 
-            Log.d("로그인 access token", accessToken.toString())
+            Timber.d("로그인 access token", accessToken.toString())
 
             val response = chain.proceedWithToken(request, accessToken)
 
@@ -51,7 +51,7 @@ class UserAuthInterceptor(
 
                     val result = authService.get().refreshToken(currentAccessToken, currentRefreshToken)
 
-                    return@withLock result.map { Token(it, it) }
+                    return@withLock result.map { Token(it.accessToken, it.refreshToken) }
                         .fold(
                             onSuccess = { it },
                             onFailure = { Token(null, null) },

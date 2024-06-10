@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.data.remote.source
 
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.domain.repository.ReportRepository
-import com.teamfilmo.filmo.ui.model.report.Report
-import com.teamfilmo.filmo.ui.model.report.ReportInfo
+import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.ReportInfo
 import javax.inject.Inject
 
 class ReportRepositoryImpl

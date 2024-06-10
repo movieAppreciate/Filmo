@@ -1,17 +1,19 @@
 package com.teamfilmo.filmo.ui.search
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
+import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivitySearchBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class SearchActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySearchBinding
+@AndroidEntryPoint
+class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel, SearchEffect, SearchEvent>(
+    ActivitySearchBinding::inflate,
+) {
+    override val viewModel: SearchViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onBindLayout() {
+    }
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun handleEffect(effect: SearchEffect) {
     }
 }

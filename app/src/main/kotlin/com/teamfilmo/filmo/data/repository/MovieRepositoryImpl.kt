@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.domain.repository.MovieRepository
-import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.ui.model.movie.MovieResponse
+import com.teamfilmo.filmo.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.model.movie.MovieResponse
 import javax.inject.Inject
 
 class MovieRepositoryImpl

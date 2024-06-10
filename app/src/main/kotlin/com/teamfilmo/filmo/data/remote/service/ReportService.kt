@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.ui.model.report.Report
-import com.teamfilmo.filmo.ui.model.report.ReportInfo
+import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.ReportInfo
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path

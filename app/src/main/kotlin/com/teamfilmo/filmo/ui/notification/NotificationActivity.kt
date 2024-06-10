@@ -1,17 +1,19 @@
 package com.teamfilmo.filmo.ui.notification
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
+import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityNotificationBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class NotificationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityNotificationBinding
+@AndroidEntryPoint
+class NotificationActivity : BaseActivity<ActivityNotificationBinding, NotificationViewModel, NotificationEffect, NotificationEvent>(
+    ActivityNotificationBinding::inflate,
+) {
+    override val viewModel: NotificationViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onBindLayout() {
+    }
 
-        binding = ActivityNotificationBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun handleEffect(effect: NotificationEffect) {
     }
 }

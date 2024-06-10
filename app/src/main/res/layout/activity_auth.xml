@@ -1,76 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:paddingHorizontal="20dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
+        android:id="@+id/kakao_login"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/naver_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
+        android:id="@+id/naver_login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:paddingHorizontal="20dp">
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/google_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/kakao_login" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="140dp"
-            android:src="@drawable/ic_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
+        android:id="@+id/google_login"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/naver_login" />
 
-        <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
-            android:id="@+id/kakao_login"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@id/naver_login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            bind:background="@{@drawable/bg_kakao}"
-            bind:buttonIcon="@{@drawable/ic_kakao}"
-            bind:buttonText='@{"카카오로 시작하기"}'
-            bind:buttonTextColor="@{@color/button_text}" />
+    <TextView
+        android:id="@+id/notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:textColor="#9DA4AE"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="계정 생성 시 개인정보수집방침 및 이용약관\n(마케팅 정보 수신 동의 포함)에 동의하게 됩니다." />
 
-        <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
-            android:id="@+id/naver_login"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@id/google_login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/kakao_login"
-            bind:background="@{@drawable/bg_naver}"
-            bind:buttonIcon="@{@drawable/ic_naver}"
-            bind:buttonText='@{"네이버로 시작하기"}'
-            bind:buttonTextColor="@{@color/white}" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.teamfilmo.filmo.ui.widget.WidgetAuthButton
-            android:id="@+id/google_login"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/naver_login"
-            bind:background="@{@drawable/bg_google}"
-            bind:buttonIcon="@{@drawable/ic_google}"
-            bind:buttonText='@{"구글로 시작하기"}' />
-
-        <TextView
-            android:id="@+id/notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="계정 생성 시 개인정보수집방침 및 이용약관\n(마케팅 정보 수신 동의 포함)에 동의하게 됩니다."
-            android:textColor="#9DA4AE"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

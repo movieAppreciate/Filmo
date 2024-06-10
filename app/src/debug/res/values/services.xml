@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="access_token" translatable="false"></string>
+    <string name="access_token" translatable="false">eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYW1zYW5nbW9vbiIsInVzZXJJZCI6ImFiYjY3YTZiLTlkYmMtNDNiZi1hMjFjLTc2M2UyMzU3OGI2MyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE3NDM2ODg5ODl9.thWQNAaylBePRisCmcganZSU23ycEZ6UQClYIYbIxMo</string>
 </resources>

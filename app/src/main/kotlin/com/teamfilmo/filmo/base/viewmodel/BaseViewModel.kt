@@ -28,7 +28,7 @@ abstract class BaseViewModel<EF : BaseEffect, EV : BaseEvent> : ViewModel() {
         }
     }
 
-    open fun sendEvent(event: EV) = Unit
+    open fun handleEvent(event: EV) = Unit
 
     protected fun launch(
         context: CoroutineContext = EmptyCoroutineContext,

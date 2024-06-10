@@ -1,10 +1,10 @@
 package com.teamfilmo.filmo.data.repository
 
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.data.source.BookmarkDataSource
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
 import javax.inject.Inject
 
 class BookmarkRepositoryImpl
@@ -16,15 +16,15 @@ class BookmarkRepositoryImpl
             return bookmarkDataSource.registBookmark(reportId)
         }
 
-        override suspend fun deleteBookmark(bookmarkId: Int): Result<String> {
+        override suspend fun deleteBookmark(bookmarkId: Long): Result<Unit> {
             return bookmarkDataSource.deleteBookmark(bookmarkId)
         }
 
-        override suspend fun getBookmarkList(): Result<BookmarkList> {
+        override suspend fun getBookmarkList(): Result<BookmarkListResponse> {
             return bookmarkDataSource.getBookmarkList()
         }
 
-        override suspend fun getBookmarkCount(reportId: String): Result<BookmarkCount> {
+        override suspend fun getBookmarkCount(reportId: String): Result<BookmarkCountResponse> {
             return bookmarkDataSource.getBookmarkCount(reportId)
         }
     }

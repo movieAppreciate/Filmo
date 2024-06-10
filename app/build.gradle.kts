@@ -72,7 +72,6 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
         viewBinding = true
     }
 
@@ -94,7 +93,7 @@ dependencies {
 
     // Kotlin
     implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.stdlib.jdk8)
+    runtimeOnly(libs.kotlin.reflection)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
@@ -214,10 +213,6 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 protobuf {

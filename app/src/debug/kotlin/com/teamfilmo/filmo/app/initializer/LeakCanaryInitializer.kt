@@ -1,14 +1,14 @@
 package com.teamfilmo.filmo.app.initializer
 
 import android.content.Context
-import android.util.Log
 import androidx.startup.Initializer
 import com.facebook.flipper.plugins.leakcanary2.FlipperLeakEventListener
 import leakcanary.LeakCanary
+import timber.log.Timber
 
 class LeakCanaryInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.d("LeakCanaryInitializer", "LeakCanaryInitializer create")
+        Timber.d("LeakCanaryInitializer", "LeakCanaryInitializer create")
         LeakCanary.config =
             LeakCanary.config.run {
                 copy(eventListeners = eventListeners + FlipperLeakEventListener())

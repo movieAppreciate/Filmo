@@ -15,23 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Filmo"
         tools:targetApi="31">
-        <activity android:name=".ui.report.MainPageActivity"
-            android:theme="@style/Theme.Filmo"
+        <activity
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.auth.AuthActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Filmo">
-
-        </activity>
+        <activity android:name=".ui.report.ReportFragment" />
+        <activity android:name=".ui.auth.AuthActivity" />
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.notification.NotificationActivity" />
 
+        <!-- Kakao Login Page -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -52,7 +49,11 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            android:exported="false">
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.teamfilmo.filmo.app.initializer.TimberInitializer"
+                android:value="androidx.startup" />
             <meta-data
                 android:name="com.teamfilmo.filmo.app.initializer.NaverInitializer"
                 android:value="androidx.startup" />

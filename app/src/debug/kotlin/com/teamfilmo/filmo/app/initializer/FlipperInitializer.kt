@@ -1,7 +1,6 @@
 package com.teamfilmo.filmo.app.initializer
 
 import android.content.Context
-import android.util.Log
 import androidx.startup.Initializer
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.plugins.crashreporter.CrashReporterPlugin
@@ -17,10 +16,11 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import timber.log.Timber
 
 class FlipperInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.d("FlipperInitializer", "FlipperInitializer create")
+        Timber.d("FlipperInitializer", "FlipperInitializer create")
         SoLoader.init(context, false)
 
         val descriptorMapping = DescriptorMapping.withDefaults()

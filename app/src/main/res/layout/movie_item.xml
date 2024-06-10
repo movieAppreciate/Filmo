@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     app:cardCornerRadius="15dp"
     android:layout_marginHorizontal="20dp"
@@ -13,6 +12,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <FrameLayout
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="14sp"
-            android:text="애매하다. 영화관을 나서면서 나도 모르게 혼잣말을 중얼거렸다. 의심하는데 밑바탕이 없으니 집요한 추..."/>
+            android:text="애매하다. 영화관을 나서면서 나도 모르게 혼잣말을 중얼거렸다. 의심하는데 밑바탕이 없으니 집요한 추..." />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -154,12 +154,6 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_reply"
                 app:layout_constraintTop_toTopOf="@+id/tv_like_count" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </LinearLayout>
-
-
-
 </com.google.android.material.card.MaterialCardView>

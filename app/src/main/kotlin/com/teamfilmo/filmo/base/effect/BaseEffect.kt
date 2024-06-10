@@ -1,5 +1,5 @@
 package com.teamfilmo.filmo.base.effect
 
-sealed interface BaseEffect
+interface BaseEffect
 
 data object NoEffect : BaseEffect

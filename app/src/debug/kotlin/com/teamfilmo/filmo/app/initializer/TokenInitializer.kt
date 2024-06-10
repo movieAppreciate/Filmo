@@ -1,7 +1,6 @@
 package com.teamfilmo.filmo.app.initializer
 
 import android.content.Context
-import android.util.Log
 import androidx.startup.Initializer
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.source.UserTokenSource
@@ -11,17 +10,18 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 
 class TokenInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         val accessToken = context.getString(R.string.access_token)
         val refreshToken = context.getString(R.string.refresh_token)
-        Log.d("TokenInitializer", "TokenInitializer token: $accessToken, $refreshToken")
+        Timber.d("TokenInitializer token: $accessToken, $refreshToken")
         val hilt = EntryPointAccessors.fromApplication(context, InitializerEntry::class.java)
 
         val userTokenSource = runBlocking { hilt.getUserTokenSource().getUserToken().firstOrNull() }
         if (userTokenSource.isNullOrEmpty()) {
-            Log.d("TokenInitializer", "Token is empty, updating token")
+            Timber.d("Token is empty, updating token")
             runBlocking { hilt.getUserTokenSource().updateToken(accessToken, refreshToken) }
         }
     }

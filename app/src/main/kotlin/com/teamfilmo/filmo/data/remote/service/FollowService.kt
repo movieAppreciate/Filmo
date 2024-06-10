@@ -1,54 +1,43 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.follow.FollowResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface FollowService {
     /**
-     * 팔로잉/차단 등록
+     * 팔로잉 등록
      */
     @POST("follow/regist")
     suspend fun registFollow(
         /**
-         * 현재 사용자 아이디
-         */
-        @Query("userId") userId: String,
-        /**
          * 대상 아이디
          */
         @Query("followTarget") followTarget: String,
-        /**
-         * follow(팔로우) or block(차단)
-         */
-        @Query("type") type: String,
-    ): Result<String>
+    ): Result<FollowResponse>
 
     /**
-     * 팔로잉/차단 취소
+     * 팔로잉 취소
      */
     @POST("follow/cancle")
-    suspend fun cancleFollow(
+    suspend fun cancelFollow(
         /**
          * 팔로우 id
          */
         @Query("followId") followId: String,
-    ): Result<String>
+    ): Result<Unit>
 
     /**
-     * 팔로잉/차단 확인
+     * 팔로잉 확인
      */
     @GET("follow/isFollow")
     suspend fun isFollow(
         /**
-         * 유저 아이디
-         */
-        @Query("userId") userId: String,
-        /**
          * 상대 아이디
          */
         @Query("followTarget") followTarget: String,
-    ): Result<String>
+    ): Result<Boolean>
 
     /**
      * 팔로잉/차단 목록
@@ -58,7 +47,7 @@ interface FollowService {
         /**
          * 유저 아이디
          */
-        @Query("userId") userId: String,
+        @Query("otherUserId") userId: String? = null,
         /**
          * 마지막으로 조회된 유저 아이디,
          */
@@ -67,10 +56,6 @@ interface FollowService {
          * 검색어
          */
         @Query("keyword") keyword: String? = null,
-        /**
-         * follow(팔로우) or block(차단)
-         */
-        @Query("type") type: String,
     ): Result<String>
 
     /**

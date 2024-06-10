@@ -1,5 +1,9 @@
 package com.teamfilmo.filmo.data.remote.network.adapter
 
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -37,17 +41,30 @@ class ResultCall<T : Any>(
                     t: Throwable,
                 ) {
                     if (retryCount < maxRetryCount) {
-                        clone().enqueue(callback)
+                        callback.onResponse(
+                            this@ResultCall,
+                            Response.success(Result.failure(t)),
+                        )
                     } else {
-                        val result = Result.failure<T>(t)
-                        callback.onResponse(this@ResultCall, Response.success(result))
+                        when (t) {
+                            is SocketException, is SocketTimeoutException, is SSLHandshakeException, is UnknownHostException -> {
+                                clone().enqueue(callback)
+                            }
+
+                            else -> {
+                                callback.onResponse(
+                                    this@ResultCall,
+                                    Response.success(Result.failure(t)),
+                                )
+                            }
+                        }
                     }
                 }
             },
         )
     }
 
-    override fun clone(): Call<Result<T>> = ResultCall(call, maxRetryCount, retryCount + 1)
+    override fun clone(): Call<Result<T>> = ResultCall(call.clone(), maxRetryCount, retryCount + 1)
 
     override fun execute(): Response<Result<T>> {
         throw UnsupportedOperationException("ResponseCall doesn't support execute")

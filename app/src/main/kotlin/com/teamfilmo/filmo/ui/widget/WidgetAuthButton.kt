@@ -1,40 +1,13 @@
 package com.teamfilmo.filmo.ui.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
 import com.teamfilmo.filmo.databinding.WidgetAuthButtonBinding
 
-@BindingMethods(
-    value = [
-        BindingMethod(
-            type = WidgetAuthButton::class,
-            attribute = "bind:background",
-            method = "setBackground",
-        ),
-        BindingMethod(
-            type = WidgetAuthButton::class,
-            attribute = "bind:buttonText",
-            method = "setButtonText",
-        ),
-        BindingMethod(
-            type = WidgetAuthButton::class,
-            attribute = "bind:buttonTextColor",
-            method = "setButtonTextColor",
-        ),
-        BindingMethod(
-            type = WidgetAuthButton::class,
-            attribute = "bind:buttonIcon",
-            method = "setButtonIcon",
-        ),
-    ],
-)
 class WidgetAuthButton
     @JvmOverloads
     constructor(
@@ -54,20 +27,30 @@ class WidgetAuthButton
         }
 
         fun setButtonTextColor(
-            @ColorInt color: Int,
+            colorStateList: ColorStateList,
         ) {
-            binding.title.setTextColor(color)
+            binding.title.setTextColor(colorStateList)
         }
 
         fun setButtonIcon(
-            drawable: Drawable,
+            drawable: Drawable?,
         ) {
             binding.icon.setImageDrawable(drawable)
         }
-
-        fun setBackground(
-            @DrawableRes background: Int,
-        ) {
-            binding.root.setBackgroundResource(background)
-        }
     }
+
+fun WidgetAuthButton.setButtonText(text: String) {
+    setButtonText(text)
+}
+
+fun WidgetAuthButton.setButtonTextColor(
+    colorStateList: ColorStateList,
+) {
+    setButtonTextColor(colorStateList)
+}
+
+fun WidgetAuthButton.setButtonIcon(
+    drawable: Drawable?,
+) {
+    setButtonIcon(drawable)
+}

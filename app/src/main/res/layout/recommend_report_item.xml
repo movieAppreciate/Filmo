@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_margin="15dp"
     android:layout_height="300dp">
@@ -9,148 +8,142 @@
     <FrameLayout
         android:layout_width="200dp"
         android:background="@drawable/movieimage"
-        android:layout_height="300dp" >
+        android:layout_height="300dp">
 
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <ImageButton
-            android:id="@+id/bookmarkButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_bookmark"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_bookmark"
-            app:layout_constraintBottom_toTopOf="@+id/tvMovieName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/white" />
-
-        <TextView
-            android:id="@+id/tvMovieName"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="외계+인 2부"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toTopOf="@+id/tvTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="외계인+인 감상문"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@+id/shapeableImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <ImageButton
+                android:id="@+id/bookmarkButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@drawable/ic_bookmark"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_bookmark"
+                app:layout_constraintBottom_toTopOf="@+id/tvMovieName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:tint="@color/white" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/shapeableImageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_duck"
-            app:layout_constraintBottom_toTopOf="@+id/likeButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:shapeAppearance="@style/Circle50" />
+            <TextView
+                android:id="@+id/tvMovieName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="외계+인 2부"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
-        <TextView
-            android:id="@+id/tvNickName"
-            android:layout_width="66dp"
-            android:layout_height="19dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="7dp"
-            android:text="뿔테안경이동진"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
-            app:layout_constraintEnd_toStartOf="@+id/textView3"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
-            app:layout_constraintTop_toTopOf="@+id/shapeableImageView" />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="외계인+인 감상문"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/shapeableImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/shapeableImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_duck"
+                app:layout_constraintBottom_toTopOf="@+id/likeButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:shapeAppearance="@style/Circle50" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:text="1시간 전"
-            android:textColor="@color/gray04"
-            android:textSize="8sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvNickName"
-            app:layout_constraintStart_toEndOf="@+id/tvNickName"
-            app:layout_constraintTop_toTopOf="@+id/tvNickName" />
-
-        <ImageButton
-            android:id="@+id/likeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_like"
-            android:src="@drawable/ic_like_unselected"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/white" />
-
-        <TextView
-            android:id="@+id/tvLikeCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:text="310"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-            app:layout_constraintStart_toEndOf="@+id/likeButton"
-            app:layout_constraintTop_toTopOf="@+id/likeButton" />
-
-        <ImageView
-            android:id="@+id/replyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ic_reply"
-            android:src="@drawable/ic_reply"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tvLikeCount"
-            app:layout_constraintTop_toTopOf="@+id/likeButton"
-            app:tint="@color/white" />
-
-        <TextView
-            android:id="@+id/tvReplyCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="7"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/tvLikeCount"
-            app:layout_constraintStart_toEndOf="@+id/replyButton"
-            app:layout_constraintTop_toTopOf="@+id/tvLikeCount" />
+            <TextView
+                android:id="@+id/tvNickName"
+                android:layout_width="66dp"
+                android:layout_height="19dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="7dp"
+                android:text="뿔테안경이동진"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
+                app:layout_constraintEnd_toStartOf="@+id/textView3"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintTop_toTopOf="@+id/shapeableImageView" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="1시간 전"
+                android:textColor="@color/gray04"
+                android:textSize="8sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvNickName"
+                app:layout_constraintStart_toEndOf="@+id/tvNickName"
+                app:layout_constraintTop_toTopOf="@+id/tvNickName" />
+
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_like"
+                android:src="@drawable/ic_like_unselected"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tvLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="310"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+                app:layout_constraintStart_toEndOf="@+id/likeButton"
+                app:layout_constraintTop_toTopOf="@+id/likeButton" />
+
+            <ImageView
+                android:id="@+id/replyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/ic_reply"
+                android:src="@drawable/ic_reply"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvLikeCount"
+                app:layout_constraintTop_toTopOf="@+id/likeButton"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tvReplyCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="7"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLikeCount"
+                app:layout_constraintStart_toEndOf="@+id/replyButton"
+                app:layout_constraintTop_toTopOf="@+id/tvLikeCount" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-
-
 </com.google.android.material.card.MaterialCardView>
 

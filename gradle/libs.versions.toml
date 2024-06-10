@@ -6,7 +6,7 @@ targetSdk = "34"
 
 # Gradle
 # [Document](https://developer.android.com/build/releases/gradle-plugin)
-android_gradle_plugin = "8.4.0"
+android_gradle_plugin = "8.4.1"
 
 # Kotlin
 # [Github](https://github.com/JetBrains/kotlin)
@@ -20,10 +20,6 @@ kotlinx_serialization = "1.6.3"
 # [Github](https://github.com/google/ksp)
 kotlin_ksp = "1.9.24-1.0.20"
 
-activity = "1.9.0"
-fragment = "1.7.0"
-swiperefreshlayout = "1.1.0"
-
 # AndroidX
 # [Document](https://developer.android.com/jetpack/androidx/releases/core)
 androidx_core = "1.13.1"
@@ -31,13 +27,13 @@ androidx_core_splashscreen = "1.0.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/arch-core)
 androidx_arch_core = "2.2.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/appcompat)
-androidx_appcompat = "1.6.1"
+androidx_appcompat = "1.7.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/activity)
 androidx_activity = "1.9.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/fragment)
-androidx_fragment = "1.7.0"
+androidx_fragment = "1.7.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/lifecycle)
-androidx_lifecycle = "2.7.0"
+androidx_lifecycle = "2.8.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/navigation)
 androidx_navigation = "2.7.7"
 # [Document](https://developer.android.com/jetpack/androidx/releases/room)
@@ -47,23 +43,25 @@ androidx_datastore = "1.1.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/preference)
 androidx_preference = "1.2.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/webkit)
-androidx_webkit = "1.10.0"
+androidx_webkit = "1.11.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/browser)
 androidx_browser = "1.8.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/recyclerview)
 androidx_recyclerview = "1.3.2"
 # [Document](https://developer.android.com/jetpack/androidx/releases/constraintlayout)
 androidx_constraintlayout = "2.1.4"
+# [Document](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout)
+androidx_swiperefreshlayout = "1.1.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/viewpager2)
-androidx_viewpager2 = "1.1.0-rc01"
+androidx_viewpager2 = "1.1.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/paging)
-androidx_paging = "3.2.1"
+androidx_paging = "3.3.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/startup)
 androidx_startup = "1.1.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/work)
 androidx_work = "2.9.0"
 # [Document](https://developer.android.com/jetpack/androidx/releases/credentials)
-androidx_credentials = "1.3.0-alpha03"
+androidx_credentials = "1.3.0-beta01"
 # [Document](https://developer.android.com/jetpack/androidx/releases/security)
 androidx_security-crypto = "1.1.0-alpha06"
 # [Document](https://developer.android.com/jetpack/androidx/releases/test)
@@ -87,10 +85,10 @@ android_desugar_jdk_libs = "2.0.4"
 material_components = "1.12.0"
 # [Document](https://developers.google.com/android/guides/setup)
 # [Document](https://developers.google.com/android/guides/google-services-plugin)
-google_services = "4.4.1"
-google_services_base = "18.3.0"
+google_services = "4.4.2"
+google_services_base = "18.5.0"
 # [Document](https://developers.google.com/identity/sign-in/android)
-google_services_auth = "21.1.1"
+google_services_auth = "21.2.0"
 # [Document](https://developers.google.com/identity/android-credential-manager)
 # [Guide](https://developer.android.com/training/sign-in/credential-manager)
 google_identity = "1.1.0"
@@ -98,8 +96,8 @@ google_identity = "1.1.0"
 # Firebase
 # [Document](https://firebase.google.com/docs/android/setup)
 # [Document](https://firebase.google.com/support/release-notes/android)
-firebase_bom = "33.0.0"
-firebase_crashlytics_plugin = "2.9.9"
+firebase_bom = "33.1.0"
+firebase_crashlytics_plugin = "3.0.1"
 firebase_performance_plugin = "1.4.2"
 
 # Hilt
@@ -124,15 +122,15 @@ retrofit = "2.11.0"
 
 # Protobuf, GRPC
 # [GitHub](https://github.com/protocolbuffers/protobuf)
-protobuf = "4.26.1"
+protobuf = "4.27.1"
 # [GitHub](https://github.com/google/protobuf-gradle-plugin)
 protobuf_plugin = "0.9.4"
 # [Github](https://github.com/googleapis/sdk-platform-java/tree/main/java-common-protos)
-protobuf_google_common = "2.37.1"
+protobuf_google_common = "2.39.1"
 
 # Image
 # [Github](https://github.com/airbnb/lottie-android)
-lottie = "6.4.0"
+lottie = "6.4.1"
 # [Github](https://github.com/bumptech/glide)
 glide = "4.16.0"
 # [Github](https://github.com/zjupure/GlideWebpDecoder)
@@ -143,14 +141,14 @@ glide_webp = "2.6.4.16.0"
 junit5 = "5.10.2"
 junti5_android = "1.4.0"
 # [Document](https://mockk.io/)
-mockk = "1.13.10"
+mockk = "1.13.11"
 # [Github](https://github.com/cashapp/turbine)
 turbine = "1.1.0"
 # [Github](https://github.com/google/truth)
 truth = "1.4.2"
 # [Github](https://pinterest.github.io/ktlint)
 # [Github](https://github.com/JLLeitschuh/ktlint-gradle)
-ktlint = "12.1.0"
+ktlint = "12.1.1"
 
 # Logger
 # [Github](https://github.com/JakeWharton/timber)
@@ -209,6 +207,7 @@ androidx-preference = { group = "androidx.preference", name = "preference-ktx", 
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidx_webkit" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx_browser" }
 androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx_paging" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidx_swiperefreshlayout" }
 
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx_recyclerview" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx_constraintlayout" }
@@ -321,9 +320,6 @@ protobuf-gradlePlugin = { group = "com.google.protobuf", name = "protobuf-gradle
 ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
 androidx-navigation-safe-args-gradlePlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx_navigation" }
 junit5-gradlePlugin = { group = "de.mannodermaus.gradle.plugins", name = "android-junit5", version.ref = "junit5" }
-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
-androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 
 [bundles]

@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.ui.model.movie.MovieResponse
+import com.teamfilmo.filmo.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.model.movie.MovieResponse
 
 interface MovieRepository {
     suspend fun searchList(

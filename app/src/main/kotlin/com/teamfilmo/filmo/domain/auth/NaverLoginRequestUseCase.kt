@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.auth
 
+import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.domain.repository.AuthRepository
-import com.teamfilmo.filmo.ui.model.auth.AuthResponse
 import javax.inject.Inject
 
 class NaverLoginRequestUseCase
@@ -9,7 +9,7 @@ class NaverLoginRequestUseCase
     constructor(
         private val authRepository: AuthRepository,
     ) {
-        suspend operator fun invoke(email: String): Result<AuthResponse> {
+        suspend operator fun invoke(email: String): Result<LoginResponse> {
             return authRepository.login(email, AuthType.NAVER.value)
         }
     }

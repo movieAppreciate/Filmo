@@ -1,5 +1,5 @@
 package com.teamfilmo.filmo.base.event
 
-sealed interface BaseEvent
+open class BaseEvent
 
-data object NoEvent : BaseEvent
+data object NoEvent : BaseEvent()

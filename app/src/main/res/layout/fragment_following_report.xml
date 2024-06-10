@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -22,11 +19,10 @@
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/autoCompleteTv"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            style="@style/Circle10"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:inputType="none"
-            android:padding="1dp"
+            android:padding="5dp"
             android:text="인기순" />
     </com.google.android.material.textfield.TextInputLayout>
 

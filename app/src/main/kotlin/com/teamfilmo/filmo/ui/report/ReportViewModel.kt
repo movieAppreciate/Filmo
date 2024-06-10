@@ -3,22 +3,22 @@ package com.teamfilmo.filmo.ui.report
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import com.teamfilmo.filmo.domain.repository.ReportRepository
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkCount
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkList
-import com.teamfilmo.filmo.ui.model.bookmark.BookmarkResponse
-import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.ui.model.movie.MovieResponse
-import com.teamfilmo.filmo.ui.model.report.Report
-import com.teamfilmo.filmo.ui.model.report.ReportInfo
-import com.teamfilmo.filmo.ui.model.report.ReportItem
-import com.teamfilmo.filmo.ui.model.report.ReportList
+import com.teamfilmo.filmo.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.model.movie.MovieResponse
+import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.ReportInfo
+import com.teamfilmo.filmo.model.report.ReportItem
+import com.teamfilmo.filmo.model.report.ReportList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -51,8 +51,7 @@ class ReportViewModel
         private val movieRepository: MovieRepository,
         private val likeRepository: LikeRepository,
         private val bookmarkRepository: BookmarkRepository,
-    ) :
-    ViewModel() {
+    ) : BaseViewModel<ReportEffect, ReportEvent>() {
         private var genreIdList = listOf<String>()
         val uiState = MutableLiveData<UiState>()
 
@@ -110,7 +109,7 @@ class ReportViewModel
                     val bookmark = _bookmarkList.value?.find { it.reportId == reportId }
                     Log.d("북마크 토글", bookmark.toString())
                     if (bookmark != null) {
-                        deleteBookmark(bookmark.bookmarkId)
+                        deleteBookmark(bookmark.id)
                     } else {
                         registBookmark(reportId)
                     }
@@ -145,15 +144,15 @@ class ReportViewModel
             }
         }
 
-        private suspend fun getBookmark(): Result<BookmarkList> {
+        private suspend fun getBookmark(): Result<BookmarkListResponse> {
             return bookmarkRepository.getBookmarkList()
         }
 
-        suspend fun getBookmarkCount(reportId: String): Result<BookmarkCount> {
+        suspend fun getBookmarkCount(reportId: String): Result<BookmarkCountResponse> {
             return bookmarkRepository.getBookmarkCount(reportId)
         }
 
-        private suspend fun deleteBookmark(bookmarkId: Int): Result<String> {
+        private suspend fun deleteBookmark(bookmarkId: Long): Result<Unit> {
             val currentState = uiState.value ?: UiState()
             val newState =
                 currentState.copy(

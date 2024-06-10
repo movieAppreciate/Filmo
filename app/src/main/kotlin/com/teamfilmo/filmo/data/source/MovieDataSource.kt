@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.source
 
-import com.teamfilmo.filmo.ui.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.ui.model.movie.MovieResponse
+import com.teamfilmo.filmo.model.movie.DetailMovieResponse
+import com.teamfilmo.filmo.model.movie.MovieResponse
 
 interface MovieDataSource {
     suspend fun searchList(
