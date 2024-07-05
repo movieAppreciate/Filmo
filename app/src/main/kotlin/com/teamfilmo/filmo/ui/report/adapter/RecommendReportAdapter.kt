@@ -46,7 +46,7 @@ class RecommendReportAdapter : RecyclerView.Adapter<RecommendReportAdapter.Recom
     inner class RecommendViewHolder(private val binding: RecommendReportItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val likeButton: ImageButton = binding.likeButton
         private val bookmarkButton: ImageButton = binding.bookmarkButton
-        private var itemClick: ReportAdapter.ItemClick? = null
+        private var itemClick: AllMovieReportAdapter.ItemClick? = null
 
         init {
             likeButton.setOnClickListener {

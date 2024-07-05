@@ -11,7 +11,10 @@ class ReportRepositoryImpl
     constructor(
         private val reportDataSource: ReportDataSource,
     ) : ReportRepository {
-        override suspend fun searchReport(): Result<ReportInfo> {
+        override suspend fun searchReport(
+            lastReportId: String?,
+            keyword: String?,
+        ): Result<ReportInfo> {
             return reportDataSource.searchReport()
         }
 
