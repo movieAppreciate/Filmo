@@ -18,7 +18,6 @@ import com.teamfilmo.filmo.model.movie.MovieResponse
 import com.teamfilmo.filmo.model.report.Report
 import com.teamfilmo.filmo.model.report.ReportInfo
 import com.teamfilmo.filmo.model.report.ReportItem
-import com.teamfilmo.filmo.model.report.ReportList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -170,26 +169,24 @@ class ReportViewModel
             return reportRepository.searchReport()
         }
 
-        private fun mapForReportItem(
-            reportList: List<ReportList>,
-            likeList: MutableList<Boolean>,
-        ): List<ReportItem> {
-            return reportList.mapIndexed { index, reportItem ->
-                ReportItem(
-                    reportId = reportItem.reportId,
-                    title = reportItem.title,
-                    content = reportItem.content,
-                    createDate = reportItem.createDate,
-                    imageUrl = reportItem.imageUrl,
-                    nickname = reportItem.nickname,
-                    likeCount = reportItem.likeCount,
-                    replyCount = reportItem.replyCount,
-                    bookmarkCount = reportItem.bookmarkCount,
-                    isLiked = likeList[index],
-                    genreIds = genreIdList,
-                )
-            }
-        }
+//        private fun mapForReportItem(
+//            reportList: List<ReportList>,
+//            likeList: MutableList<Boolean>,
+//        ): List<ReportItem> {
+//            return reportList.mapIndexed { index, reportItem ->
+//                ReportItem(
+//                    reportId = reportItem.reportId,
+//                    title = reportItem.title,
+//                    content = reportItem.content,
+//                    createDate = reportItem.createDate,
+//                    imageUrl = reportItem.imageUrl,
+//                    nickname = reportItem.nickname,
+//                    likeCount = reportItem.likeCount,
+//                    replyCount = reportItem.replyCount,
+//                    bookmarkCount = reportItem.bookmarkCount,
+//                )
+//            }
+//        }
 
         private fun mapForMovieItem(
             reportId: String,
@@ -214,7 +211,6 @@ class ReportViewModel
                             }
                         }
 
-                        _report.value = mapForReportItem(response.reportList, likeList)
                         getReportList()
                     }
                 } else {

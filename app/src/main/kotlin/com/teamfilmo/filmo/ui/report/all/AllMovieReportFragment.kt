@@ -6,27 +6,26 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.databinding.FragmentMovieReportBinding
-import com.teamfilmo.filmo.ui.report.adapter.ReportAdapter
-import com.teamfilmo.filmo.ui.report.adapter.ReportAdapter2
+import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
+import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
-    BaseFragment<FragmentMovieReportBinding, AllMovieReportViewModel, AllMovieReportEffect, AllMovieReportEvent>(
-        FragmentMovieReportBinding::inflate,
+    BaseFragment<FragmentAllMovieReportBinding, AllMovieReportViewModel, AllMovieReportEffect, AllMovieReportEvent>(
+        FragmentAllMovieReportBinding::inflate,
     ),
     View.OnClickListener {
     override val viewModel: AllMovieReportViewModel by viewModels()
 
-    val reportAdapter by lazy {
-        ReportAdapter()
-    }
-    private val reportAdapter2 by lazy {
-        ReportAdapter2()
+    val allMovieReportAdapter by lazy {
+        AllMovieReportAdapter()
     }
 
     private fun onRefresh() {
@@ -61,47 +60,36 @@ class AllMovieReportFragment :
     override fun onBindLayout() {
         childFragmentManager.commit {
             setReorderingAllowed(true)
-//            add(R.id.recommend_fragment_container_view, RecommendReportFragment())
-        }
-//        reportViewModel.bookmarkList.observe(viewLifecycleOwner) { bookmarkList ->
-//            binding.reportRecyclerview1.apply {
-//                adapter = reportAdapter
-//                reportAdapter.setBookmark(bookmarkList)
-//            }
-//
-//            binding.reportRecyclerview2.apply {
-//                adapter = reportAdapter2
-//                reportAdapter2.setBookmark(bookmarkList)
-//            }
-//        }
 
-//        reportViewModel.report.observe(viewLifecycleOwner) { reportList ->
-//            binding.reportRecyclerview1.apply {
-//                adapter = reportAdapter
-//                reportAdapter.setReportInfo(reportList, 0, 2)
-//            }
-//
-//            binding.reportRecyclerview2.apply {
-//                adapter = reportAdapter2
-//                reportAdapter2.setReportInfo(reportList, 3, reportList.lastIndex)
-//            }
-//        }
-        reportAdapter.itemClick =
-            object : ReportAdapter.ItemClick {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.list.collect {
+                        Timber.d("전체 감상문", viewModel.list.toString())
+                        binding.allMovieReportRecyclerview.apply {
+                            adapter = allMovieReportAdapter
+                            allMovieReportAdapter.setReportInfo(viewModel.list.value)
+                        }
+                    }
+                }
+            }
+        }
+
+        allMovieReportAdapter.itemClick =
+            object : AllMovieReportAdapter.ItemClick {
                 override fun onClick(position: Int) {
                     Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
                     // todo : 본문 페이지로 이동하기
                 }
 
                 override fun onLikeClick(position: Int) {
-                    val report = reportAdapter.reportList[position]
+                    val report = allMovieReportAdapter.reportList[position]
                     lifecycleScope.launch {
 //                        reportViewModel.updateLike(report.reportId)
                     }
                 }
 
                 override fun onBookmarkClick(position: Int) {
-                    val report = reportAdapter.reportList[position]
+                    val report = allMovieReportAdapter.reportList[position]
                     lifecycleScope.launch {
 //                        reportViewModel.toggleBookmark(report.reportId)
                     }

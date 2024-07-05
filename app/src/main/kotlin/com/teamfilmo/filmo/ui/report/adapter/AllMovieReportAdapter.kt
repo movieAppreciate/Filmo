@@ -17,7 +17,7 @@ sealed class ReportPayload {
     data class LikeCountPayload(val likeCount: Int) : ReportPayload()
 }
 
-class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovieReportViewHolder>() {
     var bookmarkList: List<BookmarkResponse> = mutableListOf()
     var reportList: ArrayList<ReportItem> = arrayListOf()
 
@@ -35,15 +35,13 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     fun setReportInfo(
         newReportList: List<ReportItem>,
-        startIndex: Int,
-        endIndex: Int,
     ) {
-        val list = newReportList.subList(startIndex, endIndex + 1)
+        val list = newReportList
         val currentSize = reportList.size
         reportList.clear()
         reportList.addAll(list)
-        notifyItemRangeRemoved(startIndex, currentSize)
-        notifyItemRangeInserted(startIndex, reportList.size)
+        notifyItemRangeRemoved(0, currentSize)
+        notifyItemRangeInserted(0, reportList.size)
     }
 
     fun setBookmark(bookmarkList: List<BookmarkResponse>) {
@@ -54,18 +52,18 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ReportViewHolder {
+    ): AllMovieReportViewHolder {
         val binding = MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ReportViewHolder(binding)
+        return AllMovieReportViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: ReportViewHolder,
+        holder: AllMovieReportViewHolder,
         position: Int,
     ) {
         holder.bindItems(reportList[position])
-        holder.bindLikeImage(reportList[position].isLiked)
-        holder.bindLikeCount(reportList[position].likeCount)
+//        holder.bindLikeImage(reportList[position].isLiked)
+//        holder.bindLikeCount(reportList[position].likeCount)
 
         val isBookmarked =
             bookmarkList.any {
@@ -76,7 +74,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
     }
 
     override fun onBindViewHolder(
-        holder: ReportViewHolder,
+        holder: AllMovieReportViewHolder,
         position: Int,
         payloads: MutableList<Any>,
     ) {
@@ -90,16 +88,16 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }
 
-                    is ReportPayload.LikePayload -> {
-                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
-                        this.reportList[position].isLiked = payload.isLiked
-                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
-                    }
-
-                    is ReportPayload.LikeCountPayload -> {
-                        this.reportList[position].likeCount = payload.likeCount
-                        holder.bindLikeCount(payload.likeCount)
-                    }
+//                    is ReportPayload.LikePayload -> {
+//                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
+//                        this.reportList[position].isLiked = payload.isLiked
+//                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
+//                    }
+//
+//                    is ReportPayload.LikeCountPayload -> {
+//                        this.reportList[position].likeCount = payload.likeCount
+//                        holder.bindLikeCount(payload.likeCount)
+//                    }
 
                     else -> {
                     }
@@ -112,7 +110,7 @@ class ReportAdapter() : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
         return reportList.size
     }
 
-    inner class ReportViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AllMovieReportViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.movieImage.setOnClickListener {
                 itemClick?.onClick(adapterPosition)
