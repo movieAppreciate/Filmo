@@ -31,30 +31,21 @@ class AllMovieReportFragment :
     private fun onRefresh() {
         binding.swiperefresh.setOnRefreshListener {
             lifecycleScope.launch {
-//                reportViewModel.requestReport()
-//                reportViewModel.report.value?.let {
-//                    binding.reportRecyclerview1.apply {
-//                        visibility = View.VISIBLE
-//                        adapter = reportAdapter
-//                        reportAdapter.setReportInfo(it, 0, 2)
-//                    }
-//                    binding.reportRecyclerview2.apply {
-//                        visibility = View.VISIBLE
-//                        adapter = reportAdapter2
-//                        reportAdapter2.setReportInfo(it, 3, it.lastIndex)
-//                    }
-//                }
-//                reportViewModel.bookmarkList.value?.let {
-//                    reportAdapter.setBookmark(it)
-//                    reportAdapter2.setBookmark(it)
-//                }
                 binding.swiperefresh.isRefreshing = false
             }
         }
+    }
 
-        /*
-        장르 버튼 구현
-         */
+    override fun handleEffect(effect: AllMovieReportEffect) {
+        when (effect) {
+            is AllMovieReportEffect.RegistLike -> {
+                lifecycleScope.launch {
+                    viewModel.registLike(reportId = "171992621146711f6b2cc-a792-4f16-96ad-e06b7a0ae711")
+                }
+            }
+            is AllMovieReportEffect.CancelLike -> {
+            }
+        }
     }
 
     override fun onBindLayout() {
@@ -64,7 +55,6 @@ class AllMovieReportFragment :
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.list.collect {
-                        Timber.d("전체 감상문", viewModel.list.toString())
                         binding.allMovieReportRecyclerview.apply {
                             adapter = allMovieReportAdapter
                             allMovieReportAdapter.setReportInfo(viewModel.list.value)
@@ -78,14 +68,14 @@ class AllMovieReportFragment :
             object : AllMovieReportAdapter.ItemClick {
                 override fun onClick(position: Int) {
                     Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
-                    // todo : 본문 페이지로 이동하기
+                    // todo  : 본문 페이지로 이동
                 }
 
                 override fun onLikeClick(position: Int) {
+                    Timber.d(TAG, "clicked")
                     val report = allMovieReportAdapter.reportList[position]
-                    lifecycleScope.launch {
-//                        reportViewModel.updateLike(report.reportId)
-                    }
+                    Timber.d("$report")
+                    viewModel.handleEvent(AllMovieReportEvent.RegistLike(report.reportId))
                 }
 
                 override fun onBookmarkClick(position: Int) {

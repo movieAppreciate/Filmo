@@ -62,7 +62,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         position: Int,
     ) {
         holder.bindItems(reportList[position])
-//        holder.bindLikeImage(reportList[position].isLiked)
+        holder.bindLikeImage(reportList[position].isLiked)
 //        holder.bindLikeCount(reportList[position].likeCount)
 
         val isBookmarked =
@@ -88,12 +88,12 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }
 
-//                    is ReportPayload.LikePayload -> {
-//                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
-//                        this.reportList[position].isLiked = payload.isLiked
-//                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
-//                    }
-//
+                    is ReportPayload.LikePayload -> {
+                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
+                        this.reportList[position].isLiked = payload.isLiked
+                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
+                    }
+
 //                    is ReportPayload.LikeCountPayload -> {
 //                        this.reportList[position].likeCount = payload.likeCount
 //                        holder.bindLikeCount(payload.likeCount)
