@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     app:cardCornerRadius="15dp"
     android:layout_marginHorizontal="20dp"
@@ -112,18 +113,21 @@
                 android:id="@+id/likeButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="64dp"
-                android:src="@drawable/ic_like"
+                android:layout_marginStart="100dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/ic_like"
+                android:src="@drawable/ic_like"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_reply"
                 app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
-                app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
+                app:layout_constraintTop_toTopOf="@+id/appCompatTextView"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/tv_like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
                 app:layout_constraintEnd_toStartOf="@+id/btn_comment"
@@ -134,13 +138,12 @@
                 android:id="@+id/btn_reply"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_reply"
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
                 app:layout_constraintEnd_toStartOf="@+id/tv_reply_count"
-                app:layout_constraintStart_toEndOf="@+id/tv_like_count"
+                app:layout_constraintStart_toEndOf="@+id/likeButton"
                 app:layout_constraintTop_toTopOf="@+id/likeButton"
                 app:layout_constraintVertical_bias="0.4" />
 
@@ -148,9 +151,9 @@
                 android:id="@+id/tv_reply_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_reply"
                 app:layout_constraintTop_toTopOf="@+id/tv_like_count" />
 
