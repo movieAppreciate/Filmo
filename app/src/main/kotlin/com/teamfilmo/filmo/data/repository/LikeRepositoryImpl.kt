@@ -9,7 +9,7 @@ class LikeRepositoryImpl
     constructor(
         private val likeDataSource: LikeDataSource,
     ) : LikeRepository {
-        override suspend fun registLike(reportId: String): Result<String> {
+        override suspend fun registLike(reportId: String): Result<Unit> {
             return likeDataSource.registLike(reportId)
         }
 

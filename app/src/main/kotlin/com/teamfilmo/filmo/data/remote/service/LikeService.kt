@@ -15,7 +15,7 @@ interface LikeService {
          */
         @Query("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<Unit>
 
     @POST("/like/cancel")
     suspend fun cancel(

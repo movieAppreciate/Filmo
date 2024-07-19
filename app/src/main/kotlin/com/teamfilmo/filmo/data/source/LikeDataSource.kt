@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.source
 
 interface LikeDataSource {
-    suspend fun registLike(reportId: String): Result<String>
+    suspend fun registLike(reportId: String): Result<Unit>
 
     suspend fun checkLike(reportId: String): Result<Boolean>
 

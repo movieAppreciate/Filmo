@@ -2,9 +2,6 @@ package com.teamfilmo.filmo.domain.like
 
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 class RegistLikeUseCase
@@ -12,15 +9,8 @@ class RegistLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        operator fun invoke(reportId: String): Flow<String?> =
-            flow {
-                val result =
-                    likeRepository.registLike(reportId)
-                        .onFailure {
-                            throw it
-                        }
-                emit(result.getOrNull())
-            }.catch {
-                Timber.e(it)
-            }
+        suspend operator fun invoke(reportId: String): Result<Unit> =
+            likeRepository.registLike(reportId)
+                .onSuccess { Timber.d("좋아요 등록 성공") }
+                .onFailure { Timber.d("등록 실패: $it") }
     }

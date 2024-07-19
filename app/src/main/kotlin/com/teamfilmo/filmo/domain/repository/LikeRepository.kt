@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.repository
 
 interface LikeRepository {
-    suspend fun registLike(reportId: String): Result<String>
+    suspend fun registLike(reportId: String): Result<Unit>
 
     suspend fun checkLike(reportId: String): Result<Boolean>
 
