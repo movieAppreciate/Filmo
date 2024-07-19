@@ -39,11 +39,11 @@ class AllMovieReportFragment :
     override fun handleEffect(effect: AllMovieReportEffect) {
         when (effect) {
             is AllMovieReportEffect.RegistLike -> {
-                lifecycleScope.launch {
-                    viewModel.registLike(reportId = "171992621146711f6b2cc-a792-4f16-96ad-e06b7a0ae711")
-                }
+                // 좋아요 아이콘 변경
+                allMovieReportAdapter.updateLikeState(effect.reportId, true)
             }
             is AllMovieReportEffect.CancelLike -> {
+                allMovieReportAdapter.updateLikeState(effect.reportId, false)
             }
         }
     }
@@ -74,8 +74,16 @@ class AllMovieReportFragment :
                 override fun onLikeClick(position: Int) {
                     Timber.d(TAG, "clicked")
                     val report = allMovieReportAdapter.reportList[position]
-                    Timber.d("$report")
-                    viewModel.handleEvent(AllMovieReportEvent.RegistLike(report.reportId))
+                    lifecycleScope.launch {
+                        val result = viewModel.checkLike(report.reportId)
+                        result.collect {
+                            if (it) {
+                                viewModel.handleEvent(AllMovieReportEvent.CancelLike(report.reportId))
+                            } else {
+                                viewModel.handleEvent(AllMovieReportEvent.RegistLike(report.reportId))
+                            }
+                        }
+                    }
                 }
 
                 override fun onBookmarkClick(position: Int) {

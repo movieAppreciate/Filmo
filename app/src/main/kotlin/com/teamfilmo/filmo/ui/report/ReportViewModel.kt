@@ -239,7 +239,7 @@ class ReportViewModel
     /*
     좋아요
      */
-        private suspend fun registLike(reportId: String): Result<String> {
+        private suspend fun registLike(reportId: String): Result<Unit> {
             val currentState = uiState.value ?: UiState()
             val newState =
                 currentState.copy(

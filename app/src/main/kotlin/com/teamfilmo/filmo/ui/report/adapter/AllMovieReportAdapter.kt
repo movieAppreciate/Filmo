@@ -31,6 +31,17 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         fun onBookmarkClick(position: Int)
     }
 
+    fun updateLikeState(
+        reportId: String,
+        isLiked: Boolean,
+    ) {
+        val position = reportList.indexOfFirst { it.reportId == reportId }
+        if (position != -1) {
+            reportList[position].isLiked = isLiked
+            notifyItemChanged(position, ReportPayload.LikePayload(isLiked))
+        }
+    }
+
     var itemClick: ItemClick? = null
 
     fun setReportInfo(
