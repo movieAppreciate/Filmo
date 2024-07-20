@@ -10,7 +10,7 @@ data class ReportItem(
     val createDate: String,
     val imageUrl: String?,
     val nickname: String,
-    val likeCount: Int,
+    var likeCount: Int,
     val replyCount: Int,
     val bookmarkCount: Int,
     val isBookmark: Boolean,

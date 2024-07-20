@@ -33,7 +33,7 @@ data class UiState(
 data class LikeState(
     val reportId: String = "",
     val isLiked: Boolean = false,
-    val likeCount: Int = 0,
+    val likeCount: String = "",
 )
 
 data class BookmarkState(
@@ -56,7 +56,7 @@ class ReportViewModel
 
         val likeState: LiveData<LikeState> =
             uiState.map {
-                LikeState(it.reportId, it.isLiked, it.likeCount)
+                LikeState(it.reportId, it.isLiked, it.likeCount.toString())
             }
 
         val bookmarkState: LiveData<BookmarkState> =
@@ -239,7 +239,7 @@ class ReportViewModel
     /*
     좋아요
      */
-        private suspend fun registLike(reportId: String): Result<Unit> {
+        private suspend fun registLike(reportId: String): Result<String> {
             val currentState = uiState.value ?: UiState()
             val newState =
                 currentState.copy(

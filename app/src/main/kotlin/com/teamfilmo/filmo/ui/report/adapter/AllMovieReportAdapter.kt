@@ -42,6 +42,17 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
     }
 
+    fun updateLikeCount(
+        reportId: String,
+        likeCount: Int,
+    ) {
+        val position = reportList.indexOfFirst { it.reportId == reportId }
+        if (position != -1) {
+            reportList[position].likeCount = likeCount
+            notifyItemChanged(position, ReportPayload.LikeCountPayload(likeCount))
+        }
+    }
+
     var itemClick: ItemClick? = null
 
     fun setReportInfo(
@@ -74,7 +85,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
     ) {
         holder.bindItems(reportList[position])
         holder.bindLikeImage(reportList[position].isLiked)
-//        holder.bindLikeCount(reportList[position].likeCount)
+        holder.bindLikeCount(reportList[position].likeCount)
 
         val isBookmarked =
             bookmarkList.any {
@@ -105,10 +116,10 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
                         holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
                     }
 
-//                    is ReportPayload.LikeCountPayload -> {
-//                        this.reportList[position].likeCount = payload.likeCount
-//                        holder.bindLikeCount(payload.likeCount)
-//                    }
+                    is ReportPayload.LikeCountPayload -> {
+                        this.reportList[position].likeCount = payload.likeCount
+                        holder.bindLikeCount(payload.likeCount)
+                    }
 
                     else -> {
                     }
