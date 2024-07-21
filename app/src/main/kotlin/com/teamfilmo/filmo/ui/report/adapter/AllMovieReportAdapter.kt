@@ -53,6 +53,17 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
     }
 
+    fun updateBookmarkState(
+        reportId: String,
+        isBookmarked: Boolean,
+    ) {
+        val position = reportList.indexOfFirst { it.reportId == reportId }
+        if (position != -1) {
+            reportList[position].isBookmark = isBookmarked
+            notifyItemChanged(position, ReportPayload.BookmarkPayload(isBookmarked))
+        }
+    }
+
     var itemClick: ItemClick? = null
 
     fun setReportInfo(
@@ -64,11 +75,6 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         reportList.addAll(list)
         notifyItemRangeRemoved(0, currentSize)
         notifyItemRangeInserted(0, reportList.size)
-    }
-
-    fun setBookmark(bookmarkList: List<BookmarkResponse>) {
-        this.bookmarkList = bookmarkList
-        notifyItemRangeChanged(0, this.bookmarkList.size)
     }
 
     override fun onCreateViewHolder(
@@ -86,13 +92,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         holder.bindItems(reportList[position])
         holder.bindLikeImage(reportList[position].isLiked)
         holder.bindLikeCount(reportList[position].likeCount)
-
-        val isBookmarked =
-            bookmarkList.any {
-                it.reportId == reportList[position].reportId
-            }
-
-        holder.bindBookmarkButton(isBookmarked)
+        holder.bindBookmarkButton(reportList[position].isBookmark)
     }
 
     override fun onBindViewHolder(
@@ -106,6 +106,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             payloads.forEach {
                 when (val payload = it as ReportPayload) {
                     is ReportPayload.BookmarkPayload -> {
+                        this.reportList[position].isBookmark = payload.isBookmarked
                         Log.d("어댑터", "북마크 payload ${payload.isBookmarked}")
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }

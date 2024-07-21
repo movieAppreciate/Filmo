@@ -6,7 +6,7 @@ import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 interface BookmarkRepository {
     suspend fun registBookmark(reportId: String): Result<com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse>
 
-    suspend fun deleteBookmark(bookmarkId: Long): Result<Unit>
+    suspend fun deleteBookmark(bookmarkId: Long): Result<String>
 
     suspend fun getBookmarkList(): Result<BookmarkListResponse>
 

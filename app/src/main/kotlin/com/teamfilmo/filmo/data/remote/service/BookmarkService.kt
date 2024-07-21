@@ -55,5 +55,5 @@ interface BookmarkService {
          */
         @Query("bookmarkId")
         bookmarkId: Long,
-    ): Result<Unit>
+    ): Result<String>
 }

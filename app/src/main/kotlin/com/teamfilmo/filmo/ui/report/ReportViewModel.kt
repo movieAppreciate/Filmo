@@ -151,7 +151,7 @@ class ReportViewModel
             return bookmarkRepository.getBookmarkCount(reportId)
         }
 
-        private suspend fun deleteBookmark(bookmarkId: Long): Result<Unit> {
+        private suspend fun deleteBookmark(bookmarkId: Long): Result<String> {
             val currentState = uiState.value ?: UiState()
             val newState =
                 currentState.copy(

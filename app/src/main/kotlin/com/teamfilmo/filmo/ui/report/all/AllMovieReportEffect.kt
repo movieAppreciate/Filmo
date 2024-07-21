@@ -17,4 +17,12 @@ sealed interface AllMovieReportEffect : BaseEffect {
         val reportId: String,
         val likeCount: Int,
     ) : AllMovieReportEffect
+
+    data class RegistBookmark(
+        val reportId: String,
+    ) : AllMovieReportEffect
+
+    data class DeleteBookmark(
+        val reportId: String,
+    ) : AllMovieReportEffect
 }
