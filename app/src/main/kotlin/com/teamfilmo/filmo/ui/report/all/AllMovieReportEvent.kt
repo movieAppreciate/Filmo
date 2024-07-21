@@ -6,4 +6,8 @@ sealed class AllMovieReportEvent : BaseEvent() {
     data class ClickLike(
         val reportId: String,
     ) : AllMovieReportEvent()
+
+    data class ClickBookmark(
+        val reportId: String,
+    ) : AllMovieReportEvent()
 }

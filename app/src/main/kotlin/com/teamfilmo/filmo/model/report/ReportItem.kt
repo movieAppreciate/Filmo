@@ -13,6 +13,6 @@ data class ReportItem(
     var likeCount: Int,
     val replyCount: Int,
     val bookmarkCount: Int,
-    val isBookmark: Boolean,
+    var isBookmark: Boolean,
     var isLiked: Boolean,
 )

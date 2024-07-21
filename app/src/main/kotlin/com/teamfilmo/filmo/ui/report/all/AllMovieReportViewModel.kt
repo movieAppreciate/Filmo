@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.ui.report.all
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -23,9 +25,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class AllReportUiState(
+data class AllReportLikeState(
     val reportId: String = "",
     var likeCount: Int = 0,
+)
+
+data class AllReportBookmarkState(
+    val reportId: String = "",
+    val bookmarkId: Long = 0L,
+    var isBookmarked: Boolean = false,
 )
 
 @HiltViewModel
@@ -38,13 +46,18 @@ class AllMovieReportViewModel
         private val registerLikeUseCase: RegistLikeUseCase,
         private val cancelLikeUseCase: CancelLikeUseCase,
         private val registBookmarkUseCase: RegistBookmarkUseCase,
+        private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
-        private val _uiState = MutableStateFlow<List<AllReportUiState>>(emptyList())
-        val uiState: StateFlow<List<AllReportUiState>> = _uiState.asStateFlow()
+        private val _likeState = MutableStateFlow<List<AllReportLikeState>>(emptyList())
+        val likeState: StateFlow<List<AllReportLikeState>> = _likeState.asStateFlow()
+
+        private val _bookmarkState = MutableStateFlow<List<AllReportBookmarkState>>(emptyList())
+        val bookmarkState: StateFlow<List<AllReportBookmarkState>> = _bookmarkState.asStateFlow()
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
+                is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
             }
         }
 
@@ -71,11 +84,21 @@ class AllMovieReportViewModel
                             checkLikeStateUseCase(reportItem.reportId).first(),
                         )
                     }
-                _uiState.value =
+                _likeState.value =
                     reports.map { reportItem ->
-                        AllReportUiState(
+                        AllReportLikeState(
                             reportId = reportItem.reportId,
                             likeCount = reportItem.likeCount,
+                        )
+                    }
+                _bookmarkState.value =
+                    reports.map { reportItem ->
+                        val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
+                        AllReportBookmarkState(
+                            reportId = reportItem.reportId,
+                            // todo : bookmark id 있으면 넣어주기 없으면 null
+                            bookmarkId = bookmark?.id ?: 0L,
+                            isBookmarked = reportItem.isBookmark,
                         )
                     }
                 reports
@@ -133,7 +156,7 @@ class AllMovieReportViewModel
             isLiked: Boolean,
         ) {
             var updatedLikeCount = 0
-            _uiState.update { uiStateList ->
+            _likeState.update { uiStateList ->
                 uiStateList.map { uiState ->
                     if (uiState.reportId == reportId) {
                         updatedLikeCount = if (isLiked) uiState.likeCount + 1 else uiState.likeCount - 1
@@ -147,11 +170,63 @@ class AllMovieReportViewModel
         }
 
     /*
-    북마크
+    북마크 등록 , 삭제
      */
-        fun registerBookmark(reportId: String) {
+        private fun registerBookmark(reportId: String) {
             viewModelScope.launch {
-                registBookmarkUseCase(reportId)
+                val result = registBookmarkUseCase(reportId).first()
+                if (result != null) {
+                    _bookmarkState.update { stateList ->
+                        stateList.map { bookmark ->
+                            if (bookmark.reportId == reportId) {
+                                bookmark.copy(
+                                    bookmarkId = result.id,
+                                    isBookmarked = true,
+                                )
+                            } else {
+                                bookmark
+                            }
+                        }
+                    }
+                }
+                sendEffect(AllMovieReportEffect.RegistBookmark(reportId))
+                Timber.d("bookmark regist ${_bookmarkState.value} ")
+            }
+        }
+
+        private fun deleteBookmark(
+            reportId: String,
+            bookmarkId: Long,
+        ) {
+            viewModelScope.launch {
+                _bookmarkState.update { stateList ->
+                    stateList.map { bookmarkState ->
+                        if (bookmarkState.bookmarkId == bookmarkId) {
+                            bookmarkState.copy(
+                                bookmarkId = bookmarkState.bookmarkId,
+                                isBookmarked = false,
+                            )
+                        } else {
+                            bookmarkState
+                        }
+                    }
+                }
+                deleteBookmarkUseCase(bookmarkId = bookmarkId).collect()
+                sendEffect(AllMovieReportEffect.DeleteBookmark(reportId))
+            }
+        }
+
+        private fun toggleBookmark(
+            reportId: String,
+        ) {
+            val bookmark = _bookmarkState.value.find { it.reportId == reportId }
+            Timber.d("bookmark :  $bookmark")
+            if (bookmark != null) {
+                if (bookmark.isBookmarked) {
+                    deleteBookmark(reportId, bookmark.bookmarkId)
+                } else {
+                    registerBookmark(reportId)
+                }
             }
         }
     }

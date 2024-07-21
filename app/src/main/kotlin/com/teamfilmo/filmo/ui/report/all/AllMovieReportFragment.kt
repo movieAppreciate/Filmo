@@ -12,7 +12,6 @@ import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -47,12 +46,18 @@ class AllMovieReportFragment :
             is AllMovieReportEffect.CountLike -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.uiState.collect { uiState ->
-                            Timber.d("like count : ${effect.likeCount}")
+                        viewModel.likeState.collect {
                             allMovieReportAdapter.updateLikeCount(effect.reportId, effect.likeCount)
                         }
                     }
                 }
+            }
+            is AllMovieReportEffect.RegistBookmark ->
+                lifecycleScope.launch {
+                    allMovieReportAdapter.updateBookmarkState(effect.reportId, true)
+                }
+            is AllMovieReportEffect.DeleteBookmark -> {
+                allMovieReportAdapter.updateBookmarkState(effect.reportId, false)
             }
         }
     }
@@ -89,7 +94,7 @@ class AllMovieReportFragment :
                 override fun onBookmarkClick(position: Int) {
                     val report = allMovieReportAdapter.reportList[position]
                     viewLifecycleOwner.lifecycleScope.launch {
-                        viewModel.registerBookmark(report.reportId)
+                        viewModel.handleEvent(AllMovieReportEvent.ClickBookmark(report.reportId))
                     }
                 }
             }

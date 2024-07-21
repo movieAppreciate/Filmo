@@ -21,7 +21,11 @@ class RegistBookmarkUseCase
                     bookmarkRepository
                         .registBookmark(reportId)
                         .onFailure {
+                            Timber.d("bookmark regist failed : ${it.message}")
                             throw it
+                        }
+                        .onSuccess {
+                            Timber.d("bookmark regist : $it")
                         }
                 emit(result.getOrNull())
             }.catch {

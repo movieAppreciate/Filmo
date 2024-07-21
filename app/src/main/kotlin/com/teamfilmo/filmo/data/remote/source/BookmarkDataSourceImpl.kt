@@ -16,7 +16,7 @@ class BookmarkDataSourceImpl
             return bookmarkService.registerBookmark(reportId)
         }
 
-        override suspend fun deleteBookmark(bookmarkId: Long): Result<Unit> {
+        override suspend fun deleteBookmark(bookmarkId: Long): Result<String> {
             return bookmarkService.deleteBookmark(bookmarkId)
         }
 
