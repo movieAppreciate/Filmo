@@ -10,4 +10,6 @@ sealed class AllMovieReportEvent : BaseEvent() {
     data class ClickBookmark(
         val reportId: String,
     ) : AllMovieReportEvent()
+
+    data object RefreshReport : AllMovieReportEvent()
 }

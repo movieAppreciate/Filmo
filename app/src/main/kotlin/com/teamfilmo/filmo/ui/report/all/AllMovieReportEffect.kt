@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import com.teamfilmo.filmo.base.effect.BaseEffect
+import com.teamfilmo.filmo.model.report.ReportItem
 
 sealed interface AllMovieReportEffect : BaseEffect {
     data class RegistLike(
@@ -24,5 +25,9 @@ sealed interface AllMovieReportEffect : BaseEffect {
 
     data class DeleteBookmark(
         val reportId: String,
+    ) : AllMovieReportEffect
+
+    data class RefreshReport(
+        val reportList: List<ReportItem>,
     ) : AllMovieReportEffect
 }

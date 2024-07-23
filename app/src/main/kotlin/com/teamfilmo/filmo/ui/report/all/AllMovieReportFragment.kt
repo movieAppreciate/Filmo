@@ -26,9 +26,8 @@ class AllMovieReportFragment :
 
     private fun onRefresh() {
         binding.swiperefresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                binding.swiperefresh.isRefreshing = false
-            }
+            viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
+            binding.swiperefresh.isRefreshing = false
         }
     }
 
@@ -43,7 +42,7 @@ class AllMovieReportFragment :
                 allMovieReportAdapter.updateLikeState(effect.reportId, false)
             }
 
-            is AllMovieReportEffect.CountLike -> {
+            is AllMovieReportEffect.CountLike ->
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.likeState.collect {
@@ -51,14 +50,14 @@ class AllMovieReportFragment :
                         }
                     }
                 }
-            }
             is AllMovieReportEffect.RegistBookmark ->
                 lifecycleScope.launch {
                     allMovieReportAdapter.updateBookmarkState(effect.reportId, true)
                 }
-            is AllMovieReportEffect.DeleteBookmark -> {
+            is AllMovieReportEffect.DeleteBookmark ->
                 allMovieReportAdapter.updateBookmarkState(effect.reportId, false)
-            }
+            is AllMovieReportEffect.RefreshReport ->
+                allMovieReportAdapter.setReportInfo(effect.reportList)
         }
     }
 
@@ -76,6 +75,7 @@ class AllMovieReportFragment :
                     }
                 }
             }
+            onRefresh()
         }
 
         allMovieReportAdapter.itemClick =
@@ -98,7 +98,6 @@ class AllMovieReportFragment :
                     }
                 }
             }
-        onRefresh()
     }
 
     companion object {

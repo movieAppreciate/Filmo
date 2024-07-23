@@ -48,6 +48,12 @@ class AllMovieReportViewModel
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
+        init {
+            fetchAllMovieReportList()
+        }
+
+        private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
+
         private val _likeState = MutableStateFlow<List<AllReportLikeState>>(emptyList())
         val likeState: StateFlow<List<AllReportLikeState>> = _likeState.asStateFlow()
 
@@ -58,51 +64,57 @@ class AllMovieReportViewModel
             when (event) {
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
+                is AllMovieReportEvent.RefreshReport -> fetchAllMovieReportList()
             }
         }
 
-        private val _allMovieReportList =
-            combine(
-                getReportListUseCase(),
-                getBookmarkListUseCase(),
-            ) { reportList, bookmarkList ->
-                val reports =
-                    reportList.map { reportItem ->
-                        ReportItem(
-                            reportItem.reportId,
-                            reportItem.title,
-                            reportItem.content,
-                            reportItem.createDate,
-                            reportItem.imageUrl,
-                            reportItem.nickname,
-                            reportItem.likeCount,
-                            reportItem.replyCount,
-                            reportItem.bookmarkCount,
-                            bookmarkList.any {
-                                it.reportId == reportItem.reportId
-                            },
-                            checkLikeStateUseCase(reportItem.reportId).first(),
-                        )
-                    }
-                _likeState.value =
-                    reports.map { reportItem ->
-                        AllReportLikeState(
-                            reportId = reportItem.reportId,
-                            likeCount = reportItem.likeCount,
-                        )
-                    }
-                _bookmarkState.value =
-                    reports.map { reportItem ->
-                        val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
-                        AllReportBookmarkState(
-                            reportId = reportItem.reportId,
-                            // todo : bookmark id 있으면 넣어주기 없으면 null
-                            bookmarkId = bookmark?.id ?: 0L,
-                            isBookmarked = reportItem.isBookmark,
-                        )
-                    }
-                reports
+        private fun fetchAllMovieReportList() {
+            viewModelScope.launch {
+                combine(
+                    getReportListUseCase(),
+                    getBookmarkListUseCase(),
+                ) { reportList, bookmarkList ->
+                    val reports =
+                        reportList.map { reportItem ->
+                            ReportItem(
+                                reportItem.reportId,
+                                reportItem.title,
+                                reportItem.content,
+                                reportItem.createDate,
+                                reportItem.imageUrl,
+                                reportItem.nickname,
+                                reportItem.likeCount,
+                                reportItem.replyCount,
+                                reportItem.bookmarkCount,
+                                bookmarkList.any {
+                                    it.reportId == reportItem.reportId
+                                },
+                                checkLikeStateUseCase(reportItem.reportId).first(),
+                            )
+                        }
+                    _likeState.value =
+                        reports.map { reportItem ->
+                            AllReportLikeState(
+                                reportId = reportItem.reportId,
+                                likeCount = reportItem.likeCount,
+                            )
+                        }
+                    _bookmarkState.value =
+                        reports.map { reportItem ->
+                            val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
+                            AllReportBookmarkState(
+                                reportId = reportItem.reportId,
+                                bookmarkId = bookmark?.id ?: 0L,
+                                isBookmarked = reportItem.isBookmark,
+                            )
+                        }
+                    reports
+                }.collect { reports ->
+                    _allMovieReportList.value = reports
+                    sendEffect(AllMovieReportEffect.RefreshReport(_allMovieReportList.value))
+                }
             }
+        }
 
         val allMovieReportList: StateFlow<List<ReportItem>> =
             _allMovieReportList.stateIn(
