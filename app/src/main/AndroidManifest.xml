@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.report.ReportFragment" />
+        <activity android:name=".ui.report.all.AllMovieReportFragment"/>
         <activity android:name=".ui.auth.AuthActivity" />
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.notification.NotificationActivity" />

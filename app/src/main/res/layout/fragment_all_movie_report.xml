@@ -5,256 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:layout_constraintBottom_toTopOf="@id/swiperefresh"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/all"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="전체"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/sf"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="SF"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/tv_movie"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="TV 영화"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/family"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="가족"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/horror"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="공포"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/documentary"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="85dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="다큐멘터리"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/drama"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:backgroundTint="@null"
-                android:text="드라마"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/romance"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="로맨스"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/adventure"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="모험"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/mystery"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="미스테리"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/crime"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="범죄"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/western"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="서부"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/thriller"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="스릴러"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/animation"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="85dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-
-                android:text="애니메이션"
-
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/action"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:text="액션"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/history"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-
-                android:text="역사"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/music"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:text="음악"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/war"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="55dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="전쟁"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/comedy"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:text="코미디"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/fantasy"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/custom_button_selector"
-                android:minHeight="0dp"
-                android:text="판타지"
-                android:textColor="@drawable/txt_selector"
-                android:textSize="12sp" />
-
-
-        </LinearLayout>
-    </HorizontalScrollView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
@@ -263,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -280,6 +30,12 @@
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/movie_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

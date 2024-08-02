@@ -3,11 +3,13 @@ package com.teamfilmo.filmo.data.remote.di
 import com.teamfilmo.filmo.data.remote.source.AuthRemoteDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.BookmarkDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.LikeDataSourceImpl
+import com.teamfilmo.filmo.data.remote.source.MovieApiDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.MovieDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.ReportDataSourceImpl
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
 import com.teamfilmo.filmo.data.source.BookmarkDataSource
 import com.teamfilmo.filmo.data.source.LikeDataSource
+import com.teamfilmo.filmo.data.source.MovieApiDataSource
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import dagger.Binds
@@ -48,4 +50,10 @@ abstract class RemoteSourceModule {
     abstract fun bindBookmarkDatasource(
         bookmarkDataSource: BookmarkDataSourceImpl,
     ): BookmarkDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindMovieApiDataSource(
+        movieApiDataSource: MovieApiDataSourceImpl,
+    ): MovieApiDataSource
 }

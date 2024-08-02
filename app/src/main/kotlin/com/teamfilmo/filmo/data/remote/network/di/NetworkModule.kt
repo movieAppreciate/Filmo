@@ -4,6 +4,9 @@ import com.teamfilmo.filmo.data.remote.network.adapter.ResultCallAdapter
 import com.teamfilmo.filmo.data.remote.network.policy.BaseUrl
 import com.teamfilmo.filmo.data.remote.network.policy.ConnectTimeout
 import com.teamfilmo.filmo.data.remote.network.policy.ContentType
+import com.teamfilmo.filmo.data.remote.network.policy.MainApiRetrofit
+import com.teamfilmo.filmo.data.remote.network.policy.MovieApiBaseUrl
+import com.teamfilmo.filmo.data.remote.network.policy.MovieApiRetrofit
 import com.teamfilmo.filmo.data.remote.network.policy.ReadTimeout
 import com.teamfilmo.filmo.data.remote.network.policy.RetryCount
 import com.teamfilmo.filmo.data.remote.network.policy.ServiceNetworkPolicy
@@ -60,6 +63,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @MainApiRetrofit
     fun provideRetrofit(
         @BaseUrl baseUrl: String,
         @RetryCount retryCount: Int,
@@ -70,6 +74,25 @@ object NetworkModule {
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
+            .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @MovieApiRetrofit
+    fun provideMovieApiRetrofit(
+        @MovieApiBaseUrl movieApiBaseUrl: String,
+        @RetryCount retryCount: Int,
+        okHttpClient: OkHttpClient,
+        @ContentType contentType: String,
+        json: Json,
+    ): Retrofit {
+        return Retrofit
+            .Builder()
+            .baseUrl(movieApiBaseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
             .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))

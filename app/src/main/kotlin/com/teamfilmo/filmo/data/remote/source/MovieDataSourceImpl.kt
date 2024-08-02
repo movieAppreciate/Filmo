@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.source
 
+import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.service.MovieService
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
@@ -26,7 +27,7 @@ class MovieDataSourceImpl
             return movieService.getVideo(movieId)
         }
 
-        override suspend fun getPoster(movieId: Int): Result<String> {
+        override suspend fun getPoster(movieId: Int): Result<PosterResponse> {
             return movieService.getPoster(movieId)
         }
     }

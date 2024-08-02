@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.app.di
 import android.content.Context
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.network.policy.BaseUrl
+import com.teamfilmo.filmo.data.remote.network.policy.MovieApiBaseUrl
 import com.teamfilmo.filmo.data.remote.network.policy.ServiceNetworkPolicy
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,12 @@ object ServiceModule {
     fun provideBaseUrl(
         @ApplicationContext context: Context,
     ): String = context.getString(R.string.service_url)
+
+    @Provides
+    @MovieApiBaseUrl
+    fun provideMovieApiBaseUrl(
+        @ApplicationContext context: Context,
+    ): String = context.getString(R.string.movie_service_url)
 
     @Provides
     fun provideNetworkPolicy(

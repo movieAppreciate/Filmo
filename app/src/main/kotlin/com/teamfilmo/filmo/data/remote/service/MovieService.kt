@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
 import com.teamfilmo.filmo.model.movie.MovieResponse
 import retrofit2.http.GET
@@ -57,5 +58,5 @@ interface MovieService {
          */
         @Query("movieId")
         movieId: Int,
-    ): Result<String>
+    ): Result<PosterResponse>
 }

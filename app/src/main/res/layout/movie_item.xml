@@ -42,8 +42,9 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_movie"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
+                android:gravity="bottom"
                 android:layout_margin="10dp"
                 android:text="사바하"
                 android:textColor="@color/white"
@@ -55,11 +56,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_margin="10dp"
+                android:textStyle="bold"
                 android:text="인간 냄새와 강박적 위트가 가득한 한편의 인형극"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
         </FrameLayout>
-
 
         <TextView
             android:id="@+id/tv_content"
@@ -127,10 +128,9 @@
                 android:id="@+id/tv_like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-                app:layout_constraintEnd_toStartOf="@+id/btn_comment"
+                app:layout_constraintEnd_toStartOf="@+id/btn_reply"
                 app:layout_constraintStart_toEndOf="@+id/likeButton"
                 app:layout_constraintTop_toTopOf="@+id/likeButton" />
 

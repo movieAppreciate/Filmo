@@ -10,8 +10,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
+import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -19,16 +22,12 @@ class AllMovieReportFragment :
         FragmentAllMovieReportBinding::inflate,
     ) {
     override val viewModel: AllMovieReportViewModel by viewModels()
-
     val allMovieReportAdapter by lazy {
         AllMovieReportAdapter()
     }
 
-    private fun onRefresh() {
-        binding.swiperefresh.setOnRefreshListener {
-            viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
-            binding.swiperefresh.isRefreshing = false
-        }
+    val movieInfoAdapter by lazy {
+        MovieInfoAdapter()
     }
 
     override fun handleEffect(effect: AllMovieReportEffect) {
@@ -65,17 +64,38 @@ class AllMovieReportFragment :
         childFragmentManager.commit {
             setReorderingAllowed(true)
 
+            binding.apply {
+                allMovieReportRecyclerview.adapter = allMovieReportAdapter
+                movieRecyclerview.adapter = movieInfoAdapter
+                swiperefresh.setOnRefreshListener {
+                    viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
+                    swiperefresh.isRefreshing = false
+                }
+            }
+
+            Toast.makeText(context, "all movie report fragment", Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    Timber.d("실행됨")
                     viewModel.allMovieReportList.collect {
                         binding.allMovieReportRecyclerview.apply {
+                            Timber.d("어댑터")
                             adapter = allMovieReportAdapter
                             allMovieReportAdapter.setReportInfo(viewModel.allMovieReportList.value)
                         }
                     }
                 }
             }
-            onRefresh()
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.upcomingMovieList.collect { movieInfoList ->
+                        binding.movieRecyclerview.apply {
+                            adapter = movieInfoAdapter
+                            movieInfoAdapter.setMovieInfoList(movieInfoList)
+                        }
+                    }
+                }
+            }
         }
 
         allMovieReportAdapter.itemClick =

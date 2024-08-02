@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
 import com.teamfilmo.filmo.databinding.MovieItemBinding
 import com.teamfilmo.filmo.model.report.ReportItem
+import timber.log.Timber
 
 sealed class ReportPayload {
     data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
@@ -18,7 +18,6 @@ sealed class ReportPayload {
 }
 
 class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovieReportViewHolder>() {
-    var bookmarkList: List<BookmarkResponse> = mutableListOf()
     var reportList: ArrayList<ReportItem> = arrayListOf()
 
     interface ItemClick {
@@ -74,6 +73,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         reportList.clear()
         reportList.addAll(list)
         notifyItemRangeRemoved(0, currentSize)
+        Timber.d("adapter : $reportList")
         notifyItemRangeInserted(0, reportList.size)
     }
 
@@ -120,9 +120,6 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
                     is ReportPayload.LikeCountPayload -> {
                         this.reportList[position].likeCount = payload.likeCount
                         holder.bindLikeCount(payload.likeCount)
-                    }
-
-                    else -> {
                     }
                 }
             }

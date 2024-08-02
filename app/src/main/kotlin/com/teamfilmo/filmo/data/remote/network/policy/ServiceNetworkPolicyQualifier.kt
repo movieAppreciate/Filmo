@@ -8,6 +8,18 @@ annotation class BaseUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class MainApiRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MovieApiRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MovieApiBaseUrl
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class AccessToken
 
 @Qualifier

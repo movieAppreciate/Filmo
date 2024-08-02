@@ -1,13 +1,16 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import androidx.lifecycle.viewModelScope
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.RegistLikeUseCase
+import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.model.report.ReportItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +22,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -47,27 +50,64 @@ class AllMovieReportViewModel
         private val cancelLikeUseCase: CancelLikeUseCase,
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
+        private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
         init {
             fetchAllMovieReportList()
         }
 
+        private val _upcomingMovieList = MutableStateFlow<List<MovieInfo>>(emptyList())
         private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
 
         private val _likeState = MutableStateFlow<List<AllReportLikeState>>(emptyList())
         val likeState: StateFlow<List<AllReportLikeState>> = _likeState.asStateFlow()
 
-        private val _bookmarkState = MutableStateFlow<List<AllReportBookmarkState>>(emptyList())
-        val bookmarkState: StateFlow<List<AllReportBookmarkState>> = _bookmarkState.asStateFlow()
+        private val bookmarkState = MutableStateFlow<List<AllReportBookmarkState>>(emptyList())
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
                 is AllMovieReportEvent.RefreshReport -> fetchAllMovieReportList()
+                else -> {}
             }
         }
 
+    /*
+    영화 api : 최신 영화 정보 리스트 가져오기
+     */
+        private fun getUpcomingMovieList() {
+            viewModelScope.launch {
+                val list = mutableListOf<MovieInfo>()
+                getUpcomingMovieUseCase()
+                    .take(3).collect {
+                        Timber.d("movielist : $it")
+                        it.take(3).map {
+                            MovieInfo(
+                                movieAge = 14,
+                                movieImage = R.drawable.movieimage,
+                                movieName = it.title,
+                                genres = it.genres,
+                            ).apply {
+                                list.add(this)
+                            }
+                        }
+                    }
+                Timber.d("$list")
+                _upcomingMovieList.value = list
+            }
+        }
+
+        val upcomingMovieList: StateFlow<List<MovieInfo>> =
+            _upcomingMovieList.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = emptyList(),
+            )
+
+    /*
+    감상문 리스트 가져온 후 결합 (좋아요, 북마크 여부)
+     */
         private fun fetchAllMovieReportList() {
             viewModelScope.launch {
                 combine(
@@ -99,7 +139,7 @@ class AllMovieReportViewModel
                                 likeCount = reportItem.likeCount,
                             )
                         }
-                    _bookmarkState.value =
+                    bookmarkState.value =
                         reports.map { reportItem ->
                             val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
                             AllReportBookmarkState(
@@ -112,8 +152,10 @@ class AllMovieReportViewModel
                 }.collect { reports ->
                     _allMovieReportList.value = reports
                     sendEffect(AllMovieReportEffect.RefreshReport(_allMovieReportList.value))
+                    Timber.d("${_allMovieReportList.value}")
                 }
             }
+            getUpcomingMovieList()
         }
 
         val allMovieReportList: StateFlow<List<ReportItem>> =
@@ -125,7 +167,6 @@ class AllMovieReportViewModel
 
     /* 좋아요 등록
      */
-
         private fun registLike(reportId: String) {
             Timber.d("좋아요 등록")
             viewModelScope.launch {
@@ -188,7 +229,7 @@ class AllMovieReportViewModel
             viewModelScope.launch {
                 val result = registBookmarkUseCase(reportId).first()
                 if (result != null) {
-                    _bookmarkState.update { stateList ->
+                    bookmarkState.update { stateList ->
                         stateList.map { bookmark ->
                             if (bookmark.reportId == reportId) {
                                 bookmark.copy(
@@ -202,7 +243,7 @@ class AllMovieReportViewModel
                     }
                 }
                 sendEffect(AllMovieReportEffect.RegistBookmark(reportId))
-                Timber.d("bookmark regist ${_bookmarkState.value} ")
+                Timber.d("bookmark regist ${bookmarkState.value} ")
             }
         }
 
@@ -211,7 +252,7 @@ class AllMovieReportViewModel
             bookmarkId: Long,
         ) {
             viewModelScope.launch {
-                _bookmarkState.update { stateList ->
+                bookmarkState.update { stateList ->
                     stateList.map { bookmarkState ->
                         if (bookmarkState.bookmarkId == bookmarkId) {
                             bookmarkState.copy(
@@ -231,7 +272,7 @@ class AllMovieReportViewModel
         private fun toggleBookmark(
             reportId: String,
         ) {
-            val bookmark = _bookmarkState.value.find { it.reportId == reportId }
+            val bookmark = bookmarkState.value.find { it.reportId == reportId }
             Timber.d("bookmark :  $bookmark")
             if (bookmark != null) {
                 if (bookmark.isBookmarked) {

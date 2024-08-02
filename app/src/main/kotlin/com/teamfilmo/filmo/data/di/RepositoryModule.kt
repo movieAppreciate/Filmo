@@ -4,10 +4,12 @@ import com.teamfilmo.filmo.data.remote.source.ReportRepositoryImpl
 import com.teamfilmo.filmo.data.repository.AuthRepositoryImpl
 import com.teamfilmo.filmo.data.repository.BookmarkRepositoryImpl
 import com.teamfilmo.filmo.data.repository.LikeRepositoryImpl
+import com.teamfilmo.filmo.data.repository.MovieApiRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieRepositoryImpl
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
+import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import dagger.Binds
@@ -42,4 +44,9 @@ abstract class RepositoryModule {
     abstract fun bindLikeRepository(
         likeRepository: LikeRepositoryImpl,
     ): LikeRepository
+
+    @Binds
+    abstract fun bindMovieApiRepository(
+        movieApiRepository: MovieApiRepositoryImpl,
+    ): MovieApiRepository
 }
