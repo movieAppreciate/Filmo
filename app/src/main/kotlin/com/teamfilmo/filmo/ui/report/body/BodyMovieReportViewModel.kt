@@ -1,3 +1,5 @@
 package com.teamfilmo.filmo.ui.report.body
 
-class BodyMovieReportViewModel
+import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+
+class BodyMovieReportViewModel : BaseViewModel<BodyMovieReportEffect, BodyMovieReportEvent>()

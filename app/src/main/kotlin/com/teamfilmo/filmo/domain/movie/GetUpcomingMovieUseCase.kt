@@ -15,7 +15,6 @@ class GetUpcomingMovieUseCase
     constructor(
         private val movieApiRepository: MovieApiRepository,
     ) {
-
         companion object {
             const val SERVICE_KEY = "f05219d9db24ba715593fc3a9c55c641"
         }

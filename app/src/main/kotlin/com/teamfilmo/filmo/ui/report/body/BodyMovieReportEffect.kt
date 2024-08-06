@@ -1,3 +1,5 @@
 package com.teamfilmo.filmo.ui.report.body
 
-class BodyMovieReportEffect
+import com.teamfilmo.filmo.base.effect.BaseEffect
+
+class BodyMovieReportEffect : BaseEffect

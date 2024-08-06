@@ -1,7 +1,6 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import androidx.lifecycle.viewModelScope
-import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
@@ -10,6 +9,7 @@ import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.RegistLikeUseCase
+import com.teamfilmo.filmo.domain.movie.GetMovieImageUseCase
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.model.report.ReportItem
@@ -51,11 +51,13 @@ class AllMovieReportViewModel
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
+        private val getMovieImageUseCase: GetMovieImageUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
         init {
             fetchAllMovieReportList()
         }
 
+        private var imageUriList: ArrayList<String> = arrayListOf()
         private val _upcomingMovieList = MutableStateFlow<List<MovieInfo>>(emptyList())
         private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
 
@@ -79,21 +81,26 @@ class AllMovieReportViewModel
         private fun getUpcomingMovieList() {
             viewModelScope.launch {
                 val list = mutableListOf<MovieInfo>()
+
                 getUpcomingMovieUseCase()
                     .take(3).collect {
                         Timber.d("movielist : $it")
-                        it.take(3).map {
-                            MovieInfo(
-                                movieAge = 14,
-                                movieImage = R.drawable.movieimage,
-                                movieName = it.title,
-                                genres = it.genres,
-                            ).apply {
-                                list.add(this)
+                        it.take(3).map { movieResult ->
+                            getMovieImageUseCase(movieResult.id).collect {
+                                Timber.d("뷰모델 : $it")
+                                MovieInfo(
+                                    movieAge = 16,
+                                    movieImage = it,
+                                    movieName = movieResult.title,
+                                    genres = movieResult.genres,
+                                    id = movieResult.id,
+                                ).apply {
+                                    list.add(this)
+                                }
                             }
                         }
                     }
-                Timber.d("$list")
+                Timber.d("이미지 :  $list")
                 _upcomingMovieList.value = list
             }
         }
