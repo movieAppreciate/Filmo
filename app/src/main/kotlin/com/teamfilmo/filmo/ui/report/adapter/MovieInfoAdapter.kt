@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.ui.report.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.databinding.UpcomingMovieItemBinding
 
@@ -27,7 +27,11 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
             val genre = item.genres
             val image = item.movieImage
 
-            binding.movieImage.setImageDrawable(image.toDrawable())
+            Glide.with(binding.root.context)
+                .asBitmap()
+                .load(image)
+                .into(binding.movieImage)
+
             binding.movieTitleTxt.text = title
             binding.ageTxt.text = age.toString()
 

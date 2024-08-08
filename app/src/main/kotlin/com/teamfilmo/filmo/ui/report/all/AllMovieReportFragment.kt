@@ -33,7 +33,6 @@ class AllMovieReportFragment :
     override fun handleEffect(effect: AllMovieReportEffect) {
         when (effect) {
             is AllMovieReportEffect.RegistLike -> {
-                // 좋아요 아이콘 변경
                 allMovieReportAdapter.updateLikeState(effect.reportId, true)
             }
 
@@ -80,7 +79,6 @@ class AllMovieReportFragment :
                     viewModel.allMovieReportList.collect {
                         binding.allMovieReportRecyclerview.apply {
                             Timber.d("어댑터")
-                            adapter = allMovieReportAdapter
                             allMovieReportAdapter.setReportInfo(viewModel.allMovieReportList.value)
                         }
                     }
@@ -90,7 +88,6 @@ class AllMovieReportFragment :
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.upcomingMovieList.collect { movieInfoList ->
                         binding.movieRecyclerview.apply {
-                            adapter = movieInfoAdapter
                             movieInfoAdapter.setMovieInfoList(movieInfoList)
                         }
                     }

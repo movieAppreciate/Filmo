@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txt_report_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="1.틀에 맞추다"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/txt_report_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:paddingVertical="20dp"
+        android:text="그는 늘 자신의 틀에 상대를 맞추고자 했다. 타인을 내 틀에 맞춘다는 건 어떤 의미일까. 첫째로, 타인을 온전한 단일체로 인식하기보단 여러 요소들의 집합체로서 간주한다는 뜻이다. 그러므로 상대를 구성하는 요소들 중 자신의 틀 안에 들어오는 것만을 수용하고, 나머지 부분은 도려내거나 변형하려 하게 된다. 그는 이런 태도로 전 아내를 대해왔는데, 이것은 그녀 자체를 사랑하는 것보다 그녀의 일부분을 사랑하는 것에 가가워 보인다."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_report_title" />
+
+    <TextView
+        android:id="@+id/txt_report_title_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
+        android:text="2.타인과의 관계"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_report_body" />
+
+
+    <TextView
+        android:id="@+id/txt_report_body_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:paddingVertical="20dp"
+        android:text="다른 이들의 사적인 편지를 대신 작성해주는 대필작가. 이런 직업을 갖고 있는 주인공이 굉장히 독특해 보이고, 정말 이런 회사가 존재하기는 할까 하는 궁금증이 생기기도 한다. 하지만 타인들의 관계에 대해선 능수능란한 모습을 보이면서도 막상 자신이 속한 관계에서는 어찌 할 바를 몰라 괴로워만 하고 있는 면을 보면, 그는 전혀 독특한 인물이 아니다. 그저 나 혹은 우리와 같은 존재일 뿐이다. . . "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_report_title_second" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
