@@ -81,20 +81,17 @@ class MovieSelectViewModel
                     previousQuery = query
 
                     myQuery = query?.let { MovieRequest(it) }
-                    val resultList = mutableListOf<String>()
+
                     // 비동기 작업 전 상태를 비워줍니다.
                     _movieList.update { emptyList() }
                     _moviePosterUriList.update { emptyList() }
 
-                    Timber.d("_movieList 초기화 후 : ${_movieList.value}")
-                    Timber.d("_moviePosterUriList 초기화 후 : ${_moviePosterUriList.value}")
 
                     searchMovieListUseCase(myQuery).collect {
                         getTotalMoviePage(myQuery)
                         _movieList.update {
                             it.distinctBy { it.id }
                         }
-                        Timber.d("_movieList.val 데이터 넣은후 : ${_movieList.value}")
 
                         val imageBaseUrl = "https://image.tmdb.org/t/p/original"
 
@@ -106,7 +103,6 @@ class MovieSelectViewModel
                             }
 
                         _moviePosterUriList.update { updatedResultList }
-                        Timber.d("_movieposterUriList.vale 데이터 넣은 후  : ${_movieList.value}")
                         sendEffect(MovieSelectEffect.SearchMovie)
                     }
                 }

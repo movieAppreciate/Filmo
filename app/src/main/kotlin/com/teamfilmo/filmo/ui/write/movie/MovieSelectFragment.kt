@@ -130,7 +130,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
-                            Timber.d("전달하는 리스트, ${it.size}")
                             moviePosterAdapter?.setPosterUriList(it)
                         }
                     }

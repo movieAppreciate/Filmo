@@ -27,12 +27,12 @@ class SearchMovieListUseCase
                                 throw it
                             }
                     }
+                list.clear()
                 result?.getOrNull()?.results?.forEach {
                     if (it.posterPath != null) {
                         list.add(it)
                     }
                 }
-                Timber.d("usecase : $list")
                 emit(list)
             }.catch {
                 Timber.e(it.localizedMessage)
