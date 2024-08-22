@@ -120,7 +120,6 @@ class AllMovieReportFragment :
     companion object {
         fun newInstance(): AllMovieReportFragment {
             val args = Bundle()
-
             val fragment = AllMovieReportFragment()
             fragment.arguments = args
             return fragment

@@ -1,13 +1,14 @@
 package com.teamfilmo.filmo.data.source
 
+import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
 import com.teamfilmo.filmo.model.movie.MovieResponse
 
 interface MovieDataSource {
     suspend fun searchList(
-        query: String,
-        page: Int,
+        query: MovieRequest?,
+        //    page: Int,
     ): Result<MovieResponse>
 
     suspend fun searchDetail(movieId: Int): Result<DetailMovieResponse>

@@ -4,6 +4,7 @@ import androidx.credentials.Credential
 import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -15,7 +16,9 @@ class GoogleLoginRequestUseCase
     ) {
         suspend operator fun invoke(credential: Credential): Result<LoginResponse> {
             val userId = getUserIdFromCredential(credential)
-            return authRepository.login(userId, AuthType.GOOGLE.value)
+            return authRepository.login(
+                LoginRequest(userId, AuthType.GOOGLE.value),
+            )
         }
 
         private fun getUserIdFromCredential(credential: Credential): String {

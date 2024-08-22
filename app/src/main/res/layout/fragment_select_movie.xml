@@ -3,44 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="20dp"
+    android:padding="10dp"
+    android:layout_weight="1"
+    android:background="@color/white"
     android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="335dp"
+        android:backgroundTint="@color/transparent"
+        android:src="@drawable/ic_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="192dp"
         android:text="영화를 선택해주세요."
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_back" />
 
-    <com.google.android.material.search.SearchBar
-        android:id="@+id/searchBar"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:contentInsetStart="10dp"
+        app:contentInsetEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:strokeColor="@color/gray02" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        <androidx.appcompat.widget.SearchView
+            app:queryBackground="@null"
+            app:iconifiedByDefault="false"
+            android:id="@+id/movie_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/background"
+            app:layout_constraintBottom_toTopOf="@+id/movie_recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:queryHint="영화 정보 검색" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <GridView
+        android:id="@+id/movie_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="10dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_height="0dp"
+        android:horizontalSpacing="5dp"
+        android:numColumns="3"
+        android:verticalSpacing="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </GridView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

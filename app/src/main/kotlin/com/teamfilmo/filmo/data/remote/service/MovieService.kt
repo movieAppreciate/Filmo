@@ -1,27 +1,24 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
 import com.teamfilmo.filmo.model.movie.MovieResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface MovieService {
     /**
      * 영화 검색 리스트
      */
-    @GET("/movie/searchList")
+    @POST("/movie/search/movieList")
     suspend fun searchList(
         /**
          * 검색어
          */
-        @Query("query")
-        query: String,
-        /**
-         * 페이지
-         */
-        @Query("page")
-        page: Int = 1,
+        @Body query: MovieRequest?,
     ): Result<MovieResponse>
 
     /**

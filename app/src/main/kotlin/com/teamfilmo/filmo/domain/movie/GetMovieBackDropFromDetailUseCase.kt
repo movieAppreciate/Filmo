@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
-class GetMovieImageUseCase
+class GetMovieBackDropFromDetailUseCase
     @Inject
     constructor(
         private val movieRepository: MovieRepository,
@@ -15,17 +15,12 @@ class GetMovieImageUseCase
         operator fun invoke(movieId: Int): Flow<String> =
             flow {
                 val result =
-                    movieRepository.getPoster(movieId)
+                    movieRepository.searchDetail(movieId)
                         .onFailure {
                             throw it
                         }
-
-                val imageUrl = "https://image.tmdb.org/t/p/original"
-                result.getOrNull()?.images?.posters?.first()?.file_path.apply {
-                    emit(imageUrl + this)
-                    Timber.d("경로 : ${imageUrl + this}")
-                }
-            }.catch {
-                Timber.e(it.localizedMessage)
+                val imageBaseUrl = "https://image.tmdb.org/t/p/original"
+                emit(imageBaseUrl + result.getOrNull()?.backdropPath)
             }
+                .catch { Timber.e(it) }
     }

@@ -2,7 +2,7 @@
 <resources>
     <string name="service_url" translatable="false">http://ec2-54-180-121-146.ap-northeast-2.compute.amazonaws.com:8080/</string>
     <string name="movie_service_url" translatable="false">https://api.themoviedb.org/</string>
-    <string name="movie_service_api_key" translatable="false">"f05219d9db24ba715593fc3a9c55c641"</string>
+    <string name="movie_service_api_key" translatable="false">"a03cd18043a24a01005b3c585cdcc01a"</string>
     <string name="access_token" translatable="false"></string>
     <string name="refresh_token" translatable="false"></string>
     <integer name="write_timeout">10</integer>

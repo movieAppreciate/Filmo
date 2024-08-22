@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.databinding.MovieItemBinding
 import com.teamfilmo.filmo.model.report.ReportItem
-import timber.log.Timber
 
 sealed class ReportPayload {
     data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
@@ -73,7 +72,6 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         reportList.clear()
         reportList.addAll(list)
         notifyItemRangeRemoved(0, currentSize)
-        Timber.d("adapter : $reportList")
         notifyItemRangeInserted(0, reportList.size)
     }
 

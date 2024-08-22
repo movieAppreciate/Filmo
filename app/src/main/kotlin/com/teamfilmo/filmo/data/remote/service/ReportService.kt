@@ -1,7 +1,10 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.model.report.Report
-import com.teamfilmo.filmo.model.report.ReportInfo
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -46,34 +49,14 @@ interface ReportService {
     /**
      * 감상문 등록
      */
-    @POST("/report/registReport")
+    @POST("/report/save")
     suspend fun registReport(
-        /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
-        /**
-         * 감상문 제목
-         */
-        @Query("title")
-        title: String,
-        /**
-         * 감상문 내용
-         */
-        @Query("content")
-        content: String,
-        /**
-         * 선택한 영화 아이디 (TMDB)
-         */
-        @Query("movieId")
-        movieId: String,
         /**
          * 해쉬태그 Example: #해시태그1 #해시태그2
          */
-        @Query("tagString")
-        tagString: String,
-    ): Result<String>
+        @Query("loginId") loginId: String,
+        @Body request: RegistReportRequest,
+    ): Result<RegistReportResponse>
 
     /**
      * 감상문 수정

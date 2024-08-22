@@ -22,9 +22,9 @@ data class Result(
     @SerialName("title")
     val title: String,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String? = null,
     @SerialName("providers")
-    val providers: String?,
+    val providers: String? = null,
     @SerialName("release_date")
     val releaseDate: String,
     @SerialName("genre_ids")

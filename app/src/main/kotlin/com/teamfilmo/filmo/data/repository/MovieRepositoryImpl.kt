@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.repository
 
+import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.domain.repository.MovieRepository
@@ -13,10 +14,10 @@ class MovieRepositoryImpl
         private val movieDataSource: MovieDataSource,
     ) : MovieRepository {
         override suspend fun searchList(
-            query: String,
-            page: Int,
+            query: MovieRequest?,
+//           // page: Int,
         ): Result<MovieResponse> {
-            return movieDataSource.searchList(query, page)
+            return movieDataSource.searchList(query)
         }
 
         override suspend fun searchDetail(movieId: Int): Result<DetailMovieResponse> {

@@ -1,9 +1,11 @@
 package com.teamfilmo.filmo.data.remote.source
 
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import com.teamfilmo.filmo.model.report.Report
-import com.teamfilmo.filmo.model.report.ReportInfo
 import javax.inject.Inject
 
 class ReportRepositoryImpl
@@ -20,5 +22,12 @@ class ReportRepositoryImpl
 
         override suspend fun getReport(reportId: String): Result<Report> {
             return reportDataSource.getReport(reportId)
+        }
+
+        override suspend fun registReport(
+            loginId: String,
+            request: RegistReportRequest,
+        ): Result<RegistReportResponse> {
+            return reportDataSource.registReport(loginId, request)
         }
     }

@@ -26,10 +26,29 @@ data class Images(
 
 @Serializable
 data class ImagesX(
-    val backdrops: List<String>,
+    val backdrops: List<BackDrop>? = null,
     val id: Int,
-    val logos: List<String>,
-    val posters: List<Poster>,
+    val logos: List<Logo>? = null,
+    val posters: List<Poster>? = null,
+)
+
+@Serializable
+data class BackDrop(
+    val aspect_ratio: Double? = null,
+    val height: Int? = null,
+    val iso_639_1: String? = null,
+    val file_path: String? = null,
+    val vote_average: Double? = null,
+    val vote_count: Int? = null,
+    val width: Int? = null,
+)
+
+@Serializable
+data class Logo(
+    val aspect_ratio: Double,
+    val height: Int,
+    val width: Int,
+    val file_path: String,
 )
 
 @Serializable

@@ -9,7 +9,6 @@ import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.RegistLikeUseCase
-import com.teamfilmo.filmo.domain.movie.GetMovieImageUseCase
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.model.report.ReportItem
@@ -51,13 +50,11 @@ class AllMovieReportViewModel
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
-        private val getMovieImageUseCase: GetMovieImageUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
         init {
             fetchAllMovieReportList()
         }
 
-        private var imageUriList: ArrayList<String> = arrayListOf()
         private val _upcomingMovieList = MutableStateFlow<List<MovieInfo>>(emptyList())
         private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
 
@@ -78,25 +75,24 @@ class AllMovieReportViewModel
     /*
     영화 api : 최신 영화 정보 리스트 가져오기
      */
+
         private fun getUpcomingMovieList() {
             viewModelScope.launch {
                 val list = mutableListOf<MovieInfo>()
-
                 getUpcomingMovieUseCase()
                     .take(3).collect {
                         Timber.d("movielist : $it")
                         it.take(3).map { movieResult ->
-                            getMovieImageUseCase(movieResult.id).collect {
-                                Timber.d("뷰모델 : $it")
-                                MovieInfo(
-                                    movieAge = 16,
-                                    movieImage = it,
-                                    movieName = movieResult.title,
-                                    genres = movieResult.genres,
-                                    id = movieResult.id,
-                                ).apply {
-                                    list.add(this)
-                                }
+                            Timber.d("뷰모델 : $it")
+                            val imageBaseUrl = "https://image.tmdb.org/t/p/original"
+                            MovieInfo(
+                                movieAge = 16,
+                                movieImage = imageBaseUrl + movieResult.posterPath,
+                                movieName = movieResult.title,
+                                genres = movieResult.genres,
+                                id = movieResult.id,
+                            ).apply {
+                                list.add(this)
                             }
                         }
                     }

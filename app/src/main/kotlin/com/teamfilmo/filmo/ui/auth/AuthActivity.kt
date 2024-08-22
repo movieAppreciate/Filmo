@@ -21,7 +21,7 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.base.util.showToast
 import com.teamfilmo.filmo.databinding.ActivityAuthBinding
-import com.teamfilmo.filmo.ui.report.ReportFragment
+import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.util.click
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.coroutines.resume
@@ -92,7 +92,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             AuthEffect.LoginSuccess -> {
                 lifecycleScope.launch {
                     showToast("로그인 성공")
-                    val intent = Intent(this@AuthActivity, ReportFragment::class.java)
+                    val intent = Intent(this@AuthActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }

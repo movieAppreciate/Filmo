@@ -28,10 +28,9 @@ class UserAuthInterceptor(
                 return@runBlocking chain.proceed(request)
             }
 
-            val accessToken =
-                dataStore.get().getUserToken().firstOrNull()?.let { it.ifEmpty { null } }
+            val accessToken = dataStore.get().getUserToken().firstOrNull()?.let { it.ifEmpty { null } }
 
-            Timber.d("로그인 access token", accessToken.toString())
+            Timber.d("로그인 access token ", accessToken.toString())
 
             val response = chain.proceedWithToken(request, accessToken)
 

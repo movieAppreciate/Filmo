@@ -8,6 +8,8 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
+import com.teamfilmo.filmo.data.remote.model.user.TokenValue
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
@@ -17,6 +19,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 
 @HiltViewModel
@@ -54,7 +57,7 @@ class AuthViewModel
                 kakaoLoginRequestUseCase(email)
                     .onSuccess {
                         Timber.d("kakao login success")
-                        userTokenSource.setUserToken(it.accessToken)
+                        userTokenSource.setUserToken(parse(it))
                         sendEffect(AuthEffect.LoginSuccess)
                     }
                     .onFailure {
@@ -107,7 +110,7 @@ class AuthViewModel
                 naverLoginRequestUseCase(email)
                     .onSuccess {
                         Timber.d("naver login success")
-                        userTokenSource.setUserToken(it.accessToken)
+                        userTokenSource.setUserToken(parse(it))
                         sendEffect(AuthEffect.LoginSuccess)
                     }
                     .onFailure {
@@ -122,7 +125,7 @@ class AuthViewModel
                 googleLoginRequestUseCase(credential)
                     .onSuccess {
                         Timber.d("google login success")
-                        userTokenSource.setUserToken(it.accessToken)
+                        userTokenSource.setUserToken(parse(it))
                         sendEffect(AuthEffect.LoginSuccess)
                     }
                     .onFailure {
@@ -130,5 +133,11 @@ class AuthViewModel
                         sendEffect(AuthEffect.LoginFailed)
                     }
             }
+        }
+
+        fun parse(loginResponse: LoginResponse): String {
+            val json = Json { ignoreUnknownKeys = true }
+            val tokenVersion: TokenValue = json.decodeFromString(loginResponse.value)
+            return tokenVersion.accessToken
         }
     }

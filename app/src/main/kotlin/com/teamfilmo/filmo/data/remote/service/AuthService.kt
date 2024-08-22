@@ -1,8 +1,10 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
+import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -34,19 +36,13 @@ interface AuthService {
     /**
      * 로그인
      */
-    @POST("/login")
+    @POST("/user/login")
     @Headers("NO-AUTH: true")
     suspend fun login(
         /**
          * 소셜로그인으로 부터 받은 uid
          */
-        @Query("uid")
-        uid: String,
-        /**
-         * 소셜로그인 타입(kakao, google, naver)
-         */
-        @Query("type")
-        type: String,
+        @Body loginRequest: LoginRequest,
     ): Result<LoginResponse>
 
     /**

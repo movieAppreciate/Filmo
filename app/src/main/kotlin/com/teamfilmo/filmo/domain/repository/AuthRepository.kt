@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.repository
 
+import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
 
@@ -11,7 +12,6 @@ interface AuthRepository {
     ): Result<SignUpResponse>
 
     suspend fun login(
-        uid: String,
-        type: String,
+        loginRequest: LoginRequest,
     ): Result<LoginResponse>
 }

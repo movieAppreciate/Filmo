@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.source
 
+import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
 import com.teamfilmo.filmo.data.remote.service.AuthService
@@ -20,9 +21,8 @@ class AuthRemoteDataSourceImpl
         }
 
         override suspend fun login(
-            uid: String,
-            type: String,
+            loginRequest: LoginRequest,
         ): Result<LoginResponse> {
-            return authService.login(uid, type)
+            return authService.login(loginRequest)
         }
     }

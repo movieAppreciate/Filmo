@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.databinding.UpcomingMovieItemBinding
+import timber.log.Timber
 
 class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHolder>() {
     var movieList: ArrayList<MovieInfo> = arrayListOf()
@@ -27,6 +28,7 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
             val genre = item.genres
             val image = item.movieImage
 
+            Timber.d("무비 이미지 경로 : ${item.movieImage}")
             Glide.with(binding.root.context)
                 .asBitmap()
                 .load(image)

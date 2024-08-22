@@ -9,6 +9,8 @@ import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
@@ -16,7 +18,6 @@ import com.teamfilmo.filmo.domain.repository.ReportRepository
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
 import com.teamfilmo.filmo.model.movie.MovieResponse
 import com.teamfilmo.filmo.model.report.Report
-import com.teamfilmo.filmo.model.report.ReportInfo
 import com.teamfilmo.filmo.model.report.ReportItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -129,8 +130,8 @@ class ReportViewModel
             return bookmarkRepository.registBookmark(reportId)
         }
 
-        suspend fun searchMovieList(movie: String): Result<MovieResponse> {
-            return movieRepository.searchList(movie, 1)
+        suspend fun searchMovieList(movie: MovieRequest): Result<MovieResponse> {
+            return movieRepository.searchList(movie)
         }
 
     /*

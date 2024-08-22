@@ -28,7 +28,7 @@ data class DetailMovieResponse(
     @SerialName("popularity")
     val popularity: Double,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String? = null,
     @SerialName("production_companies")
     val productionCompanies: List<ProductionCompany>,
     @SerialName("production_countries")

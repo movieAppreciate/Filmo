@@ -1,7 +1,9 @@
 package com.teamfilmo.filmo.domain.repository
 
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.model.report.Report
-import com.teamfilmo.filmo.model.report.ReportInfo
 
 interface ReportRepository {
     suspend fun searchReport(
@@ -10,4 +12,9 @@ interface ReportRepository {
     ): Result<ReportInfo>
 
     suspend fun getReport(reportId: String): Result<Report>
+
+    suspend fun registReport(
+        loginId: String,
+        request: RegistReportRequest,
+    ): Result<RegistReportResponse>
 }
