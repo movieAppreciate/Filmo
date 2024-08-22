@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @HiltViewModel
 class MovieSelectViewModel
@@ -41,7 +40,7 @@ class MovieSelectViewModel
             _movieList.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
-                initialValue = arrayListOf(),
+                initialValue = emptyList(),
             )
 
         private val _moviePosterUriList = MutableStateFlow<List<String>>(emptyList())
@@ -82,16 +81,9 @@ class MovieSelectViewModel
 
                     myQuery = query?.let { MovieRequest(it) }
 
-                    // 비동기 작업 전 상태를 비워줍니다.
-                    _movieList.update { emptyList() }
-                    _moviePosterUriList.update { emptyList() }
-
-
                     searchMovieListUseCase(myQuery).collect {
                         getTotalMoviePage(myQuery)
-                        _movieList.update {
-                            it.distinctBy { it.id }
-                        }
+                        _movieList.value = it.distinctBy { it.id }
 
                         val imageBaseUrl = "https://image.tmdb.org/t/p/original"
 

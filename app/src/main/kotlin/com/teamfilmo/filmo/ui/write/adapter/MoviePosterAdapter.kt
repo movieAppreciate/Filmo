@@ -14,10 +14,8 @@ class MoviePosterAdapter(private val context: Context) : BaseAdapter() {
     private var selectedPosition: Int? = null
 
     fun setPosterUriList(uriList: List<String>) {
-        posterUriList = emptyList<String>().toMutableList()
-        Timber.d("clear 후 $posterUriList")
+        posterUriList.clear()
         posterUriList.addAll(uriList)
-        Timber.d("전달된 uri list $posterUriList")
         notifyDataSetChanged()
     }
 

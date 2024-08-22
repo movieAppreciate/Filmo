@@ -107,8 +107,8 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
                             moviePosterAdapter?.getSelectedMoviePosition().apply {
                                 viewModel.movieList.collect { movieList ->
-
                                     this?.let {
+                                        Timber.d("클릭함 $movieList")
                                         if (movieList.isNotEmpty()) {
                                             val selectedMovieName = movieList[this].title
                                             val selectedMovieId = movieList[this].id.toString()
