@@ -30,7 +30,7 @@ class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel, WriteEf
 
     fun navigateToWriteReportFragment(
         movieName: String,
-        movieId: Int,
+        movieId: String,
     ) {
         supportFragmentManager.beginTransaction()
             .add(R.id.report_fragment_container_view, WriteReportFragment.newInstance(movieName, movieId))
@@ -40,7 +40,7 @@ class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel, WriteEf
 
     fun navigateToReportThumbnailFragment(
         movieName: String,
-        movieId: Int,
+        movieId: String,
     ) {
         supportFragmentManager.beginTransaction()
             .add(R.id.report_fragment_container_view, ReportThumbnailFragment.newInstance(movieName, movieId))

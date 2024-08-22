@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.movie
 
+import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ class GetMoviePosterUseCase
     constructor(
         private val movieRepository: MovieRepository,
     ) {
-        operator fun invoke(movieId: Int): Flow<String> =
+        operator fun invoke(movieId: ThumbnailRequest): Flow<String> =
             flow {
                 val result =
                     movieRepository.getPoster(movieId)

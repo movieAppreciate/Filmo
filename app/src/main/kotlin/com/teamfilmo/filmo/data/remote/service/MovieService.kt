@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.remote.service
 
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
+import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
 import com.teamfilmo.filmo.model.movie.MovieResponse
 import retrofit2.http.Body
@@ -48,12 +49,11 @@ interface MovieService {
     /**
      * 영화 이미지 조회
      */
-    @GET("/movie/getPoster")
+    @POST("/movie/search/posters")
     suspend fun getPoster(
         /**
          * 영화 아이디
          */
-        @Query("movieId")
-        movieId: Int,
+        @Body movieId: ThumbnailRequest,
     ): Result<PosterResponse>
 }

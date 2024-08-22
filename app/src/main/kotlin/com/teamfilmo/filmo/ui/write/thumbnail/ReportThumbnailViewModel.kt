@@ -49,7 +49,7 @@ class ReportThumbnailViewModel
             }
         }
 
-        private fun getPoster(movieId: Int) {
+        private fun getPoster(movieId: String) {
             viewModelScope.launch {
                 getMoviePosterListUseCase(movieId).collect {
                     _moviePosterList.value = it
@@ -57,7 +57,7 @@ class ReportThumbnailViewModel
             }
         }
 
-        private fun getBackDrop(movieId: Int) {
+        private fun getBackDrop(movieId: String) {
             viewModelScope.launch {
                 getMovieBackDropListUseCase(movieId).collect {
                     _movieBackdropList.value = it

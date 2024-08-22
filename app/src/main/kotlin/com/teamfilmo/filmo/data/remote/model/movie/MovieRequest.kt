@@ -6,3 +6,8 @@ import kotlinx.serialization.Serializable
 data class MovieRequest(
     val query: String,
 )
+
+@Serializable
+data class ThumbnailRequest(
+    val movieId: String,
+)

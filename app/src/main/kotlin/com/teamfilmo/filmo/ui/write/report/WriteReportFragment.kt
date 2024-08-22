@@ -32,13 +32,13 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
     companion object {
         fun newInstance(
             movieName: String,
-            movieId: Int,
+            movieId: String,
         ): WriteReportFragment {
             return WriteReportFragment().apply {
                 arguments =
                     Bundle().apply {
                         putString("MOVIE_NAME", movieName)
-                        putInt("MOVIE_ID", movieId)
+                        putString("MOVIE_ID", movieId)
                     }
             }
         }
@@ -112,7 +112,7 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
         }
 
         val movieName = arguments?.getString("MOVIE_NAME")
-        val movieId = arguments?.getInt("MOVIE_ID")
+        val movieId = arguments?.getString("MOVIE_ID")
         binding.txtSelectedMovie.text = movieName
 
         val list = arrayListOf<String>()

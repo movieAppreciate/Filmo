@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
+import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import com.teamfilmo.filmo.model.movie.DetailMovieResponse
@@ -28,7 +29,7 @@ class MovieRepositoryImpl
             return movieDataSource.getVideo(movieId)
         }
 
-        override suspend fun getPoster(movieId: Int): Result<PosterResponse> {
+        override suspend fun getPoster(movieId: ThumbnailRequest): Result<PosterResponse> {
             return movieDataSource.getPoster(movieId)
         }
     }

@@ -13,13 +13,13 @@ import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelectViewModel, MovieSelectEffect, MovieSelectEvent>(
     FragmentSelectMovieBinding::inflate,
 ) {
     private var currentPage: Int = 2
-    private var myQuery: String? = null
     private val moviePosterAdapter by lazy {
         context?.let { MoviePosterAdapter(it) }
     }
@@ -84,13 +84,14 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         binding.movieSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    myQuery = query
                     // 처음 검색 시에는 1페이지 데이터를 가져옴
-                    viewModel.handleEvent(MovieSelectEvent.SearchMovie(myQuery))
+                    viewModel.handleEvent(MovieSelectEvent.SearchMovie(query))
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    moviePosterAdapter?.initializePosterUriList()
+                    viewModel.handleEvent(MovieSelectEvent.InitializeMovieList)
                     return true
                 }
             },
@@ -110,7 +111,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                                     this?.let {
                                         if (movieList.isNotEmpty()) {
                                             val selectedMovieName = movieList[this].title
-                                            val selectedMovieId = movieList[this].id
+                                            val selectedMovieId = movieList[this].id.toString()
                                             (activity as? WriteActivity)?.navigateToWriteReportFragment(selectedMovieName, selectedMovieId)
                                         }
                                     }
@@ -129,6 +130,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
+                            Timber.d("전달하는 리스트, ${it.size}")
                             moviePosterAdapter?.setPosterUriList(it)
                         }
                     }

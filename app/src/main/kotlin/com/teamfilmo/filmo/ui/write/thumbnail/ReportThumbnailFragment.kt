@@ -25,13 +25,13 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
     companion object {
         fun newInstance(
             movieName: String,
-            movieId: Int,
+            movieId: String,
         ): ReportThumbnailFragment {
             return ReportThumbnailFragment().apply {
                 arguments =
                     Bundle().apply {
                         putString("MOVIE_NAME", movieName)
-                        putInt("MOVIE_ID", movieId)
+                        putString("MOVIE_ID", movieId)
                     }
             }
         }
@@ -60,7 +60,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         binding.btnBackground.isSelected = false
         binding.txtSelectedMovie.text = arguments?.getString("MOVIE_NAME")
 
-        val movieId = arguments?.getInt("MOVIE_ID")
+        val movieId = arguments?.getString("MOVIE_ID")
 
         Timber.d("Report Thumbnail Fragment selectedMovieId : $movieId")
 

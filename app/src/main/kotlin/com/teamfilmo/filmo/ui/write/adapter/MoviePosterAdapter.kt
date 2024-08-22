@@ -10,12 +10,19 @@ import com.bumptech.glide.Glide
 import timber.log.Timber
 
 class MoviePosterAdapter(private val context: Context) : BaseAdapter() {
-    private var posterUriList: ArrayList<String> = arrayListOf()
+    private var posterUriList: MutableList<String> = arrayListOf()
     private var selectedPosition: Int? = null
 
     fun setPosterUriList(uriList: List<String>) {
-        this.posterUriList.addAll(uriList)
+        posterUriList = emptyList<String>().toMutableList()
+        Timber.d("clear 후 $posterUriList")
+        posterUriList.addAll(uriList)
         Timber.d("전달된 uri list $posterUriList")
+        notifyDataSetChanged()
+    }
+
+    fun initializePosterUriList() {
+        posterUriList = emptyList<String>().toMutableList()
         notifyDataSetChanged()
     }
 

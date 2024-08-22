@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -24,8 +25,9 @@ class MovieSelectViewModel
         private val getTotalPageMovieListUseCase: GetTotalPageMovieListUseCase,
     ) :
     BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
+        private var previousQuery: String? = null
         private var myQuery: MovieRequest? = null
-        private val _movieList = MutableStateFlow<List<Result>>(arrayListOf())
+        private val _movieList = MutableStateFlow<List<Result>>(emptyList())
         private var _totalPage: MutableStateFlow<Int> = MutableStateFlow(1)
 
         val totalPage: StateFlow<Int> =
@@ -55,6 +57,11 @@ class MovieSelectViewModel
                 is MovieSelectEvent.SearchMovie -> {
                     searchMovieList(query = event.query)
                 }
+
+                is MovieSelectEvent.InitializeMovieList -> {
+                    _movieList.value = emptyList()
+                    _moviePosterUriList.value = emptyList()
+                }
             }
         }
 
@@ -70,22 +77,39 @@ class MovieSelectViewModel
             query: String?,
         ) {
             viewModelScope.launch {
-                myQuery = query?.let { MovieRequest(it) }
-                val list = arrayListOf<String>()
-                Timber.d("1. 뷰모델 list  $list")
-                searchMovieListUseCase(myQuery).collect {
-                    getTotalMoviePage(myQuery)
-                    _movieList.value = it
-                    val imageBaseUrl = "https://image.tmdb.org/t/p/original"
-                    it.forEach {
-                        it.posterPath?.let { posterPath ->
-                            list.add(imageBaseUrl + posterPath)
+                if (previousQuery != query) {
+                    previousQuery = query
+
+                    myQuery = query?.let { MovieRequest(it) }
+                    val resultList = mutableListOf<String>()
+                    // 비동기 작업 전 상태를 비워줍니다.
+                    _movieList.update { emptyList() }
+                    _moviePosterUriList.update { emptyList() }
+
+                    Timber.d("_movieList 초기화 후 : ${_movieList.value}")
+                    Timber.d("_moviePosterUriList 초기화 후 : ${_moviePosterUriList.value}")
+
+                    searchMovieListUseCase(myQuery).collect {
+                        getTotalMoviePage(myQuery)
+                        _movieList.update {
+                            it.distinctBy { it.id }
                         }
+                        Timber.d("_movieList.val 데이터 넣은후 : ${_movieList.value}")
+
+                        val imageBaseUrl = "https://image.tmdb.org/t/p/original"
+
+                        val updatedResultList =
+                            it.distinctBy { it.id }.mapNotNull {
+                                it.posterPath?.let { posterPath ->
+                                    imageBaseUrl + posterPath
+                                }
+                            }
+
+                        _moviePosterUriList.update { updatedResultList }
+                        Timber.d("_movieposterUriList.vale 데이터 넣은 후  : ${_movieList.value}")
+                        sendEffect(MovieSelectEffect.SearchMovie)
                     }
                 }
-                _moviePosterUriList.value = list
-                sendEffect(MovieSelectEffect.SearchMovie)
-                // list.clear()
             }
         }
     }
