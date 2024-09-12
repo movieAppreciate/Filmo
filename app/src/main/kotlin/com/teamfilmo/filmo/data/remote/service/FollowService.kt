@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.follow.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.follow.FollowResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -85,6 +86,6 @@ interface FollowService {
         /**
          * 확인할 유저의 아이디
          */
-        @Query("userId") userId: String,
-    ): Result<String>
+        @Query("otherUserId") userId: String,
+    ): Result<FollowCountResponse>
 }

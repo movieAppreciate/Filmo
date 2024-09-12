@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.data.remote.source
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
+import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
 import com.teamfilmo.filmo.data.remote.service.ReportService
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.model.report.Report
@@ -13,8 +14,8 @@ class ReportDataSourceImpl
     constructor(
         private val reportService: ReportService,
     ) : ReportDataSource {
-        override suspend fun searchAllReport(): Result<ReportInfo> {
-            return reportService.searchAllReport()
+        override suspend fun searchAllReport(body: SearchAllReportRequest): Result<ReportInfo> {
+            return reportService.searchAllReport(body)
         }
 
         override suspend fun searchReport(

@@ -73,7 +73,7 @@ interface ReportService {
      */
     @POST("/report/searchReport")
     suspend fun searchAllReport(
-        @Body body: SearchAllReportRequest? = null,
+        @Body body: SearchAllReportRequest,
     ): Result<ReportInfo>
 
     /**

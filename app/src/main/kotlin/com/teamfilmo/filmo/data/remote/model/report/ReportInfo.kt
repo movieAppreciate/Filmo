@@ -15,7 +15,7 @@ data class ReportList(
     val title: String,
     val content: String,
     val createDate: String,
-    val imageUrl: String?,
+    val imageUrl: String? = null,
     val nickname: String,
     val likeCount: Int,
     val replyCount: Int,

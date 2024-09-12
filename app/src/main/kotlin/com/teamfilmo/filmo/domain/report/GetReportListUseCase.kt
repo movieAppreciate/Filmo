@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.report
 
+import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
@@ -13,7 +14,7 @@ class GetReportListUseCase
     ) {
         operator fun invoke() =
             flow {
-                val result = reportRepository.searchAllReport()
+                val result = reportRepository.searchAllReport(SearchAllReportRequest)
                 result.onFailure {
                     throw it
                 }
