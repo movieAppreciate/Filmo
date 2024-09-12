@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -88,7 +89,7 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:text="배급"
         android:textColor="@color/gray02"
         app:layout_constraintEnd_toEndOf="@+id/textView11"
@@ -110,7 +111,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:text="그랜드 부다패스트 호텔"
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
@@ -121,7 +121,6 @@
         android:id="@+id/txt_movie_eng_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="the grand budapest hotel"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/txt_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/txt_movie_title" />
@@ -130,7 +129,6 @@
         android:id="@+id/txt_release_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/txt_movie_eng_title"
         app:layout_constraintTop_toTopOf="@+id/textView7" />
@@ -139,7 +137,6 @@
         android:id="@+id/txt_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/txt_release_date"
         app:layout_constraintTop_toTopOf="@+id/textView8" />
 
@@ -147,7 +144,6 @@
         android:id="@+id/txt_genre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/txt_rank"
         app:layout_constraintTop_toTopOf="@+id/textView9" />
@@ -156,7 +152,6 @@
         android:id="@+id/txt_nation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/txt_genre"
         app:layout_constraintTop_toTopOf="@+id/textView11" />
@@ -165,7 +160,6 @@
         android:id="@+id/txt_running_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/textView12"
         app:layout_constraintStart_toStartOf="@+id/txt_nation"
@@ -175,7 +169,6 @@
         android:id="@+id/txt_rationing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/textView10"
         app:layout_constraintStart_toStartOf="@+id/txt_running_time"
@@ -188,7 +181,6 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="1927년 세계대전이 한창이던 어느 날, 세계 최고의 부호 마담 D.가 의문의 살인을 당한다. 유력한 용의자로 지목된 사람은 바로 전설적인 호텔 지배인이자 그녀의 연인 ..."
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -205,13 +197,13 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_summary" />
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="120dp"
-        android:layout_height="150dp"
+        android:id="@+id/movie_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
         android:layout_marginTop="40dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_rationing"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
-        app:layout_constraintStart_toEndOf="@+id/txt_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:srcCompat="@tools:sample/avatars" />
 

@@ -1,12 +1,13 @@
 package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.domain.repository.MovieRepository
-import com.teamfilmo.filmo.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.model.movie.MovieResponse
 import javax.inject.Inject
 
 class MovieRepositoryImpl
@@ -21,7 +22,7 @@ class MovieRepositoryImpl
             return movieDataSource.searchList(query)
         }
 
-        override suspend fun searchDetail(movieId: Int): Result<DetailMovieResponse> {
+        override suspend fun searchDetail(movieId: MovieDetailRequest): Result<DetailMovieResponse> {
             return movieDataSource.searchDetail(movieId)
         }
 

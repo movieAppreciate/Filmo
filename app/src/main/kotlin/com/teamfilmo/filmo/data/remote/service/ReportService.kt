@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.data.remote.service
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
+import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.SearchReportRequest
 import com.teamfilmo.filmo.model.report.Report
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -63,48 +65,26 @@ interface ReportService {
      */
     @POST("/report/modifyReport")
     suspend fun modifyReport(
-        /**
-         * 감상문 아이디
-         */
-        @Query("reportId")
-        reportId: String,
-        /**
-         * 감상문 제목
-         */
-        @Query("title")
-        title: String,
-        /**
-         * 감상문 내용
-         */
-        @Query("content")
-        content: String,
-        /**
-         * 선택한 영화 아이디 (TMDB)
-         */
-        @Query("movieId")
-        movieId: String,
-        /**
-         * 해쉬태그 Example: #해시태그1 #해시태그2
-         */
-        @Query("tagString")
-        tagString: String,
+        @Body searchReportRequest: SearchReportRequest,
     ): Result<String>
+
+    /*
+    전체 감상문 검색
+     */
+    @POST("/report/searchReport")
+    suspend fun searchAllReport(
+        @Body body: SearchAllReportRequest? = null,
+    ): Result<ReportInfo>
 
     /**
      * 감상문 검색
      */
-    @GET("/report/searchReport")
+    @POST("/report/searchReport")
     suspend fun searchReport(
         /**
          * 마지막으로 조회된 감상문 아이디
          */
-        @Query("lastReportId")
-        lastReportId: String? = null,
-        /**
-         * 검색어
-         */
-        @Query("keyword")
-        keyword: String? = null,
+        @Body requestAllReport: SearchReportRequest? = null,
     ): Result<ReportInfo>
 
     /**

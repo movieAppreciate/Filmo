@@ -6,10 +6,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.databinding.UpcomingMovieItemBinding
+import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter.ItemClick
 import timber.log.Timber
 
 class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHolder>() {
     var movieList: ArrayList<MovieInfo> = arrayListOf()
+
+    interface ItemClick {
+        fun onClick(
+            position: Int,
+        )
+    }
+
+    var itemClick: ItemClick? = null
 
     fun setMovieInfoList(
         movieInfoList: List<MovieInfo>,
@@ -34,6 +43,9 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
                 .load(image)
                 .into(binding.movieImage)
 
+            binding.movieCardView.setOnClickListener {
+                itemClick?.onClick(adapterPosition)
+            }
             binding.movieTitleTxt.text = title
             binding.ageTxt.text = age.toString()
 

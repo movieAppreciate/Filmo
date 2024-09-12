@@ -118,7 +118,7 @@ class AllMovieReportViewModel
                     getBookmarkListUseCase(),
                 ) { reportList, bookmarkList ->
                     val reports =
-                        reportList.map { reportItem ->
+                        reportList?.map { reportItem ->
                             ReportItem(
                                 reportItem.reportId,
                                 reportItem.title,
@@ -135,25 +135,31 @@ class AllMovieReportViewModel
                                 checkLikeStateUseCase(reportItem.reportId).first(),
                             )
                         }
-                    _likeState.value =
-                        reports.map { reportItem ->
-                            AllReportLikeState(
-                                reportId = reportItem.reportId,
-                                likeCount = reportItem.likeCount,
-                            )
-                        }
-                    bookmarkState.value =
-                        reports.map { reportItem ->
-                            val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
-                            AllReportBookmarkState(
-                                reportId = reportItem.reportId,
-                                bookmarkId = bookmark?.id ?: 0L,
-                                isBookmarked = reportItem.isBookmark,
-                            )
-                        }
+                    if (reports != null) {
+                        _likeState.value =
+                            reports.map { reportItem ->
+                                AllReportLikeState(
+                                    reportId = reportItem.reportId,
+                                    likeCount = reportItem.likeCount,
+                                )
+                            }
+                    }
+                    if (reports != null) {
+                        bookmarkState.value =
+                            reports.map { reportItem ->
+                                val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
+                                AllReportBookmarkState(
+                                    reportId = reportItem.reportId,
+                                    bookmarkId = bookmark?.id ?: 0L,
+                                    isBookmarked = reportItem.isBookmark,
+                                )
+                            }
+                    }
                     reports
                 }.collect { reports ->
-                    _allMovieReportList.value = reports
+                    if (reports != null) {
+                        _allMovieReportList.value = reports
+                    }
                     sendEffect(AllMovieReportEffect.RefreshReport(_allMovieReportList.value))
                     Timber.d("${_allMovieReportList.value}")
                 }

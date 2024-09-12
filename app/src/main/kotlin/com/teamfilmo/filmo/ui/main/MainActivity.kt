@@ -2,15 +2,20 @@ package com.teamfilmo.filmo.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.commit
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
 import com.teamfilmo.filmo.ui.main.adapter.MainPagerAdapter
+import com.teamfilmo.filmo.ui.movie.MovieDetailFragment
+import com.teamfilmo.filmo.ui.report.ReportFragment
 import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect, MainEvent>(
@@ -31,7 +36,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
         super.onCreate(savedInstanceState)
         if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
             binding.viewPager.currentItem = 0
+        } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
+            Timber.d("")
+            supportFragmentManager.commit {
+            }
         }
+
         binding.navBar.selectedItemId = R.id.home
     }
 
@@ -40,7 +50,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
         binding.viewPager.isUserInputEnabled = false
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> binding.viewPager.currentItem = 0
+                R.id.home -> {
+                    binding.viewPager.currentItem = 0
+                }
                 R.id.write -> {
                     val intent = Intent(this, WriteActivity::class.java)
                     startActivity(intent)
@@ -60,6 +72,25 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
                 val intent = Intent(this, AuthActivity::class.java)
                 requestLogin.launch(intent)
             }
+            else -> {}
         }
+    }
+
+    fun navigateToReportFragment() {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.main_fragment_container_view, ReportFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
+        binding.viewPager.visibility = View.VISIBLE
+        binding.mainFragmentContainerView.visibility = View.GONE
+    }
+
+    fun navigateToDetailMovieFragment(movieID: Int) {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.main_fragment_container_view, MovieDetailFragment.newInstance(movieID))
+            .addToBackStack(null)
+            .commit()
+        binding.viewPager.visibility = View.GONE
+        binding.mainFragmentContainerView.visibility = View.VISIBLE
     }
 }

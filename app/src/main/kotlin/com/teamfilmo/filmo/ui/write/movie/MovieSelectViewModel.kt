@@ -3,15 +3,14 @@ package com.teamfilmo.filmo.ui.write.movie
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.domain.movie.GetTotalPageMovieListUseCase
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
-import com.teamfilmo.filmo.model.movie.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

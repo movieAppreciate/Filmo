@@ -13,9 +13,14 @@ class ReportDataSourceImpl
     constructor(
         private val reportService: ReportService,
     ) : ReportDataSource {
+        override suspend fun searchAllReport(): Result<ReportInfo> {
+            return reportService.searchAllReport()
+        }
+
         override suspend fun searchReport(
             lastReportId: String?,
             keyword: String?,
+            targetId: String?,
         ): Result<ReportInfo> {
             return reportService.searchReport()
         }

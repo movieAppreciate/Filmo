@@ -1,10 +1,11 @@
 package com.teamfilmo.filmo.data.remote.service
 
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
-import com.teamfilmo.filmo.model.movie.DetailMovieResponse
-import com.teamfilmo.filmo.model.movie.MovieResponse
+import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -25,13 +26,12 @@ interface MovieService {
     /**
      * 영화 상세 정보 검색
      */
-    @GET("/movie/searchDetail")
+    @POST("/movie/search/movieDetail")
     suspend fun searchDetail(
         /**
          * 영화 아이디
          */
-        @Query("movieId")
-        movieId: Int,
+        @Body movieId: MovieDetailRequest,
     ): Result<DetailMovieResponse>
 
     /**

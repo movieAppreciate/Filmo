@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ReportInfo(
     val searchReportCount: Int,
-    val reportList: List<ReportList>,
+    val searchReport: List<ReportList>,
     val hasNext: Boolean,
 )
 

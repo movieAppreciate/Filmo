@@ -20,7 +20,6 @@ import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReportViewModel, WriteReportEffect, WriteReportEvent>(
@@ -91,7 +90,6 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
                                 if (word.startsWith("#")) word else "#$word"
                             }
                         tagString = formattedText
-                        Timber.d("서버로 보낼 태그:$tagList")
                         if (inputText != formattedText) {
                             binding.editReportTag.setText(formattedText)
                             binding.editReportTag.setSelection(formattedText.length)

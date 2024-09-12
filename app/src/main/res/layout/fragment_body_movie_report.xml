@@ -160,7 +160,7 @@
 
         <include
             android:id="@+id/movie_detail"
-            layout="@layout/fragement_movie_detail"
+            layout="@layout/fragment_movie_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/button"
