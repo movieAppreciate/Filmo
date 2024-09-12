@@ -3,11 +3,13 @@ package com.teamfilmo.filmo.data.di
 import com.teamfilmo.filmo.data.remote.source.ReportRepositoryImpl
 import com.teamfilmo.filmo.data.repository.AuthRepositoryImpl
 import com.teamfilmo.filmo.data.repository.BookmarkRepositoryImpl
+import com.teamfilmo.filmo.data.repository.FollowRepositoryImpl
 import com.teamfilmo.filmo.data.repository.LikeRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieApiRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieRepositoryImpl
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
+import com.teamfilmo.filmo.domain.repository.FollowRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
@@ -49,4 +51,9 @@ abstract class RepositoryModule {
     abstract fun bindMovieApiRepository(
         movieApiRepository: MovieApiRepositoryImpl,
     ): MovieApiRepository
+
+    @Binds
+    abstract fun bindFollowRepository(
+        followRepository: FollowRepositoryImpl,
+    ): FollowRepository
 }
