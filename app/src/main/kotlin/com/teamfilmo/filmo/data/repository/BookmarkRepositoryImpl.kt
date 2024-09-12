@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.data.repository
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
 import com.teamfilmo.filmo.data.source.BookmarkDataSource
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class BookmarkRepositoryImpl
     constructor(
         private val bookmarkDataSource: BookmarkDataSource,
     ) : BookmarkRepository {
-        override suspend fun registBookmark(reportId: String): Result<BookmarkResponse> {
+        override suspend fun registBookmark(reportId: SaveBookmarkRequest): Result<BookmarkResponse> {
             return bookmarkDataSource.registBookmark(reportId)
         }
 

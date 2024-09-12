@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.data.remote.service
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -12,13 +14,12 @@ interface BookmarkService {
     /**
      * 북마크 등록
      */
-    @POST("/bookmark/regist")
+    @POST("/bookmark/save")
     suspend fun registerBookmark(
         /**
          * 북마크하려는 감상문 아이디
          */
-        @Query("reportId")
-        reportId: String,
+        @Body reportId: SaveBookmarkRequest,
     ): Result<BookmarkResponse>
 
     /**

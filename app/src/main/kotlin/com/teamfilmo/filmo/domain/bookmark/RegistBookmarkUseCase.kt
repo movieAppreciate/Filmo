@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.domain.bookmark
 
 import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import dagger.Reusable
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class RegistBookmarkUseCase
             flow {
                 val result =
                     bookmarkRepository
-                        .registBookmark(reportId)
+                        .registBookmark(SaveBookmarkRequest(reportId))
                         .onFailure {
                             Timber.d("bookmark regist failed : ${it.message}")
                             throw it
