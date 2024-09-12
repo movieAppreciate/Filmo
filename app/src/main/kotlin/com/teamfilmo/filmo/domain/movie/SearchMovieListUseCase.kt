@@ -1,8 +1,8 @@
 package com.teamfilmo.filmo.domain.movie
 
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.domain.repository.MovieRepository
-import com.teamfilmo.filmo.model.movie.Result
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

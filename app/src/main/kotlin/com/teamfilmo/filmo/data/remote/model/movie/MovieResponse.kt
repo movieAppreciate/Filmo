@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.model.movie
+package com.teamfilmo.filmo.data.remote.model.movie
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

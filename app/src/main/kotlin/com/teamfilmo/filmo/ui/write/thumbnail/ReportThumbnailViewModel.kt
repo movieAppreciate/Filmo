@@ -2,7 +2,6 @@ package com.teamfilmo.filmo.ui.write.thumbnail
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.domain.movie.GetMovieBackDropFromDetailUseCase
 import com.teamfilmo.filmo.domain.movie.GetMovieBackDropListUseCase
 import com.teamfilmo.filmo.domain.movie.GetMoviePosterListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +18,6 @@ class ReportThumbnailViewModel
     @Inject
     constructor(
         private val getMoviePosterListUseCase: GetMoviePosterListUseCase,
-        private val getMovieBackDropFromDetailUseCase: GetMovieBackDropFromDetailUseCase,
         private val getMovieBackDropListUseCase: GetMovieBackDropListUseCase,
     ) : BaseViewModel<ReportThumbnailEffect, ReportThumbnailEvent>() {
         private var _moviePosterList = MutableStateFlow<List<String>>(emptyList())

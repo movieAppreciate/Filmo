@@ -9,10 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
+import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -94,6 +94,17 @@ class AllMovieReportFragment :
                 }
             }
         }
+        movieInfoAdapter.itemClick =
+            object : MovieInfoAdapter.ItemClick {
+                val movie = movieInfoAdapter.movieList
+
+                override fun onClick(position: Int) {
+                    val movieId = movie[position].id
+                    // todo : movieId 검토
+                    Timber.d("영화 클릭 :$movieId")
+                    (activity as MainActivity).navigateToDetailMovieFragment(movieId)
+                }
+            }
 
         allMovieReportAdapter.itemClick =
             object : AllMovieReportAdapter.ItemClick {
