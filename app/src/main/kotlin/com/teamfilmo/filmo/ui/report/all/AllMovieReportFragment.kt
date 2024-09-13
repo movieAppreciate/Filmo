@@ -109,7 +109,8 @@ class AllMovieReportFragment :
         allMovieReportAdapter.itemClick =
             object : AllMovieReportAdapter.ItemClick {
                 override fun onClick(position: Int) {
-                    Toast.makeText(context, "감상문 클릭", Toast.LENGTH_SHORT).show()
+                    val report = allMovieReportAdapter.reportList[position]
+                    (activity as MainActivity).navigateToBodyFragment(report.reportId)
                 }
 
                 override fun onLikeClick(position: Int) {

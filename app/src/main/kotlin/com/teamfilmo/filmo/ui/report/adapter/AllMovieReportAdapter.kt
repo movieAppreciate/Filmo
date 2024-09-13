@@ -4,9 +4,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.databinding.MovieItemBinding
 import com.teamfilmo.filmo.model.report.ReportItem
+import timber.log.Timber
 
 sealed class ReportPayload {
     data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
@@ -91,6 +93,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         holder.bindLikeImage(reportList[position].isLiked)
         holder.bindLikeCount(reportList[position].likeCount)
         holder.bindBookmarkButton(reportList[position].isBookmark)
+        holder.bindMovieImage(reportList[position].imageUrl.toString())
     }
 
     override fun onBindViewHolder(
@@ -156,11 +159,21 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             val replyCount = binding.tvReplyCount
             val likeCount = binding.tvLikeCount
             val nickName = binding.tvNickName
+
             title.text = item.title
             content.text = item.content
             replyCount.text = item.replyCount.toString()
             nickName.text = item.nickname
             likeCount.text = item.likeCount.toString()
+
+            bindMovieImage(item.imageUrl.toString())
+            Timber.d("movie image url : ${item.imageUrl}")
+        }
+
+        fun bindMovieImage(imageUrl: String) {
+            Glide.with(binding.root.context)
+                .load(imageUrl)
+                .into(binding.movieImage)
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {

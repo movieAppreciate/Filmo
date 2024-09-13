@@ -31,9 +31,8 @@ class ReportRepositoryImpl
         }
 
         override suspend fun registReport(
-            loginId: String,
             request: RegistReportRequest,
         ): Result<RegistReportResponse> {
-            return reportDataSource.registReport(loginId, request)
+            return reportDataSource.registReport(request)
         }
     }

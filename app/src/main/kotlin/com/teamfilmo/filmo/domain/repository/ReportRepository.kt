@@ -21,7 +21,6 @@ interface ReportRepository {
     suspend fun getReport(reportId: String): Result<Report>
 
     suspend fun registReport(
-        loginId: String,
         request: RegistReportRequest,
     ): Result<RegistReportResponse>
 }

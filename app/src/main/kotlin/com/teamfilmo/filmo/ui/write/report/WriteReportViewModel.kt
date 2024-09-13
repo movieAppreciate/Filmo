@@ -18,18 +18,17 @@ class WriteReportViewModel
         override fun handleEvent(event: WriteReportEvent) {
             when (event) {
                 is WriteReportEvent.RegisterReport -> {
-                    registerReport(event.loginId, event.request)
+                    registerReport(event.request)
                     sendEffect(WriteReportEffect.NavigateToMain)
                 }
             }
         }
 
         private fun registerReport(
-            loginId: String = "tjdgustjdan@gmail.com",
             request: RegistReportRequest,
         ) {
             viewModelScope.launch {
-                registReportUseCase(loginId, request).collect {
+                registReportUseCase(request).collect {
                     Timber.d("regist : $it")
                 }
             }

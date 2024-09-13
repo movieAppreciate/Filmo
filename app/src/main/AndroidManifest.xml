@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         android:name=".app.FilmoApp"
         android:allowBackup="true"

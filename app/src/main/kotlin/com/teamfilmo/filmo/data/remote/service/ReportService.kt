@@ -56,7 +56,6 @@ interface ReportService {
         /**
          * 해쉬태그 Example: #해시태그1 #해시태그2
          */
-        @Query("loginId") loginId: String,
         @Body request: RegistReportRequest,
     ): Result<RegistReportResponse>
 

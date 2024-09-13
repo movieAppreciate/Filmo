@@ -133,7 +133,7 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
                         tagString = tagString?.replace(" ", "").toString(),
                     )
                 tagList = null
-                viewModel.handleEvent(WriteReportEvent.RegisterReport("tjdgustjdan@gmail.com", request))
+                viewModel.handleEvent(WriteReportEvent.RegisterReport(request))
             }
         }
 

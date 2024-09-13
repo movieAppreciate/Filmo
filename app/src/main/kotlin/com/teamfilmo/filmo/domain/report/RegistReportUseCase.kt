@@ -13,11 +13,10 @@ class RegistReportUseCase
         private val reportRepository: ReportRepository,
     ) {
         operator fun invoke(
-            loginId: String,
             request: RegistReportRequest,
         ) =
             flow {
-                val result = reportRepository.registReport(loginId, request)
+                val result = reportRepository.registReport(request)
                 result.onFailure {
                     throw it
                 }

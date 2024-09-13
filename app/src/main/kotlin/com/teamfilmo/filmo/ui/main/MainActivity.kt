@@ -10,6 +10,7 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
+import com.teamfilmo.filmo.ui.body.BodyMovieReportFragment
 import com.teamfilmo.filmo.ui.main.adapter.MainPagerAdapter
 import com.teamfilmo.filmo.ui.movie.MovieDetailFragment
 import com.teamfilmo.filmo.ui.report.ReportFragment
@@ -88,6 +89,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
     fun navigateToDetailMovieFragment(movieID: Int) {
         supportFragmentManager.beginTransaction()
             .add(R.id.main_fragment_container_view, MovieDetailFragment.newInstance(movieID))
+            .addToBackStack(null)
+            .commit()
+        binding.viewPager.visibility = View.GONE
+        binding.mainFragmentContainerView.visibility = View.VISIBLE
+    }
+
+    fun navigateToBodyFragment(
+        reportId: String,
+    ) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container_view, BodyMovieReportFragment.newInstance(reportId))
             .addToBackStack(null)
             .commit()
         binding.viewPager.visibility = View.GONE
