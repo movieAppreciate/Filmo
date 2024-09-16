@@ -27,7 +27,7 @@ class MovieDetailViewModel
          */
         private val _movieDetailInfo =
             MutableStateFlow(
-                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
             )
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()

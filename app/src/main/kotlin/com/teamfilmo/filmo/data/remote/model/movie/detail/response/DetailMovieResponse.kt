@@ -16,6 +16,7 @@ data class DetailMovieResponse(
     val overview: String?,
     val popularity: Double?,
     val poster_path: String?,
+    val providers: Providers?,
     val production_companies: List<ProductionCompany>?,
     val production_countries: List<ProductionCountry>?,
     val release_date: String?,

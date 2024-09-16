@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:singleLine="false"
         android:id="@+id/txt_report_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

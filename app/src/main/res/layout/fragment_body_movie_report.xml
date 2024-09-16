@@ -55,27 +55,26 @@
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-
-
         </LinearLayout>
     </FrameLayout>
 
-        <ListView
+
+        <TextView
             android:id="@+id/report_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-            tools:listitem="@layout/report_item" />
-
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/ic_like_unselected"
             android:src="@drawable/ic_like_unselected"
             app:layout_constraintStart_toStartOf="@+id/image_user"
@@ -119,7 +118,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/ic_duck"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageButton"
@@ -166,6 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/button"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -180,39 +180,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movie_detail" />
 
+
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/shapeableImageView3"
+            android:id="@+id/image_platform_1"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="30dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_duck"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_watch_title"
+            app:layout_constraintVertical_bias="0.0"
             app:shapeAppearance="@style/Circle50" />
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_platform_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_duck"
+            app:layout_constraintBottom_toBottomOf="@id/image_platform_1"
+            app:layout_constraintStart_toEndOf="@+id/image_platform_1"
+            app:layout_constraintTop_toTopOf="@+id/image_platform_1"
+            app:shapeAppearance="@style/Circle50" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/watch_second"
+            android:id="@+id/image_platform_3"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="5dp"
             android:src="@drawable/ic_duck"
-            app:layout_constraintBottom_toBottomOf="@id/shapeableImageView3"
-            app:layout_constraintStart_toEndOf="@+id/shapeableImageView3"
-            app:layout_constraintTop_toTopOf="@+id/shapeableImageView3"
-            app:shapeAppearance="@style/Circle50" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/ic_duck"
-            app:layout_constraintBottom_toBottomOf="@id/shapeableImageView3"
-            app:layout_constraintStart_toEndOf="@+id/watch_second"
-            app:layout_constraintTop_toTopOf="@id/shapeableImageView3"
+            app:layout_constraintBottom_toBottomOf="@id/image_platform_1"
+            app:layout_constraintStart_toEndOf="@+id/image_platform_2"
+            app:layout_constraintTop_toTopOf="@id/image_platform_1"
             app:shapeAppearance="@style/Circle50" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
 package com.teamfilmo.filmo.ui.body
 
-import android.R
 import android.os.Bundle
-import android.widget.ArrayAdapter
+import android.view.View
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -37,8 +37,8 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                     Timber.d("뷰모델에서 report : $this")
                     binding.tvMovieTitle.text = it.movieId.toString()
                     binding.tvReportTitle.text = it.title
-                    val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, it.content.toList())
-                    binding.reportListView.adapter = adapter
+//                    val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, it.content.toList())
+                    binding.reportListView.text = it.content
                     binding.tvLikeCount.text = it.likeCount.toString()
                     binding.tvReplyCount.text = it.replyCount.toString()
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
@@ -85,6 +85,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.movieDetailInfo.collect {
+                            binding.tvMovieTitle.text = it.title
                             binding.movieDetail.apply {
                                 txtMovieTitle.text = it.title
                                 txtMovieEngTitle.text = it.original_title
@@ -102,12 +103,58 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                                     .asBitmap()
                                     .load("https://image.tmdb.org/t/p/original" + it.poster_path)
                                     .into(movieImage)
+
+                                val rentLogoPath =
+                                    it.providers?.rent?.map {
+                                        "https://image.tmdb.org/t/p/original" + it.logo_path
+                                    }?.distinct()
+
+                                val buyLogoPath =
+                                    it.providers?.buy?.map {
+                                        "https://image.tmdb.org/t/p/original" + it.logo_path
+                                    }?.distinct()
+
+                                val flatrateLogoPath =
+                                    it.providers?.flatrate?.map {
+                                        "https://image.tmdb.org/t/p/original" + it.logo_path
+                                    }?.distinct()
+
+                                // todo : 이미지 동적 생성
+//                                logoPath?.first().apply {
+//                                    this?.let { it1 -> getImage(it1, binding.imagePlatform1) }
+//                                }
+
+                                val combinedLogoPaths =
+                                    listOfNotNull(
+                                        rentLogoPath,
+                                        buyLogoPath,
+                                        flatrateLogoPath,
+                                    ).flatten().distinct()
+
+                                // todo : 없을 경우 동작 추가
+                                combinedLogoPaths.forEachIndexed { index, logoPath ->
+                                    when (index) {
+                                        0 -> getImage(logoPath, binding.imagePlatform1)
+                                        1 -> getImage(logoPath, binding.imagePlatform2)
+                                        2 -> getImage(logoPath, binding.imagePlatform3)
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    fun getImage(
+        imageUrl: String,
+        view: View,
+    ) {
+        Glide.with(binding.root.context)
+            .asBitmap()
+            .load(imageUrl)
+            .into(view as ImageView)
     }
 
     companion object {
