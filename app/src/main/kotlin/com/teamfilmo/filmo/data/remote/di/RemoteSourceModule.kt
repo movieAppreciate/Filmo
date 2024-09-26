@@ -6,6 +6,7 @@ import com.teamfilmo.filmo.data.remote.source.FollowDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.LikeDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.MovieApiDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.MovieDataSourceImpl
+import com.teamfilmo.filmo.data.remote.source.ReplyDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.ReportDataSourceImpl
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
 import com.teamfilmo.filmo.data.source.BookmarkDataSource
@@ -13,6 +14,7 @@ import com.teamfilmo.filmo.data.source.FollowDataSource
 import com.teamfilmo.filmo.data.source.LikeDataSource
 import com.teamfilmo.filmo.data.source.MovieApiDataSource
 import com.teamfilmo.filmo.data.source.MovieDataSource
+import com.teamfilmo.filmo.data.source.ReplyDataSource
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import dagger.Binds
 import dagger.Module
@@ -64,4 +66,10 @@ abstract class RemoteSourceModule {
     abstract fun bindFollowDataSource(
         followDataSource: FollowDataSourceImpl,
     ): FollowDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindReplyDataSource(
+        replyDataSource: ReplyDataSourceImpl,
+    ): ReplyDataSource
 }

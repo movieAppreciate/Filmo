@@ -27,26 +27,24 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
         super.onBindLayout()
 
         val reportId = arguments?.getString("REPORT_ID") ?: ""
-        Timber.d("body에서 받은 report id : $reportId")
 
         viewModel.handleEvent(BodyMovieReportEvent.ShowReport(reportId))
+
+        binding.btnReply.setOnClickListener {
+            Timber.d("reply fragment에 전달한 ReportId : $reportId")
+            (activity as MainActivity).navigateToReplyFragment(reportId)
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.report.collect {
-                    Timber.d("뷰모델에서 report : $this")
                     binding.tvMovieTitle.text = it.movieId.toString()
                     binding.tvReportTitle.text = it.title
-//                    val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, it.content.toList())
                     binding.reportListView.text = it.content
                     binding.tvLikeCount.text = it.likeCount.toString()
                     binding.tvReplyCount.text = it.replyCount.toString()
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
-
-                    Glide.with(binding.root.context)
-                        .asBitmap()
-                        .load(it.imageUrl)
-                        .into(binding.movieImage)
+                    it.imageUrl?.let { it1 -> getImage(it1, binding.movieImage) }
                 }
             }
         }
@@ -72,11 +70,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                             binding.tvReportTitle.text = it.title
                             binding.tvLikeCount.text = it.likeCount.toString()
                             binding.tvReplyCount.text = it.replyCount.toString()
-
-                            Glide.with(binding.root.context)
-                                .asBitmap()
-                                .load(it.imageUrl)
-                                .into(binding.movieImage)
+                            it.imageUrl?.let { it1 -> getImage(it1, binding.movieImage) }
                         }
                     }
                 }
@@ -99,10 +93,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                                 txtRunningTime.text = it.runtime.toString()
                                 txtSummary.text = it.overview.toString()
 
-                                Glide.with(binding.root.context)
-                                    .asBitmap()
-                                    .load("https://image.tmdb.org/t/p/original" + it.poster_path)
-                                    .into(movieImage)
+                                getImage("https://image.tmdb.org/t/p/original" + it.poster_path, movieImage)
 
                                 val rentLogoPath =
                                     it.providers?.rent?.map {
@@ -119,11 +110,6 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                                         "https://image.tmdb.org/t/p/original" + it.logo_path
                                     }?.distinct()
 
-                                // todo : 이미지 동적 생성
-//                                logoPath?.first().apply {
-//                                    this?.let { it1 -> getImage(it1, binding.imagePlatform1) }
-//                                }
-
                                 val combinedLogoPaths =
                                     listOfNotNull(
                                         rentLogoPath,
@@ -131,7 +117,6 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                                         flatrateLogoPath,
                                     ).flatten().distinct()
 
-                                // todo : 없을 경우 동작 추가
                                 combinedLogoPaths.forEachIndexed { index, logoPath ->
                                     when (index) {
                                         0 -> getImage(logoPath, binding.imagePlatform1)
@@ -147,7 +132,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
         }
     }
 
-    fun getImage(
+    private fun getImage(
         imageUrl: String,
         view: View,
     ) {

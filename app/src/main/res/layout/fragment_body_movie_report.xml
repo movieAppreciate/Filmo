@@ -91,7 +91,7 @@
             app:layout_constraintTop_toTopOf="@+id/imageButton" />
 
         <ImageButton
-            android:id="@+id/imageButton5"
+            android:id="@+id/btn_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -108,7 +108,7 @@
             android:layout_marginStart="4dp"
             android:text="7"
             app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
-            app:layout_constraintStart_toEndOf="@+id/imageButton5"
+            app:layout_constraintStart_toEndOf="@+id/btn_reply"
             app:layout_constraintTop_toTopOf="@+id/tv_like_count"
             app:layout_constraintVertical_bias="1.0" />
 

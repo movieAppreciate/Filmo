@@ -2,7 +2,6 @@ package com.teamfilmo.filmo.ui.report.tab
 
 import androidx.fragment.app.Fragment
 import com.teamfilmo.filmo.ui.report.all.AllMovieReportFragment
-import com.teamfilmo.filmo.ui.report.follow.FollowingReportFragment
 
 enum class ReportTabInfo(
     val position: Int,
@@ -13,11 +12,6 @@ enum class ReportTabInfo(
         0,
         "전체",
         AllMovieReportFragment::newInstance,
-    ),
-    FOLLOWING_REPORT(
-        1,
-        "팔로잉",
-        FollowingReportFragment::newInstance,
     ),
     ;
 

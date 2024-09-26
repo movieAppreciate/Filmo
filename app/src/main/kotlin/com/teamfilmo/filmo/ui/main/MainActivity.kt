@@ -13,6 +13,7 @@ import com.teamfilmo.filmo.ui.auth.AuthActivity
 import com.teamfilmo.filmo.ui.body.BodyMovieReportFragment
 import com.teamfilmo.filmo.ui.main.adapter.MainPagerAdapter
 import com.teamfilmo.filmo.ui.movie.MovieDetailFragment
+import com.teamfilmo.filmo.ui.reply.ReplyFragment
 import com.teamfilmo.filmo.ui.report.ReportFragment
 import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,6 +104,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
             .addToBackStack(null)
             .commit()
         binding.viewPager.visibility = View.GONE
+        binding.mainFragmentContainerView.visibility = View.VISIBLE
+    }
+
+    fun navigateToReplyFragment(
+        reportId: String,
+    ) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container_view, ReplyFragment.newInstance(reportId))
+            .addToBackStack(null)
+            .commit()
+
         binding.mainFragmentContainerView.visibility = View.VISIBLE
     }
 }
