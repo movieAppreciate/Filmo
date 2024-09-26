@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingHorizontal="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_image"
@@ -57,10 +58,9 @@
         android:id="@+id/btn_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_like_unselected"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txt_reply"
         app:layout_constraintTop_toBottomOf="@+id/txt_reply" />
 
@@ -68,9 +68,10 @@
         android:id="@+id/txt_like_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
-        android:text="3"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@+id/btn_like"
         app:layout_constraintEnd_toStartOf="@+id/btn_reply"
         app:layout_constraintStart_toEndOf="@+id/btn_like"
         app:layout_constraintTop_toTopOf="@+id/btn_like" />
@@ -90,8 +91,9 @@
         android:id="@+id/txt_reply_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="5dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@+id/btn_reply"
         app:layout_constraintStart_toEndOf="@+id/btn_reply"
         app:layout_constraintTop_toTopOf="@+id/btn_reply" />
 
@@ -107,4 +109,20 @@
         app:layout_constraintStart_toEndOf="@+id/user_id"
         app:layout_constraintTop_toTopOf="@+id/user_id" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/sub_reply_recycerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.354"
+        app:layout_constraintStart_toStartOf="@+id/btn_like"
+        app:layout_constraintTop_toBottomOf="@+id/btn_like"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="1"
+        tools:listitem="@layout/sub_reply_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+

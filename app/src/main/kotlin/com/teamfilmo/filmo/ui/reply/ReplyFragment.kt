@@ -11,7 +11,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
-import com.teamfilmo.filmo.ui.reply.adapter.ReplyRecyclerViewAdapter
+import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
+import com.teamfilmo.filmo.ui.reply.adapter.SubReplyRVAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,40 +25,58 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
 
     override val viewModel: ReplyViewModel by viewModels()
     val adapter by lazy {
-        ReplyRecyclerViewAdapter()
+        ReplyRVAdapter()
+    }
+    val subReplyAdapter by lazy {
+        SubReplyRVAdapter()
     }
 
     override fun onBindLayout() {
         val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
         val reportId = arguments?.getString("REPORT_ID") ?: ""
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.scrollToPosition(0)
 
-        binding.root.setOnClickListener {
-            binding.editReply.hint = "댓글달기"
-        }
         adapter.itemClick =
-            object : ReplyRecyclerViewAdapter.ReplyItemClick {
+            object : ReplyRVAdapter.ReplyItemClick {
                 override fun onReplyClick(position: Int) {
-                    val reply = adapter.replyList[position]
-                    // todo :1.  키보드 올리기  2. 답글 hint 수정
-                    isReplyingToComment = true
-                    binding.editReply.requestFocus()
-                    inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
-                    binding.editReply.hint = "${reply.nickname}에게 답글 작성하기"
+                    lifecycleScope.launch {
+                        repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            viewModel.replyListStateFlow.collect {
+                                val item = it.get(position)
+                                Timber.d("클릭한 댓글 : $item")
+                                // todo :1.  키보드 올리기  2. 답글 hint 수정
+                                isReplyingToComment = true
+                                binding.editReply.requestFocus()
+                                inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
+                                binding.editReply.hint = "${item.nickname}에게 답글 작성하기"
+                                binding.btnRegistReply.setOnClickListener {
+                                    if (isReplyingToComment) {
+                                        viewModel.handleEvent(ReplyEvent.SaveReply(item.replyId, reportId, binding.editReply.text.toString()))
+                                        Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+                                        binding.editReply.clearAnimation()
+                                        binding.editReply.text.clear()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         binding.editReply.setOnClickListener {
             binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
         }
         binding.btnRegistReply.setOnClickListener {
-            viewModel.handleEvent(ReplyEvent.SaveReply(reportId, binding.editReply.text.toString()))
-            // todo : edittext 창 초기화
-            binding.editReply.clearAnimation()
-            binding.editReply.text.clear()
-            Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+            if (!isReplyingToComment) {
+                viewModel.handleEvent(ReplyEvent.SaveReply(null, reportId, binding.editReply.text.toString()))
+                Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+                // todo : edittext 창 초기화
+                binding.editReply.clearAnimation()
+                binding.editReply.text.clear()
+            }
         }
+        /*
+        전체 댓글 가져오기
+         */
         lifecycleScope.launch {
             viewModel.getReply(reportId)
         }
@@ -66,7 +85,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.replyListStateFlow.collect {
                     binding.txtReplyCount.text = it.size.toString()
-                    Timber.d("reply data : $it")
                     adapter.setReplyList(it)
                 }
             }
@@ -81,7 +99,9 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.replyItemStateFlow.collect {
                             Timber.d("추가된 댓글 : $it")
-                            adapter.addReply(it)
+                            if (!isReplyingToComment) {
+                                adapter.addReply(it)
+                            }
                         }
                     }
                 }

@@ -147,7 +147,7 @@
                 android:layout_height="30dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_reply"
+                android:src="@drawable/ic_reply_unselected"
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
                 app:layout_constraintEnd_toStartOf="@+id/tv_reply_count"
                 app:layout_constraintStart_toEndOf="@+id/likeButton"

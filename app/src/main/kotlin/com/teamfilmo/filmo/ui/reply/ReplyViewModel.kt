@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.ui.reply
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
+import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
@@ -24,6 +25,16 @@ class ReplyViewModel
         private val updateReplyUseCase: SaveReplyUseCase,
         private val deleteReplyRepository: ReplyRepository,
     ) : BaseViewModel<ReplyEffect, ReplyEvent>() {
+        /*
+        답글 리스트
+         */
+        private val _subReplyListStateFlow =
+            MutableStateFlow(
+                emptyList<SubReplyResponse>(),
+            )
+
+        val subReplyListStateFlow: StateFlow<List<SubReplyResponse>> = _subReplyListStateFlow
+
         /*
         댓글 아이템
          */
@@ -48,19 +59,20 @@ class ReplyViewModel
         override fun handleEvent(event: ReplyEvent) {
             when (event) {
                 is ReplyEvent.SaveReply -> {
-                    saveReply(event.reportId, event.content)
+                    saveReply(event.upReplyId, event.reportId, event.content)
                 }
             }
         }
 
         private fun saveReply(
+            upReplyId: String? = null,
             reportId: String,
             content: String,
         ) {
             viewModelScope.launch {
                 saveReplyUseCase(
                     SaveReplyRequest(
-                        null,
+                        upReplyId,
                         reportId,
                         content,
                     ),

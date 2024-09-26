@@ -1,14 +1,14 @@
 package com.teamfilmo.filmo.ui.reply.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
-import timber.log.Timber
 
-class ReplyRecyclerViewAdapter : RecyclerView.Adapter<ReplyRecyclerViewAdapter.ReplyViewHolder>() {
+class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
     val replyList: ArrayList<GetReplyResponseItem> = arrayListOf()
 
     interface ReplyItemClick {
@@ -40,8 +40,6 @@ class ReplyRecyclerViewAdapter : RecyclerView.Adapter<ReplyRecyclerViewAdapter.R
                 userId = replyItem.userId,
             )
         this.replyList.add(replyList.size, newReplyItem)
-        Timber.d("추가된 ReplyList 첫번째 : ${replyList.first()}")
-        Timber.d("추가된 ReplyList 마지막 : ${replyList.last()}")
         notifyItemInserted(replyList.size)
     }
 
@@ -57,17 +55,35 @@ class ReplyRecyclerViewAdapter : RecyclerView.Adapter<ReplyRecyclerViewAdapter.R
         holder: ReplyViewHolder,
         position: Int,
     ) {
-        holder.replyTextView.text = replyList[position].content
+        val reply = replyList[position]
+        holder.bind(reply)
     }
 
     override fun getItemCount(): Int = replyList.size
 
     inner class ReplyViewHolder(private val binding: ReplyItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val replyTextView = binding.txtReply
+        private val subReplyAdapter = SubReplyRVAdapter()
 
         init {
+            binding.subReplyRecycerView.apply {
+                adapter = subReplyAdapter
+            }
+
             binding.btnReply.setOnClickListener {
                 itemClick?.onReplyClick(adapterPosition)
+            }
+        }
+
+        fun bind(reply: GetReplyResponseItem) {
+            binding.txtReply.text = reply.content
+            binding.txtReplyCount.text = reply.subReply?.size?.toString() ?: "0"
+
+            binding.userId.text = reply.nickname
+            binding.txtTime.text = reply.createDate
+
+            reply.subReply?.let {
+                subReplyAdapter.setSubReply(it)
+                binding.subReplyRecycerView.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
     }
