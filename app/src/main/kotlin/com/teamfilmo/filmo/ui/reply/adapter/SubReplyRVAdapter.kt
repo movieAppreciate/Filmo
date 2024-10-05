@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponse
 import com.teamfilmo.filmo.databinding.SubReplyItemBinding
-import timber.log.Timber
 
 interface SubReplyItemClick {
     fun onMeatBallClick(
@@ -16,29 +15,9 @@ interface SubReplyItemClick {
 class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
     val subReplyList: ArrayList<SubReplyResponse> = arrayListOf()
 
-    /*
-    답글 삭제
-     */
-    fun removeSubReply(position: Int) {
-        this.subReplyList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    /*
-    답글 작성
-     */
-    fun addSubReply(subReplyItem: SubReplyResponse) {
-        Timber.d("subReplyAdapter addSubReply 호출됨")
-        this.subReplyList.add(subReplyItem)
-        Timber.d("subReplyList : ${this.subReplyList}")
-        notifyItemInserted(subReplyList.lastIndex)
-    }
-
     fun setSubReply(subReplyList: List<SubReplyResponse>) {
-        Timber.d("subReplyAdapter setSubReply 호출됨")
         this.subReplyList.clear()
         this.subReplyList.addAll(subReplyList)
-        Timber.d("전체 답글 리스트 : $subReplyList")
         notifyDataSetChanged()
     }
 

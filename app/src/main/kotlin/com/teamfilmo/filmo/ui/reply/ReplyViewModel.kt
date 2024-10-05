@@ -3,7 +3,6 @@ package com.teamfilmo.filmo.ui.reply
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
-import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
@@ -30,16 +29,6 @@ class ReplyViewModel
          */
         private val _subReplyStateFlow = MutableStateFlow(SaveReplyResponse("", "", "", "", ""))
         val subReplyStateFlow: StateFlow<SaveReplyResponse> = _subReplyStateFlow
-
-        /*
-        답글 리스트
-         */
-        private val _subReplyListStateFlow =
-            MutableStateFlow(
-                emptyList<SubReplyResponse>(),
-            )
-
-        val subReplyListStateFlow: StateFlow<List<SubReplyResponse>> = _subReplyListStateFlow
 
         /*
         댓글 아이템

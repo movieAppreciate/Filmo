@@ -9,10 +9,8 @@ import timber.log.Timber
 class ReplyViewHolder(
     private val binding: ReplyItemBinding,
     private val itemClick: ReplyItemClick?,
-    private val subReplyItemClick: SubReplyItemClick?,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val subReplyAdapter = SubReplyRVAdapter()
-    private val replyRVAdapter = ReplyRVAdapter()
 
     init {
         with(binding) {
@@ -68,16 +66,5 @@ class ReplyViewHolder(
                 }
             }
         }
-    }
-
-    fun updateSubReplyList(
-        reply: GetReplyResponseItem,
-        subReplyPosition: Int,
-    ) {
-        val subReplyList = reply.subReply?.toMutableList()
-        subReplyList?.removeAt(subReplyPosition)
-
-        val updatedReply = reply.copy(subReply = subReplyList)
-        bind(updatedReply)
     }
 }

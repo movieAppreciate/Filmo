@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +20,6 @@ import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
@@ -52,8 +52,20 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     }
 
     override fun onBindLayout() {
-        // val concatAdapter = ConcatAdapter(adapter, subReplyAdapter)
-
+        // 댓글, 답글 전환
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (isReplyingToComment) {
+                        isReplyingToComment = false
+                        binding.editReply.hint = "댓글 달기"
+                    } else {
+                        parentFragmentManager.popBackStack()
+                    }
+                }
+            },
+        )
         val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val reportId = arguments?.getString("REPORT_ID") ?: ""
         binding.recyclerView.adapter = adapter
@@ -61,6 +73,12 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+        // todo : 앱 상 뒤로 가기 버튼 말고 고유 뒤로 가기 버튼 동작 시 댓글 작성으로 변환
+//        if (isReplyingToComment){
+//            isReplyingToComment = false
+//            binding.editReply.hint="댓글 달기"
+//        }
+//
 
         adapter.itemClick =
             object : ReplyItemClick {
@@ -68,9 +86,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                     lifecycleScope.launch {
                         isReplyingToComment = true
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            // todo : replyListStateFlow 값이 변하지 않는다면 ? 내부 코드가 실행될까?
                             viewModel.replyListStateFlow.collect {
-                                Timber.d("여기 변함1")
                                 val item = it[position]
                                 upReplyId = item.replyId
                                 binding.editReply.requestFocus()
@@ -95,7 +111,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                                 val reply = adapter.replyList.get(position).replyId
                                 when (text) {
                                     "삭제하기" -> {
-                                        // todo : 해당 댓글 삭제하기
                                         viewModel.handleEvent(ReplyEvent.DeleteReply(reply, reportId))
                                         adapter.removeReplyItem(position)
                                         Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
@@ -109,11 +124,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                             }
                         },
                     )
-                }
-
-                override fun onSubReplyDelete(replyId: String) {
-                    viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
-                    Toast.makeText(context, "답글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onShowBottomSheet(
@@ -131,9 +141,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                             override fun onButtonSelected(text: String) {
                                 when (text) {
                                     "삭제하기" -> {
-                                        Timber.d("답글 리스트 : ${subReplyAdapter.subReplyList}")
                                         viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
-                                        Toast.makeText(context, "답글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                                         bottomSheet.dismiss()
                                     }
 
@@ -154,14 +162,12 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
             binding.editReply.hint = "댓글달기"
         }
         binding.btnRegistReply.setOnClickListener {
-            Timber.d("여기 호출 2")
-            if (!isReplyingToComment) {
-                viewModel.handleEvent(ReplyEvent.SaveReply(null, reportId, binding.editReply.text.toString()))
-                Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
-                // todo : edittext 창 초기화
-            } else {
+            if (isReplyingToComment) {
                 viewModel.handleEvent(ReplyEvent.SaveSubReply(upReplyId, reportId, binding.editReply.text.toString()))
                 Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.handleEvent(ReplyEvent.SaveReply(null, reportId, binding.editReply.text.toString()))
+                Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             }
             binding.editReply.clearAnimation()
             binding.editReply.text.clear()
@@ -176,10 +182,8 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.replyListStateFlow.collect {
-                    Timber.d("여기 호출0")
                     binding.txtReplyCount.text = it.size.toString()
                     adapter.setReplyList(it)
-                    // subReplyAdapter.setSubReply(it.flatMap { it.subReply ?: emptyList() })
                 }
             }
         }
@@ -188,15 +192,11 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
             is ReplyEffect.SaveReply -> {
-                // todo : 리사이클러뷰에 아이템 업데이트
-                lifecycleScope.launch {
-                }
             }
             is ReplyEffect.SaveSubReply -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.subReplyStateFlow.collect {
-                            Timber.d("여기 호출4")
                             if (it.upReplyId != null) {
                                 upReplyId = it.upReplyId
                             }
