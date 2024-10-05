@@ -28,6 +28,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_overlay"
+            android:layout_height="120dp"/>
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,8 +48,8 @@
                 android:id="@+id/tv_movie_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:text="그랜드 부다패스트 호텔"
+                android:paddingStart="10dp"
                 android:textColor="@color/white" />
 
             <TextView

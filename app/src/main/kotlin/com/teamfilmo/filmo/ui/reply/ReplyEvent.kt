@@ -8,4 +8,20 @@ sealed class ReplyEvent : BaseEvent() {
         val reportId: String,
         val content: String,
     ) : ReplyEvent()
+
+    data class DeleteReply(
+        val replyId: String,
+        val reportId: String,
+    ) : ReplyEvent()
+
+    data class DeleteSubReply(
+        val replyId: String,
+        val reportId: String,
+    ) : ReplyEvent()
+
+    data class SaveSubReply(
+        val upReplyId: String,
+        val reportId: String,
+        val content: String,
+    ) : ReplyEvent()
 }

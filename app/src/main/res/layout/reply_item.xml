@@ -11,10 +11,9 @@
         android:id="@+id/user_image"
         android:layout_width="50sp"
         android:layout_height="50sp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_duck"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearance="@style/Circle50" />
@@ -23,16 +22,16 @@
         android:id="@+id/user_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="USER_A"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.26"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/user_image"
         app:layout_constraintTop_toTopOf="@+id/user_image" />
 
     <TextView
         android:id="@+id/txt_reply"
         android:layout_width="407dp"
         android:layout_height="wrap_content"
+        android:maxLines="4"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="5dp"
         android:text="언제나 누구보다 빠르게 작성하는게 좋습니다. 그게 바로 댓글 1순위를 차지하는"
@@ -69,8 +68,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:textColor="@color/gray02"
         android:layout_marginEnd="10dp"
-        android:text=""
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/btn_like"
         app:layout_constraintEnd_toStartOf="@+id/btn_reply"
         app:layout_constraintStart_toEndOf="@+id/btn_like"
@@ -92,6 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:textColor="@color/gray02"
         android:text=""
         app:layout_constraintBottom_toBottomOf="@+id/btn_reply"
         app:layout_constraintStart_toEndOf="@+id/btn_reply"
@@ -109,20 +110,42 @@
         app:layout_constraintStart_toEndOf="@+id/user_id"
         app:layout_constraintTop_toTopOf="@+id/user_id" />
 
+
     <androidx.recyclerview.widget.RecyclerView
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/sub_reply_recycerView"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.354"
-        app:layout_constraintStart_toStartOf="@+id/btn_like"
-        app:layout_constraintTop_toBottomOf="@+id/btn_like"
-        app:layout_constraintVertical_bias="0.0"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="@+id/btn_more"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/btn_reply"
         tools:itemCount="1"
         tools:listitem="@layout/sub_reply_item" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageButton
+        android:visibility="gone"
+        android:id="@+id/btn_reply_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/btn_more_reply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sub_reply_recycerView"
+        app:layout_constraintTop_toBottomOf="@+id/sub_reply_recycerView" />
+
+    <ImageButton
+        android:id="@+id/btn_close_sub_reply"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/btn_close_sub_reply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sub_reply_recycerView"
+        app:layout_constraintTop_toBottomOf="@+id/sub_reply_recycerView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 

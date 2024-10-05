@@ -6,6 +6,7 @@ import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -42,7 +43,7 @@ interface ReplyService {
     /**
      * 댓글 삭제
      */
-    @GET("/reply/deleteReply/{replyId}")
+    @DELETE("/reply/deleteReply/{replyId}")
     suspend fun deleteReply(
         /**
          * 댓글 아이디
