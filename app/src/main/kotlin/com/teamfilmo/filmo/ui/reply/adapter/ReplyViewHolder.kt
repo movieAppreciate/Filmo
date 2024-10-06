@@ -19,6 +19,9 @@ class ReplyViewHolder(
     init {
         with(binding) {
             subReplyRecycerView.adapter = subReplyAdapter
+            btnLike.setOnClickListener {
+                itemClick?.onLikeClick(adapterPosition)
+            }
             btnReply.setOnClickListener {
                 itemClick?.onReplyClick(adapterPosition)
             }

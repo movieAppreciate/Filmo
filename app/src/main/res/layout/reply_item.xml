@@ -58,8 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_like_unselected"
+        android:background="@drawable/ic_like"
         app:layout_constraintStart_toStartOf="@+id/txt_reply"
         app:layout_constraintTop_toBottomOf="@+id/txt_reply" />
 
@@ -81,8 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_reply_unselected"
+        android:background="@drawable/ic_reply"
         app:layout_constraintBottom_toBottomOf="@+id/btn_like"
         app:layout_constraintStart_toEndOf="@+id/txt_like_count"
         app:layout_constraintTop_toTopOf="@+id/btn_like" />

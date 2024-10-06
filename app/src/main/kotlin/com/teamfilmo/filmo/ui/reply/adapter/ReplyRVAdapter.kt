@@ -7,6 +7,10 @@ import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
 
 interface ReplyItemClick {
+    fun onLikeClick(
+        position: Int,
+    )
+
     fun onReplyClick(
         position: Int,
     )

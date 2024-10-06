@@ -82,8 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:background="@drawable/ic_like_unselected"
-            android:src="@drawable/ic_like_unselected"
+            android:background="@drawable/ic_like"
             app:layout_constraintStart_toStartOf="@+id/image_user"
             app:layout_constraintTop_toBottomOf="@+id/report_list_view" />
 
@@ -102,8 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:background="@drawable/ic_reply_unselected"
-            android:src="@drawable/ic_reply_unselected"
+            android:background="@drawable/ic_reply"
             app:layout_constraintBottom_toBottomOf="@+id/imageButton"
             app:layout_constraintStart_toEndOf="@+id/tv_like_count"
             app:layout_constraintTop_toTopOf="@+id/imageButton" />

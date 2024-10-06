@@ -14,11 +14,14 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyItemClick
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
+import com.teamfilmo.filmo.ui.widget.CustomDialog
+import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
@@ -30,6 +33,27 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     override val viewModel: ReplyViewModel by viewModels()
     val adapter by lazy {
         ReplyRVAdapter()
+    }
+
+    fun showDeleteDialog(
+        reportId: String,
+        replyId: String,
+        position: Int,
+    ) {
+        val dialog =
+            context?.let {
+                CustomDialog(it)
+            }
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    viewModel.handleEvent(ReplyEvent.DeleteReply(replyId, reportId))
+                    adapter.removeReplyItem(position)
+                    Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+        dialog?.show()
     }
 
     override fun onBindLayout() {
@@ -57,6 +81,10 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
 
         adapter.itemClick =
             object : ReplyItemClick {
+                override fun onLikeClick(position: Int) {
+                    Timber.d("좋아요 클릭")
+                }
+
                 override fun onReplyClick(position: Int) {
                     lifecycleScope.launch {
                         isReplyingToComment = true
@@ -85,9 +113,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                                 val reply = adapter.replyList.get(position).replyId
                                 when (text) {
                                     "삭제하기" -> {
-                                        viewModel.handleEvent(ReplyEvent.DeleteReply(reply, reportId))
-                                        adapter.removeReplyItem(position)
-                                        Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                                        showDeleteDialog(reportId, reply, position)
                                         bottomSheet.dismiss()
                                     }
 

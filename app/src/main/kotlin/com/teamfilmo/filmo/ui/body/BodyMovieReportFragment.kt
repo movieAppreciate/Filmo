@@ -42,7 +42,16 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                     binding.tvReportTitle.text = it.title
                     binding.reportListView.text = it.content
                     binding.tvLikeCount.text = it.likeCount.toString()
-                    binding.tvReplyCount.text = it.replyCount.toString()
+                    binding.tvReplyCount.text =
+                        if (it.replyCount > 100) {
+                            (
+                                {
+                                    binding.tvReplyCount.text = "100+"
+                                }
+                            ).toString()
+                        } else {
+                            it.replyCount.toString()
+                        }
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     it.imageUrl?.let { it1 -> getImage(it1, binding.movieImage) }
                 }
