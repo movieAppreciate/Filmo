@@ -4,7 +4,11 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
-import timber.log.Timber
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.math.abs
 
 class ReplyViewHolder(
     private val binding: ReplyItemBinding,
@@ -30,20 +34,59 @@ class ReplyViewHolder(
             }
     }
 
+    private fun formatTimeDifference(dateString: String): String {
+        val possiblePatterns =
+            listOf(
+                "MMM d, yyyy, h:mm:ss a",
+                "MMM dd, yyyy, h:mm:ss a",
+                "MMM d, yyyy, hh:mm:ss a",
+                "MMM dd, yyyy, hh:mm:ss a",
+            )
+        var inputDate: Date? = null
+
+        for (pattern in possiblePatterns) {
+            try {
+                val formatter = SimpleDateFormat(pattern, Locale.ENGLISH)
+                formatter.isLenient = false
+                inputDate = formatter.parse(dateString)
+                break
+            } catch (e: ParseException) {
+                continue
+            }
+        }
+
+        if (inputDate == null) {
+            return "Invalid Date"
+        }
+
+        val currentDate = Date()
+        val diffInMills = currentDate.time - inputDate.time
+        val diffInSeconds = abs(diffInMills / 1000)
+        val diffinMinutes = diffInSeconds / 60
+        val diffiInHours = diffinMinutes / 60
+
+        return when {
+            diffInSeconds < 60 -> "${diffInSeconds}초 전"
+            diffinMinutes < 60 -> "${diffinMinutes}분 전"
+            diffiInHours < 24 -> "${diffiInHours}시간 전"
+            else -> {
+                val outputFormatter = SimpleDateFormat("yy.MM.dd", Locale.KOREA)
+                outputFormatter.format(inputDate)
+            }
+        }
+    }
+
     fun bind(reply: GetReplyResponseItem) {
         binding.txtReply.text = reply.content
         binding.txtReplyCount.text = reply.subReply?.size?.toString() ?: "0"
 
         binding.userId.text = reply.nickname
-        binding.txtTime.text = reply.createDate
+        binding.txtTime.text = formatTimeDifference(reply.createDate)
 
-        // fixme : 현재 댓글에 답글이 없는 경우 답글이 없다고 인식된다.
+        // 구현 : 시간 로직 추가하기
 
-        Timber.d("답글 리스트 : ${reply.subReply}")
         reply.subReply?.let { subReplyList ->
-            Timber.d("답글 리스트 : $subReplyList")
             if (subReplyList.size == 0) {
-                Timber.d("답글이 없습니다")
                 subReplyAdapter.setSubReply(subReplyList)
                 binding.btnReplyMore.visibility = View.GONE
                 binding.btnCloseSubReply.visibility = View.GONE
@@ -51,7 +94,6 @@ class ReplyViewHolder(
             }
 
             binding.subReplyRecycerView.visibility = View.VISIBLE
-            // fixme : 댓글이 새로 등록되면 답글 리스트가 업데이트 되어야함.
             subReplyAdapter.setSubReply(subReplyList.take(1))
             binding.btnReplyMore.visibility = View.GONE
 
@@ -65,9 +107,7 @@ class ReplyViewHolder(
                             binding.btnCloseSubReply.visibility = View.VISIBLE
                         }
                     }
-                }
 
-                with(binding) {
                     btnCloseSubReply.setOnClickListener {
                         reply.subReply.take(1).let {
                             subReplyAdapter.setSubReply(it)

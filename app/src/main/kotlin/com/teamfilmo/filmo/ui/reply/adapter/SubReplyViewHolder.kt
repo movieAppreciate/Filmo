@@ -12,6 +12,7 @@ class SubReplyViewHolder(
     val userName = binding.userId
     val writeTime = binding.txtTime
     val likeCount = binding.txtLikeCount
+    val createDate = binding.txtTime
 
     init {
         binding.btnMeatBall.setOnClickListener {
