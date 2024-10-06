@@ -37,31 +37,43 @@ class ReplyViewHolder(
         binding.userId.text = reply.nickname
         binding.txtTime.text = reply.createDate
 
-        binding.btnCloseSubReply.setOnClickListener {
-            reply.subReply?.take(1)?.let { it1 -> subReplyAdapter.setSubReply(it1) }
-            binding.btnCloseSubReply.visibility = View.GONE
-            binding.btnReplyMore.visibility = View.VISIBLE
-        }
-
         // fixme : 현재 댓글에 답글이 없는 경우 답글이 없다고 인식된다.
 
+        Timber.d("답글 리스트 : ${reply.subReply}")
         reply.subReply?.let { subReplyList ->
             Timber.d("답글 리스트 : $subReplyList")
-            if (subReplyList.isEmpty()) {
+            if (subReplyList.size == 0) {
                 Timber.d("답글이 없습니다")
+                subReplyAdapter.setSubReply(subReplyList)
+                binding.btnReplyMore.visibility = View.GONE
+                binding.btnCloseSubReply.visibility = View.GONE
                 return
             }
 
             binding.subReplyRecycerView.visibility = View.VISIBLE
+            // fixme : 댓글이 새로 등록되면 답글 리스트가 업데이트 되어야함.
             subReplyAdapter.setSubReply(subReplyList.take(1))
+            binding.btnReplyMore.visibility = View.GONE
 
             if (subReplyList.size > 1) {
-                binding.btnReplyMore.apply {
-                    visibility = View.VISIBLE
-                    setOnClickListener {
-                        subReplyAdapter.setSubReply(subReplyList)
-                        visibility = View.GONE
-                        binding.btnCloseSubReply.visibility = View.VISIBLE
+                with(binding) {
+                    btnReplyMore.apply {
+                        visibility = View.VISIBLE
+                        setOnClickListener {
+                            subReplyAdapter.setSubReply(subReplyList)
+                            visibility = View.GONE
+                            binding.btnCloseSubReply.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                with(binding) {
+                    btnCloseSubReply.setOnClickListener {
+                        reply.subReply.take(1).let {
+                            subReplyAdapter.setSubReply(it)
+                        }
+                        binding.btnCloseSubReply.visibility = View.GONE
+                        binding.btnReplyMore.visibility = View.VISIBLE
                     }
                 }
             }

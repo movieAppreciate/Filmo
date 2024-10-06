@@ -134,6 +134,7 @@ class ReplyViewModel
                     Timber.d("댓글 등록 : ${it?.content}")
                     if (it != null) {
                         _replyItemStateFlow.value = it
+//                        sendEffect(ReplyEffect.SaveReply)
                         getReply(reportId)
                     }
                 }

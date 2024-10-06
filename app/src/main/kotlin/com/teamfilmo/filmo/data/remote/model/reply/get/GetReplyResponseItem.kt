@@ -10,6 +10,6 @@ data class GetReplyResponseItem(
     val nickname: String,
     val replyId: String,
     val reportId: String,
-    val subReply: List<SubReplyResponse>? = null,
+    val subReply: ArrayList<SubReplyResponse>? = null,
     val userId: String,
 )

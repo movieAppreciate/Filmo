@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyItemClick
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
@@ -19,6 +18,7 @@ import com.teamfilmo.filmo.ui.reply.adapter.SubReplyRVAdapter
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,21 +34,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     }
     private val subReplyAdapter by lazy {
         SubReplyRVAdapter()
-    }
-
-    private fun saveReply(
-        item: GetReplyResponseItem,
-        reportId: String,
-    ) {
-        binding.btnRegistReply.setOnClickListener {
-            if (isReplyingToComment) {
-                Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
-                viewModel.handleEvent(ReplyEvent.SaveReply(item.replyId, reportId, binding.editReply.text.toString()))
-                binding.editReply.clearAnimation()
-                binding.editReply.text.clear()
-            }
-            subReplyAdapter.notifyDataSetChanged()
-        }
     }
 
     override fun onBindLayout() {
@@ -73,12 +58,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        // todo : 앱 상 뒤로 가기 버튼 말고 고유 뒤로 가기 버튼 동작 시 댓글 작성으로 변환
-//        if (isReplyingToComment){
-//            isReplyingToComment = false
-//            binding.editReply.hint="댓글 달기"
-//        }
-//
 
         adapter.itemClick =
             object : ReplyItemClick {
@@ -92,7 +71,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                                 binding.editReply.requestFocus()
                                 inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
                                 binding.editReply.hint = "${item.nickname}에게 답글 작성하기"
-                                saveReply(item, reportId)
                             }
                         }
                     }
@@ -192,13 +170,33 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
             is ReplyEffect.SaveReply -> {
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.replyListStateFlow.collect {
+                            binding.txtReplyCount.text = it.size.toString()
+                            adapter.setReplyList(it)
+                        }
+                    }
+                }
             }
             is ReplyEffect.SaveSubReply -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.subReplyStateFlow.collect {
-                            if (it.upReplyId != null) {
-                                upReplyId = it.upReplyId
+                        launch {
+                            viewModel.subReplyStateFlow.collect {
+                                if (it.upReplyId != null) {
+                                    upReplyId = it.upReplyId
+                                }
+                            }
+                        }
+                        launch {
+                            viewModel.replyListStateFlow.collect {
+                                val position =
+                                    adapter.replyList.indexOfFirst {
+                                        it.replyId == upReplyId
+                                    }
+                                adapter.setReplyList(it)
+                                // adapter.addSubReply(position, it[upReplyId.toInt()].subReply!![0])
                             }
                         }
                     }
