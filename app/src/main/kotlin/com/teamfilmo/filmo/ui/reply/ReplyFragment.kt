@@ -42,7 +42,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     ) {
         val dialog =
             context?.let {
-                CustomDialog(it)
+                CustomDialog(resources.getString(R.string.txt_delete_reply), it)
             }
         dialog?.setItemClickListener(
             object : ItemClickListener {
@@ -50,6 +50,27 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                     viewModel.handleEvent(ReplyEvent.DeleteReply(replyId, reportId))
                     adapter.removeReplyItem(position)
                     Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+        dialog?.show()
+    }
+
+    fun showDeleteSubReplyDialog(
+        reportId: String,
+        replyId: String,
+        position: Int,
+    ) {
+        val dialog =
+            context?.let {
+                CustomDialog(resources.getString(R.string.txt_delete_sub_reply), it)
+            }
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
+                    adapter.removeReplyItem(position)
+                    Toast.makeText(context, "답글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                 }
             },
         )
@@ -141,7 +162,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                             override fun onButtonSelected(text: String) {
                                 when (text) {
                                     "삭제하기" -> {
-                                        viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
+                                        showDeleteSubReplyDialog(reportId, replyId, position)
                                         bottomSheet.dismiss()
                                     }
 

@@ -13,9 +13,10 @@ interface ItemClickListener {
     fun onClick()
 }
 
-class CustomDialog(context: Context) : Dialog(context) {
+class CustomDialog(dialogMessage: String, context: Context) : Dialog(context) {
     private lateinit var itemClickListener: ItemClickListener
     private lateinit var binding: WidgetCustomDialogBinding
+    private val message = dialogMessage
 
     fun setItemClickListener(listener: ItemClickListener) {
         this.itemClickListener = listener
@@ -35,14 +36,16 @@ class CustomDialog(context: Context) : Dialog(context) {
         // 다이얼로그 바깥쪽 클릭 시 종료되도록 함
         setCanceledOnTouchOutside(true)
 
-        // 취소 버튼 클릭 시 종료
-        binding.btnCancel.setOnClickListener {
-            dismiss()
-        }
-        binding.btnDelete.setOnClickListener {
-            // 인터페이스르 통해 다이얼로그를 호출한 액티비티나 프래그먼트에 값을 전달한다.
-            itemClickListener.onClick()
-            dismiss()
+        with(binding) {
+            btnCancel.setOnClickListener {
+                dismiss()
+            }
+            btnDelete.setOnClickListener {
+                // 인터페이스르 통해 다이얼로그를 호출한 액티비티나 프래그먼트에 값을 전달한다.
+                itemClickListener.onClick()
+                dismiss()
+            }
+            binding.txtDialogMessage.text = message
         }
     }
 }
