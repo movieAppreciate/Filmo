@@ -14,7 +14,6 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyItemClick
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
-import com.teamfilmo.filmo.ui.reply.adapter.SubReplyRVAdapter
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,9 +30,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     override val viewModel: ReplyViewModel by viewModels()
     val adapter by lazy {
         ReplyRVAdapter()
-    }
-    private val subReplyAdapter by lazy {
-        SubReplyRVAdapter()
     }
 
     override fun onBindLayout() {
@@ -169,39 +165,6 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
-            is ReplyEffect.SaveReply -> {
-                lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.replyListStateFlow.collect {
-                            binding.txtReplyCount.text = it.size.toString()
-                            adapter.setReplyList(it)
-                        }
-                    }
-                }
-            }
-            is ReplyEffect.SaveSubReply -> {
-                lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        launch {
-                            viewModel.subReplyStateFlow.collect {
-                                if (it.upReplyId != null) {
-                                    upReplyId = it.upReplyId
-                                }
-                            }
-                        }
-                        launch {
-                            viewModel.replyListStateFlow.collect {
-                                val position =
-                                    adapter.replyList.indexOfFirst {
-                                        it.replyId == upReplyId
-                                    }
-                                adapter.setReplyList(it)
-                                // adapter.addSubReply(position, it[upReplyId.toInt()].subReply!![0])
-                            }
-                        }
-                    }
-                }
-            }
             is ReplyEffect.DeleteReply -> {
                 adapter.removeReplyItem(effect.position)
             }

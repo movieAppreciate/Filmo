@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
-import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponse
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
 
 interface ReplyItemClick {
@@ -25,16 +24,6 @@ interface ReplyItemClick {
 class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
     val replyList: ArrayList<GetReplyResponseItem> = arrayListOf()
     var itemClick: ReplyItemClick? = null
-    private var subReplyItemClick: SubReplyItemClick? = null
-    private val subReplyRVAdapter = SubReplyRVAdapter()
-
-    fun addSubReply(
-        position: Int,
-        replyItem: SubReplyResponse,
-    ) {
-        replyList[position].subReply?.add(replyItem)
-        notifyItemChanged(position)
-    }
 
     /*
     댓글 삭제

@@ -21,11 +21,6 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun addSubReply(newReplyItem: SubReplyResponse) {
-        this.subReplyList.add(newReplyItem)
-        notifyItemInserted(subReplyList.lastIndex)
-    }
-
     var subReplyItemClick: SubReplyItemClick? = null
 
     override fun onCreateViewHolder(
