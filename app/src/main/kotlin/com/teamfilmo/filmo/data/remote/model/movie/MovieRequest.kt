@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MovieRequest(
     val query: String,
+    val page: Int,
 )
 
 @Serializable

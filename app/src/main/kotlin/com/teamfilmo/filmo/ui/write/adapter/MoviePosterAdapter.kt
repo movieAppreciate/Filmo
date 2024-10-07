@@ -59,6 +59,7 @@ class MoviePosterAdapter(private val context: Context) : BaseAdapter() {
         }
 
         if (posterUriList[position] != "0") {
+            Timber.d("poster size : ${posterUriList.size}")
             Glide.with(context)
                 .load(posterUriList[position])
                 .into(imageView)

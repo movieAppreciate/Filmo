@@ -10,7 +10,6 @@ import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieRe
 interface MovieRepository {
     suspend fun searchList(
         query: MovieRequest?,
-//        page: Int,
     ): Result<MovieResponse>
 
     suspend fun searchDetail(movieId: MovieDetailRequest): Result<DetailMovieResponse>

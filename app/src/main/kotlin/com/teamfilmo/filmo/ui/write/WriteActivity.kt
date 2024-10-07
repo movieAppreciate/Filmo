@@ -7,8 +7,8 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityWriteBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
-import com.teamfilmo.filmo.ui.write.movie.MovieSelectFragment
 import com.teamfilmo.filmo.ui.write.report.WriteReportFragment
+import com.teamfilmo.filmo.ui.write.select.MovieSelectFragment
 import com.teamfilmo.filmo.ui.write.thumbnail.ReportThumbnailFragment
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -22,7 +22,7 @@ class SearchMovieListUseCase
             flow {
                 val result =
                     query?.let {
-                        movieRepository.searchList(it)
+                        movieRepository.searchList(query)
                             .onFailure {
                                 throw it
                             }

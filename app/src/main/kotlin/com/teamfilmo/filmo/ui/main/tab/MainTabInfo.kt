@@ -3,7 +3,7 @@ package com.teamfilmo.filmo.ui.main.tab
 import androidx.fragment.app.Fragment
 import com.teamfilmo.filmo.ui.mypage.MyPageFragment
 import com.teamfilmo.filmo.ui.report.ReportFragment
-import com.teamfilmo.filmo.ui.write.movie.MovieSelectFragment
+import com.teamfilmo.filmo.ui.write.select.MovieSelectFragment
 
 enum class MainTabInfo(val fragment: () -> Fragment) {
     HOME(ReportFragment::newInstance),

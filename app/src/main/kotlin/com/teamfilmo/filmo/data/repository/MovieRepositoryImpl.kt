@@ -17,7 +17,6 @@ class MovieRepositoryImpl
     ) : MovieRepository {
         override suspend fun searchList(
             query: MovieRequest?,
-//           // page: Int,
         ): Result<MovieResponse> {
             return movieDataSource.searchList(query)
         }
