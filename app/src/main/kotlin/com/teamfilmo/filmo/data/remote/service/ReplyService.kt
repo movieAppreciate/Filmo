@@ -1,87 +1,54 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
+import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
+import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
+import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyRequest
+import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface ReplyService {
     /**
      * 댓글 등록
      */
-    @POST("/reply/registReply")
-    suspend fun registReply(
-        /**
-         * 감상문 아이디
-         */
-        @Query("reportId")
-        reportId: String,
-        /**
-         * 유저 아아디
-         */
-        @Query("userId")
-        userId: String,
-        /**
-         * 댓글 내용
-         */
-        @Query("content")
-        content: String,
-        /**
-         * 대댓글일 경우 원 댓글 아이디
-         */
-        @Query("upReplyId")
-        upReplyId: String? = null,
-    ): Result<String>
+    @POST("/reply/save")
+    suspend fun saveReply(
+        @Body request: SaveReplyRequest,
+    ): Result<SaveReplyResponse>
 
     /**
      * 댓글 수정
      */
-    @POST("/reply/modifyReply")
-    suspend fun modifyReply(
-        /**
-         * 댓글 아이디
-         */
-        @Query("replyId")
-        replyId: String,
-        /**
-         * 댓글 내용
-         */
-        @Query("content")
-        content: String,
-    ): Result<String>
-
-    /**
-     * 서브댓글 가져오기
-     */
-    @GET("/reply/getSubReplies/{replyId}")
-    suspend fun getSubReplies(
-        /**
-         * 댓글 아이디
-         */
-        @Query("replyId")
-        replyId: String,
-    ): Result<String>
+    @POST("/reply/update")
+    suspend fun updateReply(
+        @Body request: UpdateReplyRequest,
+    ): Result<UpdateReplyResponse>
 
     /**
      * 원댓글 전체 가져오기
      */
-    @GET("/reply/getReplies/{reportId}")
-    suspend fun getReplies(
+    @GET("/reply/get/{reportId}")
+    suspend fun getReply(
         /**
          * 감상문 아이디
          */
-        @Query("reportId")
+        @Path("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<List<GetReplyResponseItem>>
 
     /**
      * 댓글 삭제
      */
-    @GET("/reply/deleteReply/{replyId}")
+    @DELETE("/reply/deleteReply/{replyId}")
     suspend fun deleteReply(
         /**
          * 댓글 아이디
          */
-        @Query("replyId")
+        @Path("replyId")
         replyId: String,
     ): Result<String>
 }

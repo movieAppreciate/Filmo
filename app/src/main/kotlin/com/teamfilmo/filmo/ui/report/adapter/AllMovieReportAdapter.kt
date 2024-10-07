@@ -203,8 +203,4 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             }
         }
     }
-
-    /*
-    감상문 필터를 위함
-     */
 }

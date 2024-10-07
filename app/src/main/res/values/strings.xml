@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Filmo</string>
+    <string name="txt_delete_reply">"해당 댓글을 삭제하시겠어요?"</string>
+    <string name="txt_delete_sub_reply">해당 답글을 삭제하시겠어요?</string>
 </resources>

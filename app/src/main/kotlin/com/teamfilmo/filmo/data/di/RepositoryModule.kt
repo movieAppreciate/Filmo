@@ -7,12 +7,14 @@ import com.teamfilmo.filmo.data.repository.FollowRepositoryImpl
 import com.teamfilmo.filmo.data.repository.LikeRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieApiRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieRepositoryImpl
+import com.teamfilmo.filmo.data.repository.ReplyRepositoryImpl
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.FollowRepository
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
+import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import dagger.Binds
 import dagger.Module
@@ -56,4 +58,9 @@ abstract class RepositoryModule {
     abstract fun bindFollowRepository(
         followRepository: FollowRepositoryImpl,
     ): FollowRepository
+
+    @Binds
+    abstract fun bindReplyRepository(
+        replyRepository: ReplyRepositoryImpl,
+    ): ReplyRepository
 }

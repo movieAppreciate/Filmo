@@ -107,7 +107,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_reply"
+            android:src="@drawable/ic_reply_unselected"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"

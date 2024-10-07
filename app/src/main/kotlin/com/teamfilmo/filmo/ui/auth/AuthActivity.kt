@@ -3,8 +3,10 @@ package com.teamfilmo.filmo.ui.auth
 import android.content.Intent
 import android.net.Uri
 import android.text.method.LinkMovementMethod
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.credentials.CredentialManager
@@ -35,6 +37,10 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
     override val viewModel: AuthViewModel by viewModels()
 
     override fun onBindLayout() {
+        // 상태바 색깔 처리해주기
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
         with(binding.googleLogin) {
             background = AppCompatResources.getDrawable(this@AuthActivity, R.drawable.bg_google)
             setButtonIcon(AppCompatResources.getDrawable(this@AuthActivity, R.drawable.ic_google))

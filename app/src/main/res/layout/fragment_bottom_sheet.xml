@@ -14,12 +14,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:textAlignment="textStart"
         android:id="@+id/tv_first"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="작성순"
-        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/tv_second"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="인기순"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/tv_third"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="댓글 많은순"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_second" />
