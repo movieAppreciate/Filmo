@@ -1,6 +1,7 @@
 [versions]
 # Version
 compileSdk = "34"
+lottieVersion = "6.5.2"
 minSdk = "24"
 targetSdk = "34"
 
@@ -246,6 +247,7 @@ javax-annotation = { group = "javax.annotation", name = "javax.annotation-api", 
 javax-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "javax_inject" }
 java-poet = { group = "com.squareup", name = "javapoet", version.ref = "java_poet" }
 
+lottie-v652 = { module = "com.airbnb.android:lottie", version.ref = "lottieVersion" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp_bom" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }

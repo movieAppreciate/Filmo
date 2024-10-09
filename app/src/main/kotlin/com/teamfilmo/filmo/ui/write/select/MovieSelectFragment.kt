@@ -1,13 +1,14 @@
 package com.teamfilmo.filmo.ui.write.select
 
 import android.os.Bundle
-import android.widget.AbsListView
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentSelectMovieBinding
 import com.teamfilmo.filmo.ui.write.WriteActivity
@@ -41,33 +42,35 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
     override fun onBindLayout() {
         super.onBindLayout()
 
-//        binding.btnGetMovie.setOnClickListener {
-//            currentPage++
-//            viewModel.handleEvent(MovieSelectEvent.LoadNextPageMovie(queryText, currentPage))
-//        }
-
-        binding.movieGridView.setOnScrollListener(
-            object : AbsListView.OnScrollListener {
-                private var isLoading = false
-
-                override fun onScrollStateChanged(
-                    view: AbsListView?,
-                    scrollState: Int,
-                ) {
+        val spanCount = 3
+        val layoutManager = GridLayoutManager(requireContext(), spanCount)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (moviePosterAdapter?.getItemViewType(position)) {
+                        MoviePosterAdapter.VIEW_TYPE_LOADING -> spanCount
+                        else -> 1
+                    }
                 }
-
-                override fun onScroll(
-                    view: AbsListView?,
-                    firstVisibleItem: Int,
-                    visibleItemCount: Int,
-                    totalItemCount: Int,
+            }
+        binding.movieRecyclerView.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
                 ) {
-                    if (!binding.movieGridView.canScrollVertically(1) && !isLoading) {
-                        isLoading = true
+                    super.onScrolled(recyclerView, dx, dy)
+                    val lastVisibleItemPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val itemTotalCount = recyclerView.adapter?.itemCount?.minus(1)
+
+                    // 스크롤이 끝에 도달했는지 확인
+                    if (lastVisibleItemPosition == itemTotalCount) {
                         currentPage++
+                        binding.movieRecyclerView.post {
+                            moviePosterAdapter?.setLoading(true)
+                        }
                         viewModel.handleEvent(MovieSelectEvent.LoadNextPageMovie(queryText, currentPage))
-                    } else {
-                        isLoading = false
                     }
                 }
             },
@@ -76,7 +79,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             (activity as? WriteActivity)?.navigateToAllMovieReportFragment()
         }
 
-        binding.movieGridView.adapter = moviePosterAdapter
+        binding.movieRecyclerView.adapter = moviePosterAdapter
         binding.movieSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
@@ -103,16 +106,12 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                 ) {
                     lifecycleScope.launch {
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            moviePosterAdapter?.getSelectedMoviePosition().apply {
-                                viewModel.movieList.collect { movieList ->
-                                    this?.let {
-                                        Timber.d("클릭함 $movieList")
-                                        if (movieList.isNotEmpty()) {
-                                            val selectedMovieName = movieList[this].title
-                                            val selectedMovieId = movieList[this].id.toString()
-                                            (activity as? WriteActivity)?.navigateToWriteReportFragment(selectedMovieName, selectedMovieId)
-                                        }
-                                    }
+                            viewModel.movieList.collect { movieList ->
+                                Timber.d("클릭함 $movieList")
+                                if (movieList.isNotEmpty()) {
+                                    val selectedMovieName = movieList[position].title
+                                    val selectedMovieId = movieList[position].id.toString()
+                                    (activity as? WriteActivity)?.navigateToWriteReportFragment(selectedMovieName, selectedMovieId)
                                 }
                             }
                         }
@@ -129,7 +128,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
                             moviePosterAdapter?.setPosterUriList(it)
-//                            binding.btnGetMovie.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -140,8 +138,11 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
-                            moviePosterAdapter?.initializePosterUriList()
-                            moviePosterAdapter?.setPosterUriList(it)
+                            binding.movieRecyclerView.post {
+                                moviePosterAdapter?.initializePosterUriList()
+                                moviePosterAdapter?.setLoading(false)
+                                moviePosterAdapter?.setPosterUriList(it)
+                            }
                         }
                     }
                 }
