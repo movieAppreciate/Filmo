@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.write.select
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -134,18 +135,23 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             }
 
             is MovieSelectEffect.LoadNextPage -> {
-                Timber.d("4. 프래그먼트의 LoadNextPage effect 호출 ")
+                moviePosterAdapter?.setLoading(true)
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
                             binding.movieRecyclerView.post {
-                                moviePosterAdapter?.initializePosterUriList()
                                 moviePosterAdapter?.setLoading(false)
+                                moviePosterAdapter?.initializePosterUriList()
                                 moviePosterAdapter?.setPosterUriList(it)
                             }
                         }
                     }
                 }
+            }
+            is MovieSelectEffect.NotifyLastPage -> {
+                moviePosterAdapter?.setLoading(false)
+                moviePosterAdapter?.isLastPage()
+                Toast.makeText(context, "마지막 페이지 입니다!", Toast.LENGTH_SHORT).show()
             }
         }
     }

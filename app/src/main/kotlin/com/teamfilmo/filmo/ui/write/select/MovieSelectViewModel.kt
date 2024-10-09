@@ -25,7 +25,7 @@ class MovieSelectViewModel
         private val getTotalPageMovieListUseCase: GetTotalPageMovieListUseCase,
     ) :
     BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
-        private var totalPage = 10
+        private var totalPage = 1
         private var myQuery: MovieRequest? = null
         private val _movieList = MutableStateFlow<List<Result>>(emptyList())
 
@@ -57,14 +57,7 @@ class MovieSelectViewModel
                 is MovieSelectEvent.LoadNextPageMovie -> {
                     loadNextMoviePage(event.page)
                 }
-            }
-        }
-
-        private fun getTotalMoviePage(query: MovieRequest?) {
-            viewModelScope.launch {
-                getTotalPageMovieListUseCase(query).collect {
-                    totalPage = it
-                }
+                else -> {}
             }
         }
 
@@ -72,16 +65,20 @@ class MovieSelectViewModel
             query: String?,
             page: Int,
         ) {
-            Timber.d("2. 뷰모델의 searchMovieList 호출 ")
-            if (page > totalPage) {
-                return
-            }
             viewModelScope.launch {
                 myQuery =
                     query?.let {
                         MovieRequest(query = it, page = page)
                     }
-                getTotalMoviePage(myQuery)
+                getTotalPageMovieListUseCase(myQuery).collect {
+                    totalPage = it
+                    if (page > it) {
+                        return@collect
+                    }
+                    if (page == it) {
+                        sendEffect(MovieSelectEffect.NotifyLastPage)
+                    }
+                }
                 searchMovieListUseCase(myQuery).collect { resultList ->
                     if (page == 1) {
                         _movieList.value =

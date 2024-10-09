@@ -6,4 +6,6 @@ sealed interface MovieSelectEffect : BaseEffect {
     data object SearchMovie : MovieSelectEffect
 
     data object LoadNextPage : MovieSelectEffect
+
+    data object NotifyLastPage : MovieSelectEffect
 }

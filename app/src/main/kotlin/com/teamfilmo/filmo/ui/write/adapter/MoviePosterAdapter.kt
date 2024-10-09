@@ -15,10 +15,15 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     private var posterUriList: MutableList<String> = arrayListOf()
     private var selectedPosition: Int? = null
     private var isLoading = false
+    private var isLastPage = false
 
     companion object {
         const val VIEW_TYPE_ITEM = 0
         const val VIEW_TYPE_LOADING = 1
+    }
+
+    fun isLastPage() {
+        isLastPage = true
     }
 
     fun setLoading(isLoading: Boolean) {
@@ -50,7 +55,7 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == posterUriList.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_ITEM
+        return if (position == posterUriList.size - 1 && !isLastPage) VIEW_TYPE_LOADING else VIEW_TYPE_ITEM
     }
 
     override fun onCreateViewHolder(
@@ -78,9 +83,7 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     ) {
         if (holder is MoviePosterViewHolder) {
             holder.bind()
-        }
-        else{
-
+        } else {
         }
     }
 
@@ -101,5 +104,6 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     inner class MovieLoadingViewHolder(private val binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
+
     inner class FooterViewHolder(private val binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
 }
