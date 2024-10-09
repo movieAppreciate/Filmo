@@ -14,7 +14,6 @@ import timber.log.Timber
 class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var posterUriList: MutableList<String> = arrayListOf()
     private var selectedPosition: Int? = null
-    private var isLoading = false
     private var isLastPage = false
 
     companion object {
@@ -24,10 +23,6 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
 
     fun isLastPage() {
         isLastPage = true
-    }
-
-    fun setLoading(isLoading: Boolean) {
-        this.isLoading = isLoading
     }
 
     fun setPosterUriList(uriList: List<String>) {

@@ -68,9 +68,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                     // 스크롤이 끝에 도달했는지 확인
                     if (lastVisibleItemPosition == itemTotalCount) {
                         currentPage++
-                        binding.movieRecyclerView.post {
-                            moviePosterAdapter?.setLoading(true)
-                        }
                         viewModel.handleEvent(MovieSelectEvent.LoadNextPageMovie(queryText, currentPage))
                     }
                 }
@@ -135,12 +132,10 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             }
 
             is MovieSelectEffect.LoadNextPage -> {
-                moviePosterAdapter?.setLoading(true)
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.moviePosterUriList.collect {
                             binding.movieRecyclerView.post {
-                                moviePosterAdapter?.setLoading(false)
                                 moviePosterAdapter?.initializePosterUriList()
                                 moviePosterAdapter?.setPosterUriList(it)
                             }
@@ -149,7 +144,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
                 }
             }
             is MovieSelectEffect.NotifyLastPage -> {
-                moviePosterAdapter?.setLoading(false)
                 moviePosterAdapter?.isLastPage()
                 Toast.makeText(context, "마지막 페이지 입니다!", Toast.LENGTH_SHORT).show()
             }
