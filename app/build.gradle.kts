@@ -213,6 +213,7 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
+    implementation(libs.lottie.v652)
 }
 
 protobuf {

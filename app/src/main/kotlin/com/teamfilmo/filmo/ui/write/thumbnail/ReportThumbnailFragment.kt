@@ -64,7 +64,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
         Timber.d("Report Thumbnail Fragment selectedMovieId : $movieId")
 
-        binding.movieImageGridView.adapter = moviePosterAdapter
+        // binding.movieImageGridView.adapter = moviePosterAdapter
 
         lifecycleScope.launch {
             if (movieId != null) {

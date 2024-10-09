@@ -49,7 +49,7 @@
             app:iconifiedByDefault="false"
             android:id="@+id/movie_search_view"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="@drawable/background"
             app:layout_constraintBottom_toTopOf="@+id/movie_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,18 +60,18 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <GridView
-        android:id="@+id/movie_grid_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/movie_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:horizontalSpacing="5dp"
-        android:numColumns="3"
-        android:verticalSpacing="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutManager="GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:spanCount="3"
+        tools:listitem="@layout/movie_poster_item" />
 
-    </GridView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
