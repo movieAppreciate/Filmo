@@ -4,7 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.source.MovieDataSource
 import com.teamfilmo.filmo.domain.repository.MovieRepository
@@ -21,7 +21,7 @@ class MovieRepositoryImpl
             return movieDataSource.searchList(query)
         }
 
-        override suspend fun searchDetail(movieId: MovieDetailRequest): Result<DetailMovieResponse> {
+        override suspend fun searchDetail(movieId: DetailMovieRequest): Result<DetailMovieResponse> {
             return movieDataSource.searchDetail(movieId)
         }
 

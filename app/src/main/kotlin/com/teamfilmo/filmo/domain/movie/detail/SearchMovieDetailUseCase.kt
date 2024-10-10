@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.movie.detail
 
-import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class SearchMovieDetailUseCase
             flow {
                 val result =
                     movieRepository.searchDetail(
-                        MovieDetailRequest(movieId.toString()),
+                        DetailMovieRequest(movieId.toString()),
                     )
                 result.onFailure {
                     Timber.e("실패 : ${it.message}")
