@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.remote.source
 
 import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
+import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
 import com.teamfilmo.filmo.data.remote.service.AuthService
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
@@ -13,11 +14,9 @@ class AuthRemoteDataSourceImpl
         private val authService: AuthService,
     ) : AuthRemoteDataSource {
         override suspend fun signUp(
-            uid: String,
-            type: String,
-            profileURL: String?,
+            request: SignUpRequest,
         ): Result<SignUpResponse> {
-            return authService.signUp(uid, type, profileURL)
+            return authService.signUp(request)
         }
 
         override suspend fun login(

@@ -44,6 +44,7 @@ class ReportThumbnailViewModel
                 is ReportThumbnailEvent.SelectBackground -> {
                     getBackDrop(event.movieId)
                 }
+                else -> {}
             }
         }
 

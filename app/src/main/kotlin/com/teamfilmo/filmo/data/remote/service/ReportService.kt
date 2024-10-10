@@ -2,10 +2,10 @@ package com.teamfilmo.filmo.data.remote.service
 
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.SearchReportRequest
-import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.data.remote.model.report.SearchReportResponse
+import com.teamfilmo.filmo.model.report.GetReportResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -73,7 +73,7 @@ interface ReportService {
     @POST("/report/searchReport")
     suspend fun searchAllReport(
         @Body body: SearchAllReportRequest,
-    ): Result<ReportInfo>
+    ): Result<SearchReportResponse>
 
     /**
      * 감상문 검색
@@ -84,7 +84,7 @@ interface ReportService {
          * 마지막으로 조회된 감상문 아이디
          */
         @Body requestAllReport: SearchReportRequest? = null,
-    ): Result<ReportInfo>
+    ): Result<SearchReportResponse>
 
     /**
      * 다른 유저의 감상문 검색
@@ -108,7 +108,7 @@ interface ReportService {
          */
         @Path("reportId")
         reportId: String,
-    ): Result<Report>
+    ): Result<GetReportResponse>
 
     /**
      * 감상문 삭제

@@ -109,7 +109,7 @@ class AuthViewModel
 
                 naverLoginRequestUseCase(email)
                     .onSuccess {
-                        Timber.d("naver login success")
+                        Timber.d("naver login success : $it")
                         userTokenSource.setUserToken(parse(it))
                         sendEffect(AuthEffect.LoginSuccess)
                     }

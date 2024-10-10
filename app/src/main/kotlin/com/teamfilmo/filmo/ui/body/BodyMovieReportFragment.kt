@@ -13,7 +13,6 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -37,7 +36,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.report.collect {
+                viewModel.getReportResponse.collect {
                     binding.tvMovieTitle.text = it.movieId.toString()
                     binding.tvReportTitle.text = it.title
                     binding.reportListView.text = it.content
@@ -74,7 +73,7 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             is BodyMovieReportEffect.ShowReport -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.report.collect {
+                        viewModel.getReportResponse.collect {
                             binding.tvMovieTitle.text = it.movieId.toString()
                             binding.tvReportTitle.text = it.title
                             binding.tvLikeCount.text = it.likeCount.toString()

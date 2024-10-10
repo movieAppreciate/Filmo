@@ -35,6 +35,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
             }
         }
 
+    fun updateNavigationBar(selectedItemId: Int) {
+        binding.navBar.selectedItemId = selectedItemId
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
@@ -45,6 +49,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
             }
         }
 
+        binding.navBar.selectedItemId = R.id.home
+    }
+
+    override fun onStart() {
+        super.onStart()
         binding.navBar.selectedItemId = R.id.home
     }
 

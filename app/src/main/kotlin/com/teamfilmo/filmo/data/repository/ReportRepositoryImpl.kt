@@ -2,11 +2,11 @@ package com.teamfilmo.filmo.data.remote.source
 
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.ReportInfo
 import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.SearchReportResponse
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.domain.repository.ReportRepository
-import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.GetReportResponse
 import javax.inject.Inject
 
 class ReportRepositoryImpl
@@ -14,7 +14,7 @@ class ReportRepositoryImpl
     constructor(
         private val reportDataSource: ReportDataSource,
     ) : ReportRepository {
-        override suspend fun searchAllReport(body: SearchAllReportRequest): Result<ReportInfo> {
+        override suspend fun searchAllReport(body: SearchAllReportRequest): Result<SearchReportResponse> {
             return reportDataSource.searchAllReport(body)
         }
 
@@ -22,11 +22,11 @@ class ReportRepositoryImpl
             lastReportId: String?,
             keyword: String?,
             targetId: String?,
-        ): Result<ReportInfo> {
+        ): Result<SearchReportResponse> {
             return reportDataSource.searchReport()
         }
 
-        override suspend fun getReport(reportId: String): Result<Report> {
+        override suspend fun getReport(reportId: String): Result<GetReportResponse> {
             return reportDataSource.getReport(reportId)
         }
 

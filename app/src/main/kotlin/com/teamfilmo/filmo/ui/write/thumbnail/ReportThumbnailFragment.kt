@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReportThumbnailBinding
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
@@ -38,6 +39,10 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
     }
 
     override fun onBindLayout() {
+        // 기본 스팬 적용
+        val span = 3
+        binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), span)
+
         moviePosterAdapter?.setOnItemClickListener(
             object : MoviePosterAdapter.OnItemClickListener {
                 override fun onItemClick(
@@ -64,7 +69,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
         Timber.d("Report Thumbnail Fragment selectedMovieId : $movieId")
 
-        // binding.movieImageGridView.adapter = moviePosterAdapter
+        binding.movieImageGridView.adapter = moviePosterAdapter
 
         lifecycleScope.launch {
             if (movieId != null) {
@@ -79,6 +84,8 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         }
 
         binding.btnPoster.setOnClickListener {
+            binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), 3)
+            moviePosterAdapter?.setViewType(0)
             binding.btnPoster.isSelected = true
             binding.btnBackground.isSelected = false
 
@@ -96,6 +103,17 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         }
 
         binding.btnBackground.setOnClickListener {
+            val layoutManager = GridLayoutManager(requireContext(), 2)
+            binding.movieImageGridView.layoutManager = layoutManager
+            moviePosterAdapter?.setViewType(2)
+            moviePosterAdapter?.isLastPage()
+//            layoutManager.spanSizeLookup = (
+//                object : GridLayoutManager.SpanSizeLookup() {
+//                    override fun getSpanSize(position: Int): Int {
+//                        return 2
+//                    }
+//                }
+//            )
             binding.btnPoster.isSelected = false
             binding.btnBackground.isSelected = true
 
@@ -103,9 +121,9 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     if (movieId != null) {
                         viewModel.handleEvent(ReportThumbnailEvent.SelectBackground(movieId))
-                    }
-                    viewModel.movieBackdropList.collect {
-                        moviePosterAdapter?.setPosterUriList(it)
+                        viewModel.movieBackdropList.collect {
+                            moviePosterAdapter?.setPosterUriList(it)
+                        }
                     }
                 }
             }

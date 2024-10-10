@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.report
 
 import com.teamfilmo.filmo.domain.repository.ReportRepository
-import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.GetReportResponse
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -13,7 +13,7 @@ class GetReportUseCase
     constructor(
         private val reportRepository: ReportRepository,
     ) {
-        operator fun invoke(reportId: String): Flow<Report?> =
+        operator fun invoke(reportId: String): Flow<GetReportResponse?> =
             flow {
                 val result = reportRepository.getReport(reportId)
                 result.onFailure {

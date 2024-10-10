@@ -1,12 +1,13 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
@@ -14,7 +15,6 @@ import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -22,6 +22,8 @@ class AllMovieReportFragment :
         FragmentAllMovieReportBinding::inflate,
     ) {
     override val viewModel: AllMovieReportViewModel by viewModels()
+
+    private var currentPage: Int = 1
     val allMovieReportAdapter by lazy {
         AllMovieReportAdapter()
     }
@@ -63,7 +65,29 @@ class AllMovieReportFragment :
         childFragmentManager.commit {
             setReorderingAllowed(true)
 
-            binding.apply {
+            with(binding) {
+                // todo : 리사이클러뷰 스크롤 이벤트
+
+                allMovieReportRecyclerview.addOnScrollListener(
+                    object : RecyclerView.OnScrollListener() {
+                        override fun onScrolled(
+                            recyclerView: RecyclerView,
+                            dx: Int,
+                            dy: Int,
+                        ) {
+                            super.onScrolled(recyclerView, dx, dy)
+
+                            val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                            val itemTotalCount = recyclerView.adapter?.itemCount?.minus(1)
+
+                            // 스크롤이 끝에 도달했는지 확인
+                            if (lastVisibleItemPosition == itemTotalCount) {
+                                currentPage++
+                                viewModel.handleEvent(AllMovieReportEvent.LoadNextPageReport(currentPage))
+                            }
+                        }
+                    },
+                )
                 allMovieReportRecyclerview.adapter = allMovieReportAdapter
                 movieRecyclerview.adapter = movieInfoAdapter
                 swiperefresh.setOnRefreshListener {
@@ -72,20 +96,15 @@ class AllMovieReportFragment :
                 }
             }
 
-            Toast.makeText(context, "all movie report fragment", Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    Timber.d("실행됨")
+                launch {
                     viewModel.allMovieReportList.collect {
                         binding.allMovieReportRecyclerview.apply {
-                            Timber.d("어댑터")
                             allMovieReportAdapter.setReportInfo(viewModel.allMovieReportList.value)
                         }
                     }
                 }
-            }
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
                     viewModel.upcomingMovieList.collect { movieInfoList ->
                         binding.movieRecyclerview.apply {
                             movieInfoAdapter.setMovieInfoList(movieInfoList)
@@ -100,8 +119,6 @@ class AllMovieReportFragment :
 
                 override fun onClick(position: Int) {
                     val movieId = movie[position].id
-                    // todo : movieId 검토
-                    Timber.d("영화 클릭 :$movieId")
                     (activity as MainActivity).navigateToDetailMovieFragment(movieId)
                 }
             }

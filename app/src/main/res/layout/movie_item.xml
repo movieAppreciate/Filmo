@@ -104,12 +104,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView"
+                app:layout_constraintBottom_toTopOf="@+id/tv_create_date"
                 app:layout_constraintStart_toEndOf="@+id/image_user"
                 app:layout_constraintTop_toTopOf="@+id/image_user" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView"
+                android:id="@+id/tv_create_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -129,8 +129,8 @@
                 android:src="@drawable/ic_like"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_reply"
-                app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
-                app:layout_constraintTop_toTopOf="@+id/appCompatTextView"
+                app:layout_constraintStart_toEndOf="@+id/tv_create_date"
+                app:layout_constraintTop_toTopOf="@+id/tv_create_date"
                 app:layout_constraintVertical_bias="1.0" />
 
             <TextView

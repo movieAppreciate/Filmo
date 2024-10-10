@@ -5,7 +5,7 @@ import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.model.report.Report
+import com.teamfilmo.filmo.model.report.GetReportResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,9 +33,9 @@ class BodyMovieReportViewModel
     /*
     개별 감상문 정보
      */
-        private val _report =
+        private val _getReportResponse =
             MutableStateFlow(
-                Report(
+                GetReportResponse(
                     reportId = "",
                     title = "",
                     content = "",
@@ -51,7 +51,7 @@ class BodyMovieReportViewModel
                     lastModifiedDate = "",
                 ),
             )
-        val report: StateFlow<Report> = _report.asStateFlow()
+        val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
     /*
     영화 정보
@@ -72,7 +72,7 @@ class BodyMovieReportViewModel
             viewModelScope.launch {
                 getReportUseCase(reportId).collect {
                     if (it != null) {
-                        _report.value = it
+                        _getReportResponse.value = it
                         sendEffect(BodyMovieReportEffect.ShowReport)
                     }
                 }
