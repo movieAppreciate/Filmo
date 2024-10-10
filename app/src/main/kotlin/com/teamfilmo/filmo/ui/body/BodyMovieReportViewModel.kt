@@ -21,6 +21,12 @@ class BodyMovieReportViewModel
         private val searchMovieDetailUseCase: SearchMovieDetailUseCase,
     ) : BaseViewModel<BodyMovieReportEffect, BodyMovieReportEvent>() {
         /*
+  영화 상세 내용
+         */
+        private val _movieContent = MutableStateFlow("")
+        val movieContent: StateFlow<String> = _movieContent
+
+        /*
     영화 상세 정보
          */
         private val _movieDetailInfo =
@@ -54,6 +60,12 @@ class BodyMovieReportViewModel
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
     /*
+    영화 줄거리
+     */
+        private fun getMovieContent() {
+            _movieContent.value = _movieDetailInfo.value.overview.toString()
+        }
+    /*
     영화 정보
      */
 
@@ -81,12 +93,16 @@ class BodyMovieReportViewModel
 
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
+                is BodyMovieReportEvent.ClickMoreButton -> {
+                    getMovieContent()
+                }
                 is BodyMovieReportEvent.ShowReport -> {
                     getReport(event.reportId)
                 }
                 is BodyMovieReportEvent.ShowMovieInfo -> {
                     searchMovieDetail(event.movieId)
                 }
+                else -> {}
             }
         }
     }

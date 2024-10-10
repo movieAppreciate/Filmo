@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.ui.body
 import com.teamfilmo.filmo.base.event.BaseEvent
 
 sealed class BodyMovieReportEvent : BaseEvent() {
+    data object ClickLikeButton : BodyMovieReportEvent()
+
     data class ShowReport(
         val reportId: String,
     ) : BodyMovieReportEvent()
@@ -10,4 +12,6 @@ sealed class BodyMovieReportEvent : BaseEvent() {
     data class ShowMovieInfo(
         val movieId: Int,
     ) : BodyMovieReportEvent()
+
+    data object ClickMoreButton : BodyMovieReportEvent()
 }
