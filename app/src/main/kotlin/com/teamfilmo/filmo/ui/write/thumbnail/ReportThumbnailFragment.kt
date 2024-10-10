@@ -107,13 +107,6 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
             binding.movieImageGridView.layoutManager = layoutManager
             moviePosterAdapter?.setViewType(2)
             moviePosterAdapter?.isLastPage()
-//            layoutManager.spanSizeLookup = (
-//                object : GridLayoutManager.SpanSizeLookup() {
-//                    override fun getSpanSize(position: Int): Int {
-//                        return 2
-//                    }
-//                }
-//            )
             binding.btnPoster.isSelected = false
             binding.btnBackground.isSelected = true
 

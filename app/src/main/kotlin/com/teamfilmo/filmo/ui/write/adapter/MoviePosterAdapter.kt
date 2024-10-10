@@ -123,6 +123,15 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     inner class MovieBackgroundViewHolder(private val binding: MovieBackgroundItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        // 이미지 클릭 이벤트
+        init {
+            binding.ivMovieBackground.setOnClickListener {
+                Timber.d("clicked : $position")
+                selectedPosition = position
+                onItemClickListener?.onItemClick(position, posterUriList[position])
+            }
+        }
+
         fun bind() {
             Glide.with(context)
                 .load(posterUriList[position])
