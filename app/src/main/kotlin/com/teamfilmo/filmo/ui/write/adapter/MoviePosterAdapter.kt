@@ -7,6 +7,7 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.databinding.ItemLoadingBinding
+import com.teamfilmo.filmo.databinding.MovieBackgroundItemBinding
 import com.teamfilmo.filmo.databinding.MoviePosterItemBinding
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter.MoviePosterViewHolder
 import timber.log.Timber
@@ -15,10 +16,17 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     private var posterUriList: MutableList<String> = arrayListOf()
     private var selectedPosition: Int? = null
     private var isLastPage = false
+    private var viewType = 0
 
     companion object {
         const val VIEW_TYPE_ITEM = 0
         const val VIEW_TYPE_LOADING = 1
+        const val VIEW_TYPE_BACKGROUND = 2
+    }
+
+    fun setViewType(viewType: Int) {
+        this.viewType = viewType
+        notifyDataSetChanged()
     }
 
     fun isLastPage() {
@@ -28,6 +36,7 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     fun setPosterUriList(uriList: List<String>) {
         posterUriList.clear()
         posterUriList.addAll(uriList)
+        Timber.d("들어온 리스트 : $posterUriList")
         notifyDataSetChanged()
     }
 
@@ -50,7 +59,13 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == posterUriList.size - 1 && !isLastPage) VIEW_TYPE_LOADING else VIEW_TYPE_ITEM
+        return if (position == posterUriList.size - 1 && !isLastPage) {
+            VIEW_TYPE_LOADING
+        } else if (viewType == 2) {
+            VIEW_TYPE_BACKGROUND
+        } else {
+            VIEW_TYPE_ITEM
+        }
     }
 
     override fun onCreateViewHolder(
@@ -66,6 +81,10 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
                 val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 MovieLoadingViewHolder(binding)
             }
+            VIEW_TYPE_BACKGROUND -> {
+                val binding = MovieBackgroundItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                MovieBackgroundViewHolder(binding)
+            }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -76,9 +95,14 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        if (holder is MoviePosterViewHolder) {
-            holder.bind()
-        } else {
+        when (holder) {
+            is MoviePosterViewHolder -> {
+                holder.bind()
+            }
+            is MovieBackgroundViewHolder -> {
+                holder.bind()
+            }
+            else -> {}
         }
     }
 
@@ -98,7 +122,13 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
         }
     }
 
-    inner class MovieLoadingViewHolder(private val binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class MovieBackgroundViewHolder(private val binding: MovieBackgroundItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind() {
+            Glide.with(context)
+                .load(posterUriList[position])
+                .into(binding.ivMovieBackground)
+        }
+    }
 
-    inner class FooterViewHolder(private val binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class MovieLoadingViewHolder(private val binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
 }

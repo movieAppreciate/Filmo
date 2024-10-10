@@ -30,6 +30,7 @@ class GetMovieBackDropListUseCase
                         list.add(imageBaseUrl + it.file_path)
                     }
                     emit(list)
+                    Timber.d("영화 포스터 list : $list")
                 } else {
                     Timber.e("${result.getOrNull()?.images} poster list is empty or null")
                 }

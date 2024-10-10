@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.data.remote.service
 import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
+import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -13,24 +14,10 @@ interface AuthService {
     /**
      * 회원가입
      */
-    @POST("/signup")
+    @POST("/user/signup")
     @Headers("NO-AUTH: true")
     suspend fun signUp(
-        /**
-         * 소셜로그인으로 부터 받은 uid
-         */
-        @Query("uid")
-        uid: String,
-        /**
-         * 소셜로그인 타입(kakao, google, naver)
-         */
-        @Query("type")
-        type: String,
-        /**
-         * 프로필 사진 URL
-         */
-        @Query("profileUrl")
-        profileUrl: String? = null,
+        request: SignUpRequest,
     ): Result<SignUpResponse>
 
     /**

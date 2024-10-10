@@ -55,6 +55,9 @@ class AllMovieReportViewModel
             fetchAllMovieReportList()
         }
 
+        private val _hasNextPage = MutableStateFlow<Boolean>(false)
+        val hasNextPage: StateFlow<Boolean> = _hasNextPage
+
         private val _upcomingMovieList = MutableStateFlow<List<MovieInfo>>(emptyList())
         private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
 
@@ -81,9 +84,7 @@ class AllMovieReportViewModel
                 val list = mutableListOf<MovieInfo>()
                 getUpcomingMovieUseCase()
                     .take(3).collect {
-                        Timber.d("movielist : $it")
                         it.take(3).map { movieResult ->
-                            Timber.d("뷰모델 : $it")
                             val imageBaseUrl = "https://image.tmdb.org/t/p/original"
                             MovieInfo(
                                 movieAge = 16,
@@ -96,7 +97,6 @@ class AllMovieReportViewModel
                             }
                         }
                     }
-                Timber.d("이미지 :  $list")
                 _upcomingMovieList.value = list
             }
         }
@@ -177,7 +177,6 @@ class AllMovieReportViewModel
     /* 좋아요 등록
      */
         private fun registLike(reportId: String) {
-            Timber.d("좋아요 등록")
             viewModelScope.launch {
                 registerLikeUseCase(reportId)
                 sendEffect(AllMovieReportEffect.RegistLike(reportId))
@@ -189,7 +188,6 @@ class AllMovieReportViewModel
 좋아요 취소
  */
         private fun cancelLike(reportId: String) {
-            Timber.d("좋아요 취소")
             viewModelScope.launch {
                 cancelLikeUseCase(reportId)
                 sendEffect(AllMovieReportEffect.CancelLike(reportId))
@@ -211,8 +209,8 @@ class AllMovieReportViewModel
                 }
             }
         }
-        // 좋아요 수 업데이트
 
+        // 좋아요 수 업데이트
         private fun updateLikeCount(
             reportId: String,
             isLiked: Boolean,
@@ -252,7 +250,6 @@ class AllMovieReportViewModel
                     }
                 }
                 sendEffect(AllMovieReportEffect.RegistBookmark(reportId))
-                Timber.d("bookmark regist ${bookmarkState.value} ")
             }
         }
 
@@ -282,7 +279,6 @@ class AllMovieReportViewModel
             reportId: String,
         ) {
             val bookmark = bookmarkState.value.find { it.reportId == reportId }
-            Timber.d("bookmark :  $bookmark")
             if (bookmark != null) {
                 if (bookmark.isBookmarked) {
                     deleteBookmark(reportId, bookmark.bookmarkId)

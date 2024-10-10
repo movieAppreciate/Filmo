@@ -3,14 +3,14 @@ package com.teamfilmo.filmo.data.remote.model.report
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReportInfo(
+data class SearchReportResponse(
     val searchReportCount: Int,
-    val searchReport: List<ReportList>,
+    val searchReport: List<SearchReportItem>,
     val hasNext: Boolean,
 )
 
 @Serializable
-data class ReportList(
+data class SearchReportItem(
     val reportId: String,
     val title: String,
     val content: String,
