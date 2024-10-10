@@ -7,6 +7,7 @@ import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -19,8 +20,15 @@ class MovieDetailViewModel
         override fun handleEvent(event: DetailMovieEvent) {
             when (event) {
                 is DetailMovieEvent.ClickMovie -> searchMovieDetail(event.movieId)
+                is DetailMovieEvent.ClickMoreButton -> getMovieContent()
             }
         }
+
+        /*
+        영화 상세 내용
+         */
+        private val _movieContent = MutableStateFlow("")
+        val movieContent: StateFlow<String> = _movieContent
 
         /*
   영화 상세 정보
@@ -37,13 +45,14 @@ class MovieDetailViewModel
                 searchMovieDetailUseCase(movieId).collect {
                     if (it != null) {
                         _movieDetailInfo.value = it
+                        _movieContent.value = it.overview.toString()
                         sendEffect(DetailMovieEffect.ShowDetailMovie)
                     }
                 }
             }
         }
 
-        fun getMovieOverview(): String? {
-            return _movieDetailInfo.value.overview
+        private fun getMovieContent() {
+            _movieContent.value = movieDetailInfo.value.overview.toString()
         }
     }

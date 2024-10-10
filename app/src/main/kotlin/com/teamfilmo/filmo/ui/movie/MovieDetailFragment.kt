@@ -74,9 +74,13 @@ class MovieDetailFragment :
                         binding.readMore.setOnClickListener {
                             binding.readMore.visibility = View.GONE
                             lifecycleScope.launch {
-                                val overview = viewModel.getMovieOverview()
+                                viewModel.handleEvent(DetailMovieEvent.ClickMoreButton)
                                 binding.txtSummary.maxLines = 100
-                                binding.txtSummary.text = overview
+                                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                    viewModel.movieDetailInfo.collect {
+                                        binding.txtSummary.text = it.overview
+                                    }
+                                }
                             }
                         }
                     }

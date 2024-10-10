@@ -13,6 +13,8 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -24,6 +26,14 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
     override fun onBindLayout() {
         super.onBindLayout()
+
+        with(binding.movieDetail) {
+            readMore.setOnClickListener {
+                readMore.visibility = View.GONE
+                viewModel.handleEvent(BodyMovieReportEvent.ClickMoreButton)
+                txtSummary.maxLines = 100
+            }
+        }
 
         val reportId = arguments?.getString("REPORT_ID") ?: ""
 
@@ -70,6 +80,15 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            is BodyMovieReportEffect.ShowMovieContent -> {
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.movieContent.collect {
+                            binding.reportListView.text = it
+                        }
+                    }
+                }
+            }
             is BodyMovieReportEffect.ShowReport -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
