@@ -15,4 +15,5 @@ data class ReportItem(
     val bookmarkCount: Int,
     var isBookmark: Boolean,
     var isLiked: Boolean,
+    val movieName: String,
 )

@@ -58,6 +58,7 @@ class AllMovieReportFragment :
                 allMovieReportAdapter.updateBookmarkState(effect.reportId, false)
             is AllMovieReportEffect.RefreshReport ->
                 allMovieReportAdapter.setReportInfo(effect.reportList)
+            else -> {}
         }
     }
 

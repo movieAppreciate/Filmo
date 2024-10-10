@@ -4,7 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -31,7 +31,7 @@ interface MovieService {
         /**
          * 영화 아이디
          */
-        @Body movieId: MovieDetailRequest,
+        @Body movieId: DetailMovieRequest,
     ): Result<DetailMovieResponse>
 
     /**

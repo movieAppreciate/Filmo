@@ -209,6 +209,7 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             nickName.text = item.nickname
             likeCount.text = item.likeCount.toString()
             binding.tvCreateDate.text = formatTimeDifference(item.createDate)
+            binding.tvMovie.text = item.movieName
 
             bindMovieImage(item.imageUrl.toString())
         }

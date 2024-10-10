@@ -4,7 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
 import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
 import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.MovieDetailRequest
+import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 
 interface MovieDataSource {
@@ -12,7 +12,7 @@ interface MovieDataSource {
         query: MovieRequest?,
     ): Result<MovieResponse>
 
-    suspend fun searchDetail(movieId: MovieDetailRequest): Result<DetailMovieResponse>
+    suspend fun searchDetail(movieId: DetailMovieRequest): Result<DetailMovieResponse>
 
     suspend fun getVideo(movieId: Int): Result<String>
 
