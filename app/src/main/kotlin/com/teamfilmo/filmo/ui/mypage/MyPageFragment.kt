@@ -5,8 +5,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMyPageBinding
+import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,6 +30,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel, MyPa
     }
 
     override fun onBindLayout() {
+        (activity as? MainActivity)?.updateNavigationBar(R.id.my_page)
+
         // todo : 내 아이디 넘기기
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

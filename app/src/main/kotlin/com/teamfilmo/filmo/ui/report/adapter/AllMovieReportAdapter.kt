@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.report.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,11 @@ import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.databinding.MovieItemBinding
 import com.teamfilmo.filmo.model.report.ReportItem
-import timber.log.Timber
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.math.abs
 
 sealed class ReportPayload {
     data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
@@ -108,12 +111,10 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
                 when (val payload = it as ReportPayload) {
                     is ReportPayload.BookmarkPayload -> {
                         this.reportList[position].isBookmark = payload.isBookmarked
-                        Log.d("어댑터", "북마크 payload ${payload.isBookmarked}")
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }
 
                     is ReportPayload.LikePayload -> {
-                        Log.d("어댑터", "좋아요 payload ${payload.isLiked}")
                         this.reportList[position].isLiked = payload.isLiked
                         holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
                     }
@@ -153,6 +154,48 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             }
         }
 
+        private fun formatTimeDifference(dateString: String): String {
+            val possiblePatterns =
+                listOf(
+                    "MMM d, yyyy, h:mm:ss a",
+                    "MMM dd, yyyy, h:mm:ss a",
+                    "MMM d, yyyy, hh:mm:ss a",
+                    "MMM dd, yyyy, hh:mm:ss a",
+                )
+            var inputDate: Date? = null
+
+            for (pattern in possiblePatterns) {
+                try {
+                    val formatter = SimpleDateFormat(pattern, Locale.ENGLISH)
+                    formatter.isLenient = false
+                    inputDate = formatter.parse(dateString)
+                    break
+                } catch (e: ParseException) {
+                    continue
+                }
+            }
+
+            if (inputDate == null) {
+                return "Invalid Date"
+            }
+
+            val currentDate = Date()
+            val diffInMills = currentDate.time - inputDate.time
+            val diffInSeconds = abs(diffInMills / 1000)
+            val diffinMinutes = diffInSeconds / 60
+            val diffiInHours = diffinMinutes / 60
+
+            return when {
+                diffInSeconds < 60 -> "${diffInSeconds}초 전"
+                diffinMinutes < 60 -> "${diffinMinutes}분 전"
+                diffiInHours < 24 -> "${diffiInHours}시간 전"
+                else -> {
+                    val outputFormatter = SimpleDateFormat("yy.MM.dd", Locale.KOREA)
+                    outputFormatter.format(inputDate)
+                }
+            }
+        }
+
         fun bindItems(item: ReportItem) {
             val title = binding.tvTitle
             val content = binding.tvContent
@@ -165,9 +208,9 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             replyCount.text = item.replyCount.toString()
             nickName.text = item.nickname
             likeCount.text = item.likeCount.toString()
+            binding.tvCreateDate.text = formatTimeDifference(item.createDate)
 
             bindMovieImage(item.imageUrl.toString())
-            Timber.d("movie image url : ${item.imageUrl}")
         }
 
         fun bindMovieImage(imageUrl: String) {
@@ -177,7 +220,6 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
 
         fun bindBookmarkButton(isBookmarked: Boolean) {
-            Log.d("북마크 바인딩", isBookmarked.toString())
             if (isBookmarked) {
                 binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
             } else {
@@ -195,7 +237,6 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
 
         fun bindLikeImage(isLiked: Boolean) {
-            Log.d("좋아요 어댑터", isLiked.toString())
             if (isLiked) {
                 binding.likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {
