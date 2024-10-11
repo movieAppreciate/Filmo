@@ -32,6 +32,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel, MyPa
     override fun onBindLayout() {
         (activity as? MainActivity)?.updateNavigationBar(R.id.my_page)
 
+        /*
+        todo 감상문 정보 보이게 하기
+         */
+
         // todo : 내 아이디 넘기기
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

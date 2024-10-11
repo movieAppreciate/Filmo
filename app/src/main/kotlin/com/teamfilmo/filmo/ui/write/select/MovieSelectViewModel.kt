@@ -1,19 +1,21 @@
 package com.teamfilmo.filmo.ui.write.select
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.domain.movie.GetTotalPageMovieListUseCase
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
+import com.teamfilmo.filmo.ui.write.paging.MoviePagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -25,105 +27,44 @@ class MovieSelectViewModel
         private val getTotalPageMovieListUseCase: GetTotalPageMovieListUseCase,
     ) :
     BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
-        private var totalPage = 1
-        private var myQuery: MovieRequest? = null
-        private val _movieList = MutableStateFlow<List<Result>>(emptyList())
+        private val _movieList = MutableStateFlow<MutableList<Result>>(mutableListOf())
+        val movieList: StateFlow<MutableList<Result>> = _movieList
+        private val _movieFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
+        val movieFlow: StateFlow<PagingData<Result>> = _movieFlow
 
-        val movieList: StateFlow<List<Result>> =
-            _movieList.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = emptyList(),
-            )
+        private fun searchMovies(query: String) {
+            viewModelScope.launch {
+                getMoviePagingData(query).collectLatest { pagingData ->
+                    _movieFlow.value = pagingData
+                    Timber.d("_movieFlow :${_movieFlow.value}")
+                }
+            }
+        }
 
-        private val _moviePosterUriList = MutableStateFlow<List<String>>(emptyList())
-        val moviePosterUriList: StateFlow<List<String>> =
-            _moviePosterUriList.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = emptyList(),
-            )
+        private fun getMoviePagingData(query: String): Flow<PagingData<Result>> {
+            return Pager(
+                config =
+                    PagingConfig(
+                        // Todo : 토탈 페이지 넘겨주기
+                        pageSize = 20,
+                        enablePlaceholders = true,
+                    ),
+                pagingSourceFactory = {
+                    MoviePagingSource(searchMovieListUseCase, query)
+                },
+            ).flow.cachedIn(viewModelScope)
+        }
 
         override fun handleEvent(event: MovieSelectEvent) {
             when (event) {
                 is MovieSelectEvent.SearchMovie -> {
-                    searchMovieList(query = event.query, event.page)
+                    event.query?.let { searchMovies(it) }
                 }
 
                 is MovieSelectEvent.InitializeMovieList -> {
-                    _movieList.value = emptyList()
-                    _moviePosterUriList.value = arrayListOf()
-                }
-                is MovieSelectEvent.LoadNextPageMovie -> {
-                    loadNextMoviePage(event.page)
+                    _movieFlow.value = PagingData.empty()
                 }
                 else -> {}
-            }
-        }
-
-        private fun searchMovieList(
-            query: String?,
-            page: Int,
-        ) {
-            viewModelScope.launch {
-                myQuery =
-                    query?.let {
-                        MovieRequest(query = it, page = page)
-                    }
-                getTotalPageMovieListUseCase(myQuery).collect {
-                    totalPage = it
-                    if (page > it) {
-                        return@collect
-                    }
-                    if (page == it) {
-                        sendEffect(MovieSelectEffect.NotifyLastPage)
-                    }
-                }
-                searchMovieListUseCase(myQuery).collect { resultList ->
-                    if (page == 1) {
-                        _movieList.value =
-                            resultList.distinctBy {
-                                it.id
-                            }
-                    } else {
-                        _movieList.update { oldList ->
-                            oldList + resultList.distinctBy { it.id }
-                        }
-                    }
-
-                    val imageBaseUrl = "https://image.tmdb.org/t/p/original"
-
-                    val updatedResultList =
-                        resultList.mapNotNull {
-                            it.posterPath?.let { posterPath ->
-                                imageBaseUrl + posterPath
-                            }
-                        }
-                    if (page == 1) {
-                        _moviePosterUriList.value = updatedResultList
-                    } else {
-                        _moviePosterUriList.update { oldList ->
-                            oldList + updatedResultList
-                        }
-                    }
-                    sendEffect(MovieSelectEffect.SearchMovie)
-                }
-            }
-        }
-
-        private fun loadNextMoviePage(currentPage: Int) {
-            Timber.d("2. 뷰모델의 loadNextMoviePage 호출 ")
-            if (currentPage > totalPage) {
-                return
-            }
-
-            viewModelScope.launch {
-                val searchResultDeferred =
-                    async {
-                        searchMovieList(myQuery?.query, currentPage)
-                    }
-                searchResultDeferred.await()
-                sendEffect(MovieSelectEffect.LoadNextPage)
             }
         }
     }

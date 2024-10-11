@@ -109,8 +109,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txt_count_follow"
-        app:layout_constraintTop_toTopOf="@+id/textView18"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/textView18" />
 
     <TextView
         android:id="@+id/textView19"
@@ -133,10 +132,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_report_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        tools:itemCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

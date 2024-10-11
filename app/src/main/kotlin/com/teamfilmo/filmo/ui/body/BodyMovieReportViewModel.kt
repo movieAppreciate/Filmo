@@ -3,9 +3,9 @@ package com.teamfilmo.filmo.ui.body
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
+import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.model.report.GetReportResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

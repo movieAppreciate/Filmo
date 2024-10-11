@@ -1,12 +1,12 @@
 package com.teamfilmo.filmo.data.remote.source
 
-import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.RegistReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.SearchAllReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
 import com.teamfilmo.filmo.data.remote.service.ReportService
 import com.teamfilmo.filmo.data.source.ReportDataSource
-import com.teamfilmo.filmo.model.report.GetReportResponse
 import javax.inject.Inject
 
 class ReportDataSourceImpl

@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.data.remote.model.report
+package com.teamfilmo.filmo.data.remote.model.report.regist
 
 import kotlinx.serialization.Serializable
 

@@ -33,6 +33,7 @@ class SearchMovieListUseCase
                         list.add(it)
                     }
                 }
+                Timber.d("use case에서 emit하는 list 크기 : ${list.size}")
                 emit(list)
             }.catch {
                 Timber.e(it.localizedMessage)

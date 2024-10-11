@@ -78,7 +78,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.moviePosterList.collect {
-                    moviePosterAdapter?.setPosterUriList(it)
+                    // moviePosterAdapter?.setPosterUriList(it)
                 }
             }
         }
@@ -96,7 +96,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.moviePosterList.collect {
-                        moviePosterAdapter?.setPosterUriList(it)
+                        // moviePosterAdapter?.setPosterUriList(it)
                     }
                 }
             }
@@ -106,7 +106,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
             val layoutManager = GridLayoutManager(requireContext(), 2)
             binding.movieImageGridView.layoutManager = layoutManager
             moviePosterAdapter?.setViewType(2)
-            moviePosterAdapter?.isLastPage()
+            // moviePosterAdapter?.isLastPage()
             binding.btnPoster.isSelected = false
             binding.btnBackground.isSelected = true
 
@@ -115,7 +115,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
                     if (movieId != null) {
                         viewModel.handleEvent(ReportThumbnailEvent.SelectBackground(movieId))
                         viewModel.movieBackdropList.collect {
-                            moviePosterAdapter?.setPosterUriList(it)
+                            //  moviePosterAdapter?.setPosterUriList(it)
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import com.teamfilmo.filmo.base.effect.BaseEffect
-import com.teamfilmo.filmo.model.report.ReportItem
+import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 
 sealed interface AllMovieReportEffect : BaseEffect {
     data class RegistLike(

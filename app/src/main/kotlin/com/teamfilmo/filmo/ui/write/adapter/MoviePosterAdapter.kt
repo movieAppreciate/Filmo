@@ -4,23 +4,45 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.databinding.ItemLoadingBinding
 import com.teamfilmo.filmo.databinding.MovieBackgroundItemBinding
 import com.teamfilmo.filmo.databinding.MoviePosterItemBinding
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter.MoviePosterViewHolder
 import timber.log.Timber
 
-class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var posterUriList: MutableList<String> = arrayListOf()
+class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Result, RecyclerView.ViewHolder>(MovieDiffCallback()) {
+    private class MovieDiffCallback : DiffUtil.ItemCallback<Result>() {
+        override fun areItemsTheSame(
+            oldItem: Result,
+            newItem: Result,
+        ): Boolean {
+            Timber.d("oldItem.id : ${oldItem.id}")
+            Timber.d("newItem.id : ${newItem.id}")
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: Result,
+            newItem: Result,
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
     private var selectedPosition: Int? = null
-    private var isLastPage = false
+
+//    private var isLastPage = false
     private var viewType = 0
 
     companion object {
         const val VIEW_TYPE_ITEM = 0
-        const val VIEW_TYPE_LOADING = 1
+
+//        const val VIEW_TYPE_LOADING = 1
         const val VIEW_TYPE_BACKGROUND = 2
     }
 
@@ -29,21 +51,21 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
         notifyDataSetChanged()
     }
 
-    fun isLastPage() {
-        isLastPage = true
-    }
+//    fun isLastPage() {
+//        isLastPage = true
+//    }
 
-    fun setPosterUriList(uriList: List<String>) {
-        posterUriList.clear()
-        posterUriList.addAll(uriList)
-        Timber.d("들어온 리스트 : $posterUriList")
-        notifyDataSetChanged()
-    }
+//    fun setPosterUriList(uriList: List<String>) {
+//        posterUriList.clear()
+//        posterUriList.addAll(uriList)
+//        Timber.d("들어온 리스트 : $posterUriList")
+//        notifyDataSetChanged()
+//    }
 
-    fun initializePosterUriList() {
-        posterUriList = emptyList<String>().toMutableList()
-        notifyDataSetChanged()
-    }
+//    fun initializePosterUriList() {
+//        posterUriList = emptyList<String>().toMutableList()
+//        notifyDataSetChanged()
+//    }
 
     interface OnItemClickListener {
         fun onItemClick(
@@ -59,9 +81,7 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == posterUriList.size - 1 && !isLastPage) {
-            VIEW_TYPE_LOADING
-        } else if (viewType == 2) {
+        return if (viewType == 2) {
             VIEW_TYPE_BACKGROUND
         } else {
             VIEW_TYPE_ITEM
@@ -77,10 +97,7 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
                 val binding = MoviePosterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 MoviePosterViewHolder(binding)
             }
-            VIEW_TYPE_LOADING -> {
-                val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                MovieLoadingViewHolder(binding)
-            }
+
             VIEW_TYPE_BACKGROUND -> {
                 val binding = MovieBackgroundItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 MovieBackgroundViewHolder(binding)
@@ -89,20 +106,24 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
         }
     }
 
-    override fun getItemCount(): Int = posterUriList.size
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (holder) {
-            is MoviePosterViewHolder -> {
-                holder.bind()
+        val movie = getItem(position)
+        Timber.d("position : $position")
+        Timber.d("movie : $movie")
+        if (movie != null) {
+            when (holder) {
+                is MoviePosterViewHolder -> {
+                    holder.bind(movie)
+                }
+
+                is MovieBackgroundViewHolder -> {
+                    holder.bind(movie)
+                }
+                else -> {}
             }
-            is MovieBackgroundViewHolder -> {
-                holder.bind()
-            }
-            else -> {}
         }
     }
 
@@ -111,14 +132,14 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
             binding.ivMoviePoster.setOnClickListener {
                 Timber.d("clicked : $position")
                 selectedPosition = position
-                onItemClickListener?.onItemClick(position, posterUriList[position])
             }
         }
 
-        fun bind() {
+        fun bind(movie: Result) {
             Glide.with(context)
-                .load(posterUriList[position])
+                .load("https://image.tmdb.org/t/p/original${movie.posterPath}")
                 .into(binding.ivMoviePoster)
+//            binding.root.setOnClickListener { on(movie) }
         }
     }
 
@@ -128,14 +149,15 @@ class MoviePosterAdapter(private val context: Context) : RecyclerView.Adapter<Re
             binding.ivMovieBackground.setOnClickListener {
                 Timber.d("clicked : $position")
                 selectedPosition = position
-                onItemClickListener?.onItemClick(position, posterUriList[position])
+//                onItemClickListener?.onItemClick(position, posterUriList[position])
             }
         }
 
-        fun bind() {
+        fun bind(movie: Result) {
             Glide.with(context)
-                .load(posterUriList[position])
+                .load("https://image.tmdb.org/t/p/original${movie.posterPath}")
                 .into(binding.ivMovieBackground)
+//            binding.root.setOnClickListener { on(movie) }
         }
     }
 

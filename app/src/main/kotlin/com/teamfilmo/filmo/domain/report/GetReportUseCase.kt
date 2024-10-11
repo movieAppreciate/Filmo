@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.report
 
+import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.domain.repository.ReportRepository
-import com.teamfilmo.filmo.model.report.GetReportResponse
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
