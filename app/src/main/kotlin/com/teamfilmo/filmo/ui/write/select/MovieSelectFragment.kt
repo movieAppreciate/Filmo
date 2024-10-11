@@ -41,6 +41,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
 
     override fun onBindLayout() {
         super.onBindLayout()
+        binding.movieRecyclerView.adapter = moviePosterAdapter
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -53,7 +54,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                moviePosterAdapter?.loadStateFlow?.collect {
+                moviePosterAdapter?.loadStateFlow?.collectLatest {
                     Timber.d("refresh : $it.refresh")
                     binding.movieProgressBar.isVisible = it.refresh is LoadState.Loading
                 }
@@ -67,7 +68,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             (activity as? WriteActivity)?.navigateToAllMovieReportFragment()
         }
 
-        binding.movieRecyclerView.adapter = moviePosterAdapter
         binding.movieSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {

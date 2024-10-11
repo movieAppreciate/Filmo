@@ -7,6 +7,7 @@ import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 
 class MoviePagingSource(
     private val searchMovieListUseCase: SearchMovieListUseCase,
@@ -29,12 +30,14 @@ class MoviePagingSource(
             val movieRequest = query?.let { MovieRequest(it, page) }
             val response = searchMovieListUseCase(movieRequest)
 
+            Timber.d("response.first : $response.first()")
             LoadResult.Page(
                 data = response.first(),
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.first().isEmpty()) null else page + 1,
             )
         } catch (e: Exception) {
+            e.printStackTrace()
             LoadResult.Error(e)
         }
     }

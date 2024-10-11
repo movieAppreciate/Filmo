@@ -45,7 +45,7 @@ class MovieSelectViewModel
             return Pager(
                 config =
                     PagingConfig(
-                        // Todo : 토탈 페이지 넘겨주기
+                        // Todo : 페이지별 데이터 넘겨주기
                         pageSize = 20,
                         enablePlaceholders = true,
                     ),
