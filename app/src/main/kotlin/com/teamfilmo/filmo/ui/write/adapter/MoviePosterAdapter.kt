@@ -3,40 +3,43 @@ package com.teamfilmo.filmo.ui.write.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.teamfilmo.filmo.data.remote.model.movie.Result
 import com.teamfilmo.filmo.databinding.ItemLoadingBinding
 import com.teamfilmo.filmo.databinding.MovieBackgroundItemBinding
 import com.teamfilmo.filmo.databinding.MoviePosterItemBinding
-import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter.MoviePosterViewHolder
+import com.teamfilmo.filmo.ui.write.paging.MovieContentResultWithIndex
 import timber.log.Timber
 
-class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Result, RecyclerView.ViewHolder>(MovieDiffCallback()) {
-    private class MovieDiffCallback : DiffUtil.ItemCallback<Result>() {
+/*
+RecyclerView를 통해 Paging한 데이터를 보여주기 위해서 PagingDataAdapter를 확장해준다.
+PagingDataAdapter를 확장하여 MoviePosterAdapter 어댑터를 만들어 MovieContentResultWithIndex 타입의 목록에 대한
+RecyclerView 어댑터를 제공하고  MoviePosterViewHolder ,MovieBackgroundViewHolder를 뷰홀더로 사용하고 있다.
+
+ */
+class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<MovieContentResultWithIndex, RecyclerView.ViewHolder>(MovieDiffCallback()) {
+    /*
+    DiffUtil.ItemCallback 지정
+     */
+    private class MovieDiffCallback : DiffUtil.ItemCallback<MovieContentResultWithIndex>() {
         override fun areItemsTheSame(
-            oldItem: Result,
-            newItem: Result,
+            oldItem: MovieContentResultWithIndex,
+            newItem: MovieContentResultWithIndex,
         ): Boolean {
-            Timber.d("oldItem.id : ${oldItem.id}")
-            Timber.d("newItem.id : ${newItem.id}")
-            return oldItem.id == newItem.id
+            return oldItem.index == newItem.index
         }
 
         override fun areContentsTheSame(
-            oldItem: Result,
-            newItem: Result,
+            oldItem: MovieContentResultWithIndex,
+            newItem: MovieContentResultWithIndex,
         ): Boolean {
-            return oldItem == newItem
+            return oldItem.index == newItem.index
         }
     }
 
     private var selectedPosition: Int? = null
-
-//    private var isLastPage = false
     private var viewType = 0
 
     companion object {
@@ -50,22 +53,6 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Resul
         this.viewType = viewType
         notifyDataSetChanged()
     }
-
-//    fun isLastPage() {
-//        isLastPage = true
-//    }
-
-//    fun setPosterUriList(uriList: List<String>) {
-//        posterUriList.clear()
-//        posterUriList.addAll(uriList)
-//        Timber.d("들어온 리스트 : $posterUriList")
-//        notifyDataSetChanged()
-//    }
-
-//    fun initializePosterUriList() {
-//        posterUriList = emptyList<String>().toMutableList()
-//        notifyDataSetChanged()
-//    }
 
     interface OnItemClickListener {
         fun onItemClick(
@@ -110,17 +97,17 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Resul
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val movie = getItem(position)
+        val moviePath = getItem(position)
         Timber.d("position : $position")
-        Timber.d("movie : $movie")
-        if (movie != null) {
+        Timber.d("movie : $moviePath")
+        if (moviePath != null) {
             when (holder) {
                 is MoviePosterViewHolder -> {
-                    holder.bind(movie)
+                    holder.bind(moviePath)
                 }
 
                 is MovieBackgroundViewHolder -> {
-                    holder.bind(movie)
+                    holder.bind(moviePath)
                 }
                 else -> {}
             }
@@ -135,9 +122,9 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Resul
             }
         }
 
-        fun bind(movie: Result) {
+        fun bind(movie: MovieContentResultWithIndex) {
             Glide.with(context)
-                .load("https://image.tmdb.org/t/p/original${movie.posterPath}")
+                .load("https://image.tmdb.org/t/p/original${movie.result.posterPath}")
                 .into(binding.ivMoviePoster)
 //            binding.root.setOnClickListener { on(movie) }
         }
@@ -153,9 +140,9 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Resul
             }
         }
 
-        fun bind(movie: Result) {
+        fun bind(movie: MovieContentResultWithIndex) {
             Glide.with(context)
-                .load("https://image.tmdb.org/t/p/original${movie.posterPath}")
+                .load("https://image.tmdb.org/t/p/original${movie.result.posterPath}")
                 .into(binding.ivMovieBackground)
 //            binding.root.setOnClickListener { on(movie) }
         }

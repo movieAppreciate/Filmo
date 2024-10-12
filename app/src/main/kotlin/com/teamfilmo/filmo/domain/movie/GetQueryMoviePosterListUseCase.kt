@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.domain.movie
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieContentResult
 import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
@@ -9,16 +8,16 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
-class SearchMovieListUseCase
+class GetQueryMoviePosterListUseCase
     @Inject
     constructor(
         private val movieRepository: MovieRepository,
     ) {
-        private var list = arrayListOf<MovieContentResult>()
+        private var list = arrayListOf<String>()
 
         operator fun invoke(
             query: MovieRequest?,
-        ): Flow<List<MovieContentResult>> =
+        ): Flow<List<String>> =
             flow {
                 val result =
                     query?.let {
@@ -30,10 +29,10 @@ class SearchMovieListUseCase
                 list.clear()
                 result?.getOrNull()?.results?.forEach {
                     if (it.posterPath != null) {
-                        list.add(it)
-                        Timber.d("방출하는 Result : ${it.title}")
+                        list.add(it.posterPath)
                     }
                 }
+                Timber.d("use case에서 emit하는 list 크기 : ${list.size}")
                 emit(list)
             }.catch {
                 Timber.e(it.localizedMessage)
