@@ -8,7 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReportThumbnailBinding
-import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
+import com.teamfilmo.filmo.ui.write.adapter.MovieThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -19,8 +19,8 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
     FragmentReportThumbnailBinding::inflate,
 ) {
     override val viewModel: ReportThumbnailViewModel by viewModels()
-    private val moviePosterAdapter by lazy {
-        context?.let { MoviePosterAdapter(it) }
+    private val movieThumbnailAdapter by lazy {
+        context?.let { MovieThumbnailAdapter(it) }
     }
 
     companion object {
@@ -42,9 +42,12 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         // 기본 스팬 적용
         val span = 3
         binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), span)
+        binding.movieImageGridView.adapter = movieThumbnailAdapter
+        binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), 3)
+        movieThumbnailAdapter?.setViewType(0)
 
-        moviePosterAdapter?.setOnItemClickListener(
-            object : MoviePosterAdapter.OnItemClickListener {
+        movieThumbnailAdapter?.setOnItemClickListener(
+            object : MovieThumbnailAdapter.OnItemClickListener {
                 override fun onItemClick(
                     position: Int,
                     uri: String?,
@@ -69,8 +72,6 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
         Timber.d("Report Thumbnail Fragment selectedMovieId : $movieId")
 
-        binding.movieImageGridView.adapter = moviePosterAdapter
-
         lifecycleScope.launch {
             if (movieId != null) {
                 viewModel.handleEvent(ReportThumbnailEvent.SelectPoster(movieId))
@@ -78,14 +79,14 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.moviePosterList.collect {
-                    // moviePosterAdapter?.setPosterUriList(it)
+                    movieThumbnailAdapter?.setPosterUriList(it)
                 }
             }
         }
 
         binding.btnPoster.setOnClickListener {
             binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), 3)
-            moviePosterAdapter?.setViewType(0)
+            movieThumbnailAdapter?.setViewType(0)
             binding.btnPoster.isSelected = true
             binding.btnBackground.isSelected = false
 
@@ -96,7 +97,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.moviePosterList.collect {
-                        // moviePosterAdapter?.setPosterUriList(it)
+                        movieThumbnailAdapter?.setPosterUriList(it)
                     }
                 }
             }
@@ -105,8 +106,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         binding.btnBackground.setOnClickListener {
             val layoutManager = GridLayoutManager(requireContext(), 2)
             binding.movieImageGridView.layoutManager = layoutManager
-            moviePosterAdapter?.setViewType(2)
-            // moviePosterAdapter?.isLastPage()
+            movieThumbnailAdapter?.setViewType(2)
             binding.btnPoster.isSelected = false
             binding.btnBackground.isSelected = true
 
@@ -115,7 +115,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
                     if (movieId != null) {
                         viewModel.handleEvent(ReportThumbnailEvent.SelectBackground(movieId))
                         viewModel.movieBackdropList.collect {
-                            //  moviePosterAdapter?.setPosterUriList(it)
+                            movieThumbnailAdapter?.setPosterUriList(it)
                         }
                     }
                 }
@@ -133,8 +133,5 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         } else {
             requireActivity().onBackPressed()
         }
-    }
-
-    override fun handleEffect(effect: ReportThumbnailEffect) {
     }
 }

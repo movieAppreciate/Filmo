@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.ui.write.paging
+package com.teamfilmo.filmo.ui.write.select.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

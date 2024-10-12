@@ -109,40 +109,21 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             },
         )
 
+        /*
+        그냥 id와 name을 다 어댑터에서 넘겨주도록 함.
+         */
         moviePosterAdapter?.setOnItemClickListener(
             object : MoviePosterAdapter.OnItemClickListener {
                 override fun onItemClick(
-                    position: Int,
+                    movieId: Int?,
+                    movieName: String?,
                     uri: String?,
                 ) {
-                    lifecycleScope.launch {
-                        repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            viewModel.moviePosterList.collect { movieList ->
-                                Timber.d("클릭함 $movieList")
-                                if (movieList.isNotEmpty()) {
-//                                    val selectedMovieName = movieList[position].title
-//                                    val selectedMovieId = movieList[position].id.toString()
-//                                    (activity as? WriteActivity)?.navigateToWriteReportFragment(selectedMovieName, selectedMovieId)
-                                }
-                            }
-                        }
+                    if (movieName != null) {
+                        (activity as? WriteActivity)?.navigateToWriteReportFragment(movieName, movieId.toString())
                     }
                 }
             },
         )
-    }
-
-    override fun handleEffect(effect: MovieSelectEffect) {
-        when (effect) {
-            is MovieSelectEffect.SearchMovie -> {
-//                lifecycleScope.launch {
-//                    repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                        viewModel.moviePosterUriList.collect {
-//                            moviePosterAdapter?.setPosterUriList(it)
-//                        }
-//                    }
-//                }
-            }
-        }
     }
 }

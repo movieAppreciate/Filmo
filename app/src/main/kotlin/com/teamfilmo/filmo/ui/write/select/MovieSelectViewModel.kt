@@ -8,8 +8,8 @@ import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.domain.movie.GetTotalPageMovieListUseCase
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
-import com.teamfilmo.filmo.ui.write.paging.MovieContentResultWithIndex
-import com.teamfilmo.filmo.ui.write.paging.MoviePagingSource
+import com.teamfilmo.filmo.ui.write.select.paging.MovieContentResultWithIndex
+import com.teamfilmo.filmo.ui.write.select.paging.MoviePagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
