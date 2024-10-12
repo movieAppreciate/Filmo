@@ -84,7 +84,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 moviePosterAdapter?.loadStateFlow?.collectLatest {
-                    binding.movieProgressBar.isVisible = it.refresh is LoadState.Loading
+                    binding.movieProgressBar.isVisible = it.source.append is LoadState.Loading
                 }
             }
         }
