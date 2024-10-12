@@ -76,6 +76,7 @@
         tools:listitem="@layout/movie_poster_item" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
+        app:indicatorColor="@color/primary60"
         android:id="@+id/movie_progress_bar"
         android:layout_width="0dp"
         android:layout_height="20dp"
