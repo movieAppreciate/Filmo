@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.ui.mypage
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.domain.follow.CountFollowUseCase
+import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class MyPageViewModel
     @Inject
     constructor(
+        private val getReportListUseCase: GetReportListUseCase,
         private var followCountFollowUseCase: CountFollowUseCase,
     ) : BaseViewModel<MyPageEffect, MyPageEvent>() {
     /*
@@ -27,6 +29,10 @@ class MyPageViewModel
      */
         private val _followingCount = MutableStateFlow(0)
         val followingCount: StateFlow<Int> = _followingCount.asStateFlow()
+
+    /*
+    감상문 정보
+     */
 
         fun getFollowCount(otherUserId: String) {
             viewModelScope.launch {

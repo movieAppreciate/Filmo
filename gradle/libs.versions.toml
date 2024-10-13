@@ -173,6 +173,8 @@ naver = "5.9.1"
 # kakao
 # [Document](https://developers.kakao.com/docs/latest/ko/android/getting-started)
 kakao = "2.20.0"
+pagingCommonAndroid = "3.3.2"
+pagingRuntimeKtx = "3.3.2"
 
 [libraries]
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
@@ -322,6 +324,8 @@ protobuf-gradlePlugin = { group = "com.google.protobuf", name = "protobuf-gradle
 ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
 androidx-navigation-safe-args-gradlePlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx_navigation" }
 junit5-gradlePlugin = { group = "de.mannodermaus.gradle.plugins", name = "android-junit5", version.ref = "junit5" }
+androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
+androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 
 
 [bundles]

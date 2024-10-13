@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.report.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint

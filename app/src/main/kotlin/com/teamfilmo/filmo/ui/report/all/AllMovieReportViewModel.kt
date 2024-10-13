@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
+import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
@@ -14,7 +15,6 @@ import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.model.report.ReportItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -226,7 +226,10 @@ class AllMovieReportViewModel
     collect는 흐름이 완료될 때까지 모든 값을 처리
     firstOrNull은 첫번째 값만을 처리한다.
 
+
+    getName : 왜 suspend로 해줘야하지?
      */
+
         private suspend fun getName(reportId: String): String {
             return withContext(Dispatchers.IO) {
                 val report = getReportUseCase(reportId).firstOrNull()

@@ -89,6 +89,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.paging.runtime.ktx)
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
     // Kotlin

@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
+import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.MovieItemBinding
-import com.teamfilmo.filmo.model.report.ReportItem
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date

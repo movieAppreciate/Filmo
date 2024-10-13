@@ -5,14 +5,24 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_margin="5dp"
-        android:scaleType="fitCenter"
         android:id="@+id/iv_movie_poster"
         android:layout_width="120dp"
         android:layout_height="200dp"
+        android:layout_margin="5dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/movie_progress_bar"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
