@@ -65,7 +65,7 @@ class MovieSelectViewModel
                         // 어떻게 데이터를 가져올 것인지
                         // 페이지마다 보여줄 아이템의 수 (동일하지 않아도 됨)
                         pageSize = 20,
-                        enablePlaceholders = true,
+                        enablePlaceholders = false,
                     ),
                 // PagingSource 구현의 인스턴스를 가져오는 방법을 알려주는 함수
                 pagingSourceFactory = {
