@@ -32,10 +32,10 @@
             android:layout_width="match_parent"
             android:layout_gravity="bottom"
             android:background="@drawable/gradient_overlay"
-            android:layout_height="120dp"/>
+            android:layout_height="180dp"/>
 
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -48,21 +48,24 @@
                 android:id="@+id/tv_movie_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="그랜드 부다패스트 호텔"
-                android:paddingStart="10dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/tv_report_title"
+                app:layout_constraintStart_toStartOf="@+id/tv_report_title" />
 
             <TextView
                 android:id="@+id/tv_report_title"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="인간 냄새와 강박적 위트가 가득한 하나의 인형극"
+                android:maxLength="20"
+                android:text="인간 냄새"
                 android:textColor="@color/white"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textSize="23sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
 

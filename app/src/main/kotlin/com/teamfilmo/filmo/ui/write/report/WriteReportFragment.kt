@@ -3,21 +3,21 @@ package com.teamfilmo.filmo.ui.write.report
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
-import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +29,8 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
     override val viewModel: WriteReportViewModel by viewModels()
     private var thumbnailUri: String? = null
     private var tagString: String? = null
+
+    private val navController by lazy { findNavController() }
 
     companion object {
         fun newInstance(
@@ -46,14 +48,14 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
     }
 
     override fun onBindLayout() {
+        val args: WriteReportFragmentArgs by navArgs()
+
         fun EditText.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(windowToken, 0)
         }
 
         binding.editReportTag.apply {
-            val inputType = InputType.TYPE_CLASS_TEXT
-
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
                     hideKeyboard()
@@ -100,21 +102,13 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
             )
         }
         lifecycleScope.launch {
-            parentFragmentManager.setFragmentResultListener("REQUEST_OK", this@WriteReportFragment) { key, bundle ->
-                val selectedThumbnailUri = bundle.getString("SELECTED_IMAGE_URI")
-                if (selectedThumbnailUri != null) {
-                    thumbnailUri = selectedThumbnailUri
-                    Glide.with(this@WriteReportFragment)
-                        .load(selectedThumbnailUri)
-                        .into(binding.ivThumbnail)
-                    binding.btnSelectPoster.text = "이미지 변경"
-                }
-            }
+            Glide.with(this@WriteReportFragment)
+                .load(args.posterUri)
+                .into(binding.ivThumbnail)
+            binding.btnSelectPoster.text = "이미지 변경"
         }
 
-        val movieName = arguments?.getString("MOVIE_NAME")
-        val movieId = arguments?.getString("MOVIE_ID")
-        binding.txtSelectedMovie.text = movieName
+        binding.txtSelectedMovie.text = args.movieName
 
         val list = arrayListOf<String>()
         val title = binding.editReportTitle.text
@@ -123,13 +117,13 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
 
         list.add(tag)
         binding.btnReportRegister.setOnClickListener {
-            if (movieId != null && title != null && content != null && thumbnailUri != null) {
+            if (title != null && content != null && thumbnailUri != null) {
                 val request =
                     RegistReportRequest(
                         title = title.toString(),
                         content = content.toString(),
                         imageUrl = thumbnailUri.toString(),
-                        movieId = movieId.toString(),
+                        movieId = args.movieId.toString(),
                         tagString = tagString?.replace(" ", "").toString(),
                     )
                 tagList = null
@@ -137,39 +131,14 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
             }
         }
 
-        binding.btnBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.addCallback(
-                this,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        if (parentFragmentManager.backStackEntryCount > 1) {
-                            childFragmentManager.popBackStack()
-                        } else {
-                            isEnabled = false
-                            requireActivity().onBackPressed()
-                        }
-                    }
-                },
-            )
-        }
-
         binding.btnSelectPoster.setOnClickListener {
             // 포스터 선택 프래그먼트 열기
-            if (movieName != null && movieId != null) {
-                (activity as? WriteActivity)?.navigateToReportThumbnailFragment(movieName, movieId)
-            }
+            val action = WriteReportFragmentDirections.navigateToThumbnail(movieName = args.movieName, movieId = args.movieId)
+            navController.navigate(action)
         }
 
         binding.btnBack.setOnClickListener {
             showConfirmationDialog()
-        }
-    }
-
-    private fun handleBackNavigation() {
-        if (parentFragmentManager.backStackEntryCount > 0) {
-            parentFragmentManager.popBackStack()
-        } else {
-            requireActivity().onBackPressed()
         }
     }
 
@@ -178,7 +147,7 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
         dialogBuilder.setTitle("영화 변경")
         dialogBuilder.setMessage("감상문을 작성할 영화를 변경하시겠습니까?")
         dialogBuilder.setPositiveButton("네!") { _, _ ->
-            handleBackNavigation()
+            navController.navigate(R.id.movieSelectFragment)
         }
         dialogBuilder.setNegativeButton("아니요!") { dialog, _ ->
             dialog.dismiss()
@@ -192,7 +161,7 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
         when (effect) {
             is WriteReportEffect.NavigateToMain -> {
                 Toast.makeText(context, "감상문이 등록되었습니다", Toast.LENGTH_LONG).show()
-                (activity as? WriteActivity)?.navigateToAllMovieReportFragment()
+                navController.navigate(WriteReportFragmentDirections.navigaToAllMovieReport())
             }
         }
     }

@@ -5,10 +5,10 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.junit5)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 @Suppress("ktlint:standard:property-naming")
@@ -215,7 +215,8 @@ dependencies {
     testImplementation(libs.mockk.agent)
 
     androidTestImplementation(libs.hilt.test)
-    implementation(libs.lottie.v652)
+    implementation(libs.androidx.navigation.fragment.ktx.v251)
+    implementation(libs.androidx.navigation.ui.ktx.v251)
 }
 
 protobuf {

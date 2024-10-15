@@ -8,10 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMovieDetailBinding
-import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,6 +22,7 @@ class MovieDetailFragment :
         FragmentMovieDetailBinding::inflate,
     ) {
     override val viewModel: MovieDetailViewModel by viewModels()
+    private val navController by lazy { findNavController() }
 
     override fun onViewCreated(
         view: View,
@@ -42,7 +43,7 @@ class MovieDetailFragment :
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         if (movieId != null) {
-                            (activity as MainActivity).navigateToReportFragment()
+                            navController.popBackStack()
                         }
                     }
                 },

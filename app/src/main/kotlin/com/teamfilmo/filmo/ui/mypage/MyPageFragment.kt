@@ -30,7 +30,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel, MyPa
     }
 
     override fun onBindLayout() {
-        (activity as? MainActivity)?.updateNavigationBar(R.id.my_page)
+        (activity as? MainActivity)?.updateNavigationBar(R.id.myPageFragment)
 
         /*
         todo 감상문 정보 보이게 하기

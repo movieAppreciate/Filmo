@@ -12,7 +12,6 @@ import timber.log.Timber
 class MovieThumbnailAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var posterUriList: MutableList<String> = arrayListOf()
     private var selectedPosition: Int? = null
-    private var isLastPage = false
     private var viewType = 0
 
     companion object {

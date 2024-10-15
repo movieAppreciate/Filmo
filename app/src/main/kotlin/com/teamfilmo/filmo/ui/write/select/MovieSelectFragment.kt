@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.ui.write.select
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -7,16 +8,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentSelectMovieBinding
-import com.teamfilmo.filmo.ui.write.WriteActivity
+import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelectViewModel, MovieSelectEffect, MovieSelectEvent>(
@@ -26,6 +27,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
     private val moviePosterAdapter by lazy {
         context?.let { MoviePosterAdapter(it) }
     }
+    private val navController by lazy { findNavController() }
 
     companion object {
         fun newInstance(): MovieSelectFragment {
@@ -35,6 +37,15 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
             fragment.arguments = args
             return fragment
         }
+    }
+
+    private fun navigateWriteReportFragment(
+        movieName: String,
+        movieId: Int,
+    ) {
+        val action = MovieSelectFragmentDirections.actionToWriteReport("", movieName, movieId)
+
+        navController.navigate(action)
     }
 
     override val viewModel: MovieSelectViewModel by viewModels()
@@ -71,7 +82,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.moviePosterPathFlow.collectLatest {
-                    Timber.d("movieFlow :$it")
                     moviePosterAdapter?.submitData(it)
                 }
             }
@@ -90,7 +100,8 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         }
 
         binding.btnBack.setOnClickListener {
-            (activity as? WriteActivity)?.navigateToAllMovieReportFragment()
+            val intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
         }
 
         binding.movieSearchView.setOnQueryTextListener(
@@ -115,13 +126,11 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         moviePosterAdapter?.setOnItemClickListener(
             object : MoviePosterAdapter.OnItemClickListener {
                 override fun onItemClick(
-                    movieId: Int?,
-                    movieName: String?,
-                    uri: String?,
+                    movieId: Int,
+                    movieName: String,
+                    uri: String,
                 ) {
-                    if (movieName != null) {
-                        (activity as? WriteActivity)?.navigateToWriteReportFragment(movieName, movieId.toString())
-                    }
+                    navigateWriteReportFragment(movieName, movieId)
                 }
             },
         )
