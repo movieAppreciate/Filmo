@@ -8,13 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMovieDetailBinding
-import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieDetailFragment :
@@ -22,18 +22,17 @@ class MovieDetailFragment :
         FragmentMovieDetailBinding::inflate,
     ) {
     override val viewModel: MovieDetailViewModel by viewModels()
+    private val navController by lazy { findNavController() }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val movieId = arguments?.getInt("MOVIE_ID")
-        Timber.d("받은 영화 id : $movieId")
+
+        val args: MovieDetailFragmentArgs by navArgs()
         lifecycleScope.launch {
-            if (movieId != null) {
-                viewModel.searchMovieDetail(movieId)
-            }
+            viewModel.searchMovieDetail(args.movieId)
         }
 
         requireActivity().onBackPressedDispatcher
@@ -41,9 +40,7 @@ class MovieDetailFragment :
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
-                        if (movieId != null) {
-                            (activity as MainActivity).navigateToReportFragment()
-                        }
+                        navController.popBackStack()
                     }
                 },
             )
@@ -90,16 +87,10 @@ class MovieDetailFragment :
     }
 
     companion object {
-        fun newInstance(
-            movieID: Int,
-        ): MovieDetailFragment {
-            val fragment =
-                MovieDetailFragment().apply {
-                    arguments =
-                        Bundle().apply {
-                            putInt("MOVIE_ID", movieID)
-                        }
-                }
+        fun newInstance(): MovieDetailFragment {
+            val args = Bundle()
+            val fragment = MovieDetailFragment()
+            fragment.arguments = args
             return fragment
         }
     }

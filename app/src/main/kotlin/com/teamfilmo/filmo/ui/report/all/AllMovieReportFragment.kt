@@ -6,11 +6,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
-import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +22,7 @@ class AllMovieReportFragment :
         FragmentAllMovieReportBinding::inflate,
     ) {
     override val viewModel: AllMovieReportViewModel by viewModels()
+    private val navController by lazy { findNavController() }
 
     private var currentPage: Int = 1
     val allMovieReportAdapter by lazy {
@@ -67,8 +68,6 @@ class AllMovieReportFragment :
             setReorderingAllowed(true)
 
             with(binding) {
-                // todo : 리사이클러뷰 스크롤 이벤트
-
                 allMovieReportRecyclerview.addOnScrollListener(
                     object : RecyclerView.OnScrollListener() {
                         override fun onScrolled(
@@ -120,7 +119,7 @@ class AllMovieReportFragment :
 
                 override fun onClick(position: Int) {
                     val movieId = movie[position].id
-                    (activity as MainActivity).navigateToDetailMovieFragment(movieId)
+                    navigateToMovieDetail(movieId)
                 }
             }
 
@@ -128,7 +127,7 @@ class AllMovieReportFragment :
             object : AllMovieReportAdapter.ItemClick {
                 override fun onClick(position: Int) {
                     val report = allMovieReportAdapter.reportList[position]
-                    (activity as MainActivity).navigateToBodyFragment(report.reportId)
+                    navigateToBodyReport(report.reportId)
                 }
 
                 override fun onLikeClick(position: Int) {
@@ -145,6 +144,16 @@ class AllMovieReportFragment :
                     }
                 }
             }
+    }
+
+    private fun navigateToMovieDetail(movieId: Int) {
+        val action = AllMovieReportFragmentDirections.navigateToMovieDetail(movieId)
+        navController.navigate(action)
+    }
+
+    private fun navigateToBodyReport(reportId: String) {
+        val action = AllMovieReportFragmentDirections.navigateToBody(reportId)
+        navController.navigate(action)
     }
 
     companion object {

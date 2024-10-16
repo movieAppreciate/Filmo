@@ -8,24 +8,27 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
-import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
     FragmentBodyMovieReportBinding::inflate,
 ) {
     override val viewModel: BodyMovieReportViewModel by viewModels()
+    private val navController by lazy { findNavController() }
 
     override fun onBindLayout() {
         super.onBindLayout()
+
+        val args: BodyMovieReportFragmentArgs by navArgs()
 
         with(binding.movieDetail) {
             readMore.setOnClickListener {
@@ -35,13 +38,12 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             }
         }
 
-        val reportId = arguments?.getString("REPORT_ID") ?: ""
+        // val reportId = arguments?.getString("REPORT_ID") ?: ""
 
-        viewModel.handleEvent(BodyMovieReportEvent.ShowReport(reportId))
+        viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
 
         binding.btnReply.setOnClickListener {
-            Timber.d("reply fragment에 전달한 ReportId : $reportId")
-            (activity as MainActivity).navigateToReplyFragment(reportId)
+            navigateToReply(args.reportId)
         }
 
         lifecycleScope.launch {
@@ -72,10 +74,16 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
-                        (activity as MainActivity).navigateToReportFragment()
+                        navController.popBackStack()
                     }
                 },
             )
+    }
+
+    // todo : 네비게이션 사용 코드 추가
+    private fun navigateToReply(reportId: String) {
+        val action = BodyMovieReportFragmentDirections.navigateToReply(reportId)
+        navController.navigate(action)
     }
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
@@ -170,16 +178,10 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
     }
 
     companion object {
-        fun newInstance(
-            reportId: String,
-        ): BodyMovieReportFragment {
-            val fragment =
-                BodyMovieReportFragment().apply {
-                    arguments =
-                        Bundle().apply {
-                            putString("REPORT_ID", reportId)
-                        }
-                }
+        fun newInstance(): BodyMovieReportFragment {
+            val args = Bundle()
+            val fragment = BodyMovieReportFragment()
+            fragment.arguments = args
             return fragment
         }
     }

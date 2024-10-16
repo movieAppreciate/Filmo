@@ -5,8 +5,11 @@
     android:layout_height="match_parent">
 
     <androidx.fragment.app.FragmentContainerView
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/nav_graph_write"
         android:id="@+id/report_fragment_container_view"
         android:layout_width="match_parent"
+        app:defaultNavHost = "true"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

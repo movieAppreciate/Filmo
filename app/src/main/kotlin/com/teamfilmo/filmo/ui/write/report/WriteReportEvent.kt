@@ -7,4 +7,10 @@ sealed class WriteReportEvent : BaseEvent() {
     data class RegisterReport(
         val request: RegistReportRequest,
     ) : WriteReportEvent()
+//
+//    data class SaveReportState(
+//        val reportTitle: String?,
+//        val reportContent: String?,
+//        val tagString: String?,
+//    ) : WriteReportEvent()
 }

@@ -3,6 +3,8 @@
 compileSdk = "34"
 lottieVersion = "6.5.2"
 minSdk = "24"
+navigationFragmentKtx = "2.5.1"
+navigationUiKtx = "2.5.1"
 targetSdk = "34"
 
 # Gradle
@@ -36,7 +38,7 @@ androidx_fragment = "1.8.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/lifecycle)
 androidx_lifecycle = "2.8.3"
 # [Document](https://developer.android.com/jetpack/androidx/releases/navigation)
-androidx_navigation = "2.7.7"
+androidx_navigation = "2.8.2"
 # [Document](https://developer.android.com/jetpack/androidx/releases/room)
 androidx_room = "2.6.1"
 # [Document](https://developer.android.com/jetpack/androidx/releases/datastore)
@@ -175,8 +177,11 @@ naver = "5.9.1"
 kakao = "2.20.0"
 pagingCommonAndroid = "3.3.2"
 pagingRuntimeKtx = "3.3.2"
+runtimeSavedInstanceState = "1.0.0-alpha11"
 
 [libraries]
+androidx-navigation-fragment-ktx-v251 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+androidx-navigation-ui-ktx-v251 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -322,10 +327,10 @@ firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "per
 hilt-android-gradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 protobuf-gradlePlugin = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "protobuf_plugin" }
 ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
-androidx-navigation-safe-args-gradlePlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx_navigation" }
 junit5-gradlePlugin = { group = "de.mannodermaus.gradle.plugins", name = "android-junit5", version.ref = "junit5" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-runtime-saved-instance-state = { group = "androidx.compose.runtime", name = "runtime-saved-instance-state", version.ref = "runtimeSavedInstanceState" }
 
 
 [bundles]

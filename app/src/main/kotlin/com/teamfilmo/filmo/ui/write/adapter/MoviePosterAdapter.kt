@@ -39,9 +39,9 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Movie
 
     interface OnItemClickListener {
         fun onItemClick(
-            movieId: Int? = null,
-            movieName: String? = null,
-            uri: String? = null,
+            movieId: Int,
+            movieName: String,
+            uri: String,
         )
     }
 
@@ -78,7 +78,7 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Movie
                 val movieId = getItem(position)?.result?.id
                 val movieName = getItem(position)?.result?.title
                 if (movieId != null && movieName != null) {
-                    onItemClickListener?.onItemClick(movieId, movieName)
+                    onItemClickListener?.onItemClick(movieId, movieName, "")
                 }
             }
         }

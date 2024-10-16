@@ -36,7 +36,6 @@ class ReportFragment : BaseFragment<FragmentReportBinding, ReportViewModel, Repo
     companion object {
         fun newInstance(): ReportFragment {
             val args = Bundle()
-
             val fragment = ReportFragment()
             fragment.arguments = args
             return fragment

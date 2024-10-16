@@ -14,9 +14,9 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.protobuf) apply false
-    alias(libs.plugins.navigation.safe.args) apply false
     alias(libs.plugins.junit5) apply false
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.navigation.safe.args) apply false
 }
 
 @Suppress("ktlint:standard:property-naming")

@@ -6,16 +6,13 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.commit
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
-import com.teamfilmo.filmo.ui.body.BodyMovieReportFragment
-import com.teamfilmo.filmo.ui.main.adapter.MainPagerAdapter
-import com.teamfilmo.filmo.ui.movie.MovieDetailFragment
-import com.teamfilmo.filmo.ui.reply.ReplyFragment
-import com.teamfilmo.filmo.ui.report.ReportFragment
 import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -25,6 +22,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
     ActivityMainBinding::inflate,
 ) {
     override val viewModel: MainViewModel by viewModels()
+    private lateinit var navController: NavController
 
     private val requestLogin =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -41,42 +39,54 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val navHostFragment =
+            supportFragmentManager
+                .findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
+        navController = navHostFragment.navController
+        binding.navBar.setupWithNavController(navController)
+
         if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
-            binding.viewPager.currentItem = 0
+            navController.navigate(R.id.allMovieReportFragment)
         } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
             Timber.d("")
-            supportFragmentManager.commit {
-            }
+            navController.navigate(R.id.movieDetailFragment)
         }
-
-        binding.navBar.selectedItemId = R.id.home
     }
 
     override fun onStart() {
         super.onStart()
-        binding.navBar.selectedItemId = R.id.home
+        binding.navBar.selectedItemId = R.id.allMovieReportFragment
     }
 
     override fun onBindLayout() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        binding.viewPager.adapter = MainPagerAdapter(this)
-        binding.viewPager.isUserInputEnabled = false
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> {
-                    binding.viewPager.currentItem = 0
+                R.id.allMovieReportFragment -> {
+                    if (navController.currentDestination?.id != R.id.allMovieReportFragment) {
+                        navController.navigate(R.id.allMovieReportFragment)
+                    }
+                    return@setOnItemSelectedListener true
                 }
-                R.id.write -> {
+                R.id.myPageFragment -> {
+                    if (navController.currentDestination?.id != R.id.myPageFragment) {
+                        Timber.d("마이페이지 클릭")
+                        navController.navigate(R.id.myPageFragment)
+                    }
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.writeActivity -> {
                     val intent = Intent(this, WriteActivity::class.java)
+                    Timber.d("감상문 작성 클릭")
                     startActivity(intent)
+                    return@setOnItemSelectedListener true
                 }
-                R.id.my_page -> binding.viewPager.currentItem = 2
                 else -> {
                     return@setOnItemSelectedListener false
                 }
             }
-            return@setOnItemSelectedListener true
         }
     }
 
@@ -88,45 +98,5 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
             }
             else -> {}
         }
-    }
-
-    fun navigateToReportFragment() {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.main_fragment_container_view, ReportFragment.newInstance())
-            .addToBackStack(null)
-            .commit()
-        binding.viewPager.visibility = View.VISIBLE
-        binding.mainFragmentContainerView.visibility = View.GONE
-    }
-
-    fun navigateToDetailMovieFragment(movieID: Int) {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.main_fragment_container_view, MovieDetailFragment.newInstance(movieID))
-            .addToBackStack(null)
-            .commit()
-        binding.viewPager.visibility = View.GONE
-        binding.mainFragmentContainerView.visibility = View.VISIBLE
-    }
-
-    fun navigateToBodyFragment(
-        reportId: String,
-    ) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container_view, BodyMovieReportFragment.newInstance(reportId))
-            .addToBackStack(null)
-            .commit()
-        binding.viewPager.visibility = View.GONE
-        binding.mainFragmentContainerView.visibility = View.VISIBLE
-    }
-
-    fun navigateToReplyFragment(
-        reportId: String,
-    ) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container_view, ReplyFragment.newInstance(reportId))
-            .addToBackStack(null)
-            .commit()
-
-        binding.mainFragmentContainerView.visibility = View.VISIBLE
     }
 }

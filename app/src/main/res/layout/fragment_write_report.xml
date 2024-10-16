@@ -16,8 +16,6 @@
         android:layout_height="wrap_content">
 
 
-
-
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="30dp"
@@ -34,6 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="270dp"
+            android:clickable="false"
+            android:textColor="@color/gray02"
             android:stateListAnimator="@null"
             android:text="등록"
             app:layout_constraintBottom_toBottomOf="@+id/btn_back"
@@ -81,30 +81,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_selected_movie" />
 
-
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_report_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="1dp"
             android:background="@color/transparent"
             android:hint="제목을 입력해주세요."
             android:maxLength="20"
             android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/edit_report_body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_marginBottom="35dp"
             android:background="@color/transparent"
             android:hint="영화를 보고 난 후의 생각을 자유롭게 작성해주세요."
             android:textColorHint="@color/gray02"
             android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
+
 
         <View
             android:id="@+id/view3"
