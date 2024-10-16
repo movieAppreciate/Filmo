@@ -177,6 +177,7 @@ naver = "5.9.1"
 kakao = "2.20.0"
 pagingCommonAndroid = "3.3.2"
 pagingRuntimeKtx = "3.3.2"
+runtimeSavedInstanceState = "1.0.0-alpha11"
 
 [libraries]
 androidx-navigation-fragment-ktx-v251 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
@@ -329,6 +330,7 @@ ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle"
 junit5-gradlePlugin = { group = "de.mannodermaus.gradle.plugins", name = "android-junit5", version.ref = "junit5" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-runtime-saved-instance-state = { group = "androidx.compose.runtime", name = "runtime-saved-instance-state", version.ref = "runtimeSavedInstanceState" }
 
 
 [bundles]

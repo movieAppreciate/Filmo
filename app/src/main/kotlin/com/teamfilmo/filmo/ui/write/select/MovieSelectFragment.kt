@@ -32,7 +32,6 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
     companion object {
         fun newInstance(): MovieSelectFragment {
             val args = Bundle()
-
             val fragment = MovieSelectFragment()
             fragment.arguments = args
             return fragment

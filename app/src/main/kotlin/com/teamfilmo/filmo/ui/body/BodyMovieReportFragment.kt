@@ -178,16 +178,10 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
     }
 
     companion object {
-        fun newInstance(
-            reportId: String,
-        ): BodyMovieReportFragment {
-            val fragment =
-                BodyMovieReportFragment().apply {
-                    arguments =
-                        Bundle().apply {
-                            putString("REPORT_ID", reportId)
-                        }
-                }
+        fun newInstance(): BodyMovieReportFragment {
+            val args = Bundle()
+            val fragment = BodyMovieReportFragment()
+            fragment.arguments = args
             return fragment
         }
     }

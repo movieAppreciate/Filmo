@@ -228,16 +228,10 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
     }
 
     companion object {
-        fun newInstance(
-            reportId: String,
-        ): ReplyFragment {
-            val fragment =
-                ReplyFragment().apply {
-                    arguments =
-                        Bundle().apply {
-                            putString("REPORT_ID", reportId)
-                        }
-                }
+        fun newInstance(): ReplyFragment {
+            val args = Bundle()
+            val fragment = ReplyFragment()
+            fragment.arguments = args
             return fragment
         }
     }

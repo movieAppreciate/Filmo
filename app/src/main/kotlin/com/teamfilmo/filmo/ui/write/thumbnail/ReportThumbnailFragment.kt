@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.write.thumbnail
 
 import android.os.Bundle
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,19 +25,13 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
         context?.let { MovieThumbnailAdapter(it) }
     }
     private val navController by lazy { findNavController() }
-    private val args: ReportThumbnailFragmentArgs by navArgs()
 
     companion object {
-        fun newInstance(
-            movieName: String,
-            movieId: String,
-        ): ReportThumbnailFragment {
-            return ReportThumbnailFragment().apply {
-                arguments =
-                    Bundle().apply {
-                        putString("MOVIE_ID", movieId)
-                    }
-            }
+        fun newInstance(): ReportThumbnailFragment {
+            val args = Bundle()
+            val fragment = ReportThumbnailFragment()
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -56,8 +51,15 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
                     position: Int,
                     uri: String?,
                 ) {
-                    val action = ReportThumbnailFragmentDirections.navigateToWriteReport(uri.toString(), args.movieName, args.movieId)
-                    navController.navigate(action)
+                    // 전달해야할 데이터는 safe args로 할 수 없으므로 번들로 전달한다.
+                    val result =
+                        Bundle().apply {
+                            putString("uri", uri.toString())
+                        }
+                    setFragmentResult("requestKey", result)
+                    // navigate() 로 이동 시에는 기존 프래그먼트가 아니라 새로 생성된 프래그먼트로 이동되어 작성한 감상문 내용이 사라진다.
+                    // 따라서 popbackStack을 해준다.
+                    navController.popBackStack()
                 }
             },
         )
