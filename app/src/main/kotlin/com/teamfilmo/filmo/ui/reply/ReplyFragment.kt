@@ -228,7 +228,7 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
                         if (it.isNotEmpty()) {
                             adapter.setReplyList(it)
                             binding.txtReplyCount.text = it.size.toString()
-\                        }
+                        }
                     }
                 }
             }
