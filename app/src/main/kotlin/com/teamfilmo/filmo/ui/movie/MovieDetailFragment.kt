@@ -24,6 +24,13 @@ class MovieDetailFragment :
     override val viewModel: MovieDetailViewModel by viewModels()
     private val navController by lazy { findNavController() }
 
+    override fun onBindLayout() {
+        super.onBindLayout()
+        binding.btnBack.setOnClickListener {
+            navController.popBackStack()
+        }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,

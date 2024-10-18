@@ -2,10 +2,9 @@ package com.teamfilmo.filmo.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -59,8 +58,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
     }
 
     override fun onBindLayout() {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        enableEdgeToEdge()
+//        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.allMovieReportFragment -> {

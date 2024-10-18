@@ -2,15 +2,18 @@ package com.teamfilmo.filmo.ui.reply.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
+import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
+import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponseWithRole
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import timber.log.Timber
 
 class ReplyViewHolder(
+    private val currenUserId: String,
     private val binding: ReplyItemBinding,
     private val itemClick: ReplyItemClick?,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -79,41 +82,64 @@ class ReplyViewHolder(
         }
     }
 
-    fun bind(reply: GetReplyResponseItem) {
+    fun bind(reply: GetReplyResponseItemWithRole) {
         binding.txtReply.text = reply.content
         binding.txtReplyCount.text = reply.subReply?.size?.toString() ?: "0"
 
         binding.userId.text = reply.nickname
         binding.txtTime.text = formatTimeDifference(reply.createDate)
 
-        // 구현 : 시간 로직 추가하기
+        // 본인 댓글이 아니라면 삭제 불가능하도록 하기
+        if (reply.isMyReply) {
+            binding.btnMore.visibility = View.VISIBLE
+        } else {
+            binding.btnMore.visibility = View.GONE
+        }
 
-        reply.subReply?.let { subReplyList ->
-            if (subReplyList.size == 0) {
-                subReplyAdapter.setSubReply(subReplyList)
+        Timber.d("답글 :${reply.subReply}")
+
+        val subReplyListWithRole =
+            reply.subReply?.map {
+                SubReplyResponseWithRole(
+                    content = it.content,
+                    createDate = it.createDate,
+                    lastModifiedDate = it.lastModifiedDate,
+                    nickname = it.nickname,
+                    replyId = it.replyId,
+                    reportId = it.reportId,
+                    upReplyId = it.upReplyId,
+                    userId = it.userId,
+                    isMySubReply = it.userId == currenUserId,
+                )
+            }
+        reply.subReply?.let {
+            if (subReplyListWithRole?.size == 0) {
+                subReplyAdapter.setSubReply(subReplyListWithRole)
                 binding.btnReplyMore.visibility = View.GONE
                 binding.btnCloseSubReply.visibility = View.GONE
                 return
             }
 
             binding.subReplyRecycerView.visibility = View.VISIBLE
-            subReplyAdapter.setSubReply(subReplyList.take(1))
+            subReplyListWithRole?.let { it1 -> subReplyAdapter.setSubReply(it1.take(1)) }
             binding.btnReplyMore.visibility = View.GONE
 
-            if (subReplyList.size > 1) {
+            if (subReplyListWithRole?.size!! > 1) {
                 with(binding) {
                     btnReplyMore.apply {
                         visibility = View.VISIBLE
                         setOnClickListener {
-                            subReplyAdapter.setSubReply(subReplyList)
+                            subReplyAdapter.setSubReply(subReplyListWithRole)
                             visibility = View.GONE
                             binding.btnCloseSubReply.visibility = View.VISIBLE
                         }
                     }
 
                     btnCloseSubReply.setOnClickListener {
-                        reply.subReply.take(1).let {
-                            subReplyAdapter.setSubReply(it)
+                        subReplyListWithRole?.take(1).let {
+                            if (it != null) {
+                                subReplyAdapter.setSubReply(it)
+                            }
                         }
                         binding.btnCloseSubReply.visibility = View.GONE
                         binding.btnReplyMore.visibility = View.VISIBLE

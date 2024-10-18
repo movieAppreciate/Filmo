@@ -3,13 +3,14 @@ package com.teamfilmo.filmo.ui.reply.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponse
+import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponseWithRole
 import com.teamfilmo.filmo.databinding.SubReplyItemBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import timber.log.Timber
 
 interface SubReplyItemClick {
     fun onMeatBallClick(
@@ -18,7 +19,7 @@ interface SubReplyItemClick {
 }
 
 class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
-    val subReplyList: ArrayList<SubReplyResponse> = arrayListOf()
+    val subReplyList: ArrayList<SubReplyResponseWithRole> = arrayListOf()
 
     private fun formatTimeDifference(dateString: String): String {
         val possiblePatterns =
@@ -62,7 +63,7 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
         }
     }
 
-    fun setSubReply(subReplyList: List<SubReplyResponse>) {
+    fun setSubReply(subReplyList: List<SubReplyResponseWithRole>) {
         this.subReplyList.clear()
         this.subReplyList.addAll(subReplyList)
         notifyDataSetChanged()
@@ -85,6 +86,8 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
         holder.subReplyContent.text = subReplyList[position].content
         holder.userName.text = subReplyList[position].nickname
         holder.writeTime.text = formatTimeDifference(subReplyList[position].createDate)
+        holder.setIsMySubReply(subReplyList[position].isMySubReply)
+        Timber.d("어댑터에 subReplyList[position].isMySubReply : ${subReplyList[position].isMySubReply}")
     }
 
     override fun getItemCount(): Int = subReplyList.size
