@@ -1,7 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.follow.FollowCountResponse
-import com.teamfilmo.filmo.data.remote.model.follow.FollowResponse
+import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
+import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -10,18 +11,18 @@ interface FollowService {
     /**
      * 팔로잉 등록
      */
-    @POST("follow/regist")
-    suspend fun registFollow(
+    @POST("follow/save")
+    suspend fun saveFollow(
         /**
          * 대상 아이디
          */
-        @Query("followTarget") followTarget: String,
-    ): Result<FollowResponse>
+        @Query("targetId") saveFollowRequest: String,
+    ): Result<SaveFollowResponse>
 
     /**
      * 팔로잉 취소
      */
-    @POST("follow/cancle")
+    @DELETE("follow/cancle")
     suspend fun cancelFollow(
         /**
          * 팔로우 id
@@ -37,7 +38,7 @@ interface FollowService {
         /**
          * 상대 아이디
          */
-        @Query("followTarget") followTarget: String,
+        @Query("targetId") targetId: String,
     ): Result<Boolean>
 
     /**

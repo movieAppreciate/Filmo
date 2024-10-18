@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.data.remote.model.follow
+package com.teamfilmo.filmo.data.remote.model.follow.count
 
 import kotlinx.serialization.Serializable
 

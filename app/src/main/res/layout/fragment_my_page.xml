@@ -102,10 +102,11 @@
         app:layout_constraintTop_toTopOf="@+id/textView18" />
 
     <ImageButton
-        android:layout_width="180dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_following"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txt_count_follow"

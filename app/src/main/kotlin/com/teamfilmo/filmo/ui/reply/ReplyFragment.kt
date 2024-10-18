@@ -16,7 +16,6 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyItemClick
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
-import com.teamfilmo.filmo.ui.reply.adapter.SubReplyRVAdapter
 import com.teamfilmo.filmo.ui.widget.CustomDialog
 import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
