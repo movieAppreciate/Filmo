@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.domain.follow
 
-import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.domain.repository.FollowRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -8,19 +7,22 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
-class CountFollowUseCase
+class CancelFollowUseCase
     @Inject
     constructor(
         private val followRepository: FollowRepository,
     ) {
-        operator fun invoke(otherUserId: String): Flow<FollowCountResponse?> =
+        operator fun invoke(followId: String): Flow<Boolean> =
             flow {
-                val result = followRepository.countFollow(otherUserId)
+                val result = followRepository.cancelFollow(followId)
+
                 result.onFailure {
                     throw it
                 }
-                emit(result.getOrNull())
+                result.onSuccess {
+                    emit(true)
+                }
             }.catch {
-                Timber.d(it.message.toString())
+                Timber.e("failed to cancel follow : ${it.localizedMessage}")
             }
     }

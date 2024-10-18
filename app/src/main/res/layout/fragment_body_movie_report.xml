@@ -146,18 +146,15 @@
             app:layout_constraintVertical_bias="0.448" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_follow"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="65dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/custom_button_unselected"
-            android:text="팔로잉"
-            android:textColor="@color/primary"
-            app:layout_constraintBottom_toBottomOf="@+id/image_user"
+        <ImageButton
+            android:id="@+id/btn_user_follow"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/btn_following"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_user_name"
             app:layout_constraintStart_toEndOf="@+id/txt_user_name"
-            app:layout_constraintTop_toTopOf="@+id/image_user" />
+            app:layout_constraintTop_toTopOf="@+id/txt_user_name" />
 
         <ImageButton
             android:id="@+id/btn_meat_ball"
@@ -165,17 +162,17 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:background="@drawable/ic_more"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_follow"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_user_follow"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_follow"
-            app:layout_constraintTop_toTopOf="@+id/btn_follow" />
+            app:layout_constraintStart_toEndOf="@+id/btn_user_follow"
+            app:layout_constraintTop_toTopOf="@+id/btn_user_follow" />
 
         <include
             android:id="@+id/movie_detail"
             layout="@layout/fragment_movie_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/btn_follow"
+            app:layout_constraintTop_toBottomOf="@id/btn_user_follow"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

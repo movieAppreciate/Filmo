@@ -2,9 +2,14 @@ package com.teamfilmo.filmo.ui.body
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
+import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
+import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
+import com.teamfilmo.filmo.domain.follow.SaveFollowUseCase
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.DeleteReportUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
@@ -21,13 +26,16 @@ import timber.log.Timber
 class BodyMovieReportViewModel
     @Inject
     constructor(
+        private val checkIsFollowUseCase: CheckIsFollowUseCase,
+        private val cancelFollowUseCase: CancelFollowUseCase,
+        private val saveFollowUseCase: SaveFollowUseCase,
         private val getUserInfoUseCase: GetUserInfoUseCase,
         private val deleteReportUseCase: DeleteReportUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val searchMovieDetailUseCase: SearchMovieDetailUseCase,
     ) : BaseViewModel<BodyMovieReportEffect, BodyMovieReportEvent>() {
         init {
-            // 현재 유저 정보
+            // 현재 로그인한 유저 정보
             viewModelScope.launch {
                 getUserInfoUseCase().collect {
                     if (it != null) {
@@ -37,6 +45,12 @@ class BodyMovieReportViewModel
             }
         }
 
+    /*
+    팔로우 정보
+     */
+        private val _followInfo = MutableStateFlow(SaveFollowResponse("", "", ""))
+        val followInfo: StateFlow<SaveFollowResponse> = _followInfo
+
         /*
         본인의 게시글인기?
          */
@@ -44,7 +58,7 @@ class BodyMovieReportViewModel
         val isMyPost: StateFlow<Boolean> = _isMyPost
 
         /*
-        유저 정보
+        현재 로그인한 유저 정보
          */
         private val _userInfo = MutableStateFlow(UserResponse("", "", "", "", "", "", "", "", ""))
         val userInfo: StateFlow<UserResponse> = _userInfo
@@ -89,8 +103,69 @@ class BodyMovieReportViewModel
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
     /*
-       감상문 수정
+      팔로우 토글
      */
+        private fun toggleFollow() {
+            if (_checkIsFollowResponse.value) {
+                cancelFollow()
+                sendEffect(BodyMovieReportEffect.CancelFollow)
+            } else {
+                saveFollow()
+                sendEffect(BodyMovieReportEffect.SaveFollow)
+            }
+        }
+
+    /*
+    팔로우 여부
+     */
+        private val _checkIsFollowResponse = MutableStateFlow(false)
+        val checkIsFollowResponse: StateFlow<Boolean> = _checkIsFollowResponse
+
+    /*
+ 팔로우 등록
+     */
+        private fun saveFollow() {
+            viewModelScope.launch {
+                val saveFollowRequest =
+                    SaveFollowRequest(
+                        _getReportResponse.value.userId,
+                    )
+                saveFollowUseCase(_getReportResponse.value.userId).collect {
+                    _followInfo.value = it
+                    _checkIsFollowResponse.value = true
+                    sendEffect(BodyMovieReportEffect.SaveFollow)
+                }
+            }
+        }
+
+    /*
+    팔로우 취소
+     */
+        private fun cancelFollow() {
+            viewModelScope.launch {
+                cancelFollowUseCase(_followInfo.value.followId).collect {
+                    _checkIsFollowResponse.value = false
+                    sendEffect(BodyMovieReportEffect.CancelFollow)
+                }
+            }
+        }
+
+    /*
+    팔로우 여부 검사
+     */
+        private fun checkIsFollow() {
+            viewModelScope.launch {
+                checkIsFollowUseCase(_getReportResponse.value.userId).collect {
+                    if (it != null) {
+                        _checkIsFollowResponse.value = it
+                    }
+                }
+            }
+        }
+
+        /*
+       감상문 수정
+         */
         private fun updateReport() {
         }
 
@@ -131,6 +206,7 @@ class BodyMovieReportViewModel
                 getReportUseCase(reportId).collect {
                     if (it != null) {
                         _getReportResponse.value = it
+                        checkIsFollow()
                         if (_userInfo.value.userId == _getReportResponse.value.userId) {
                             _isMyPost.value = true
                         } else {
@@ -145,6 +221,9 @@ class BodyMovieReportViewModel
 
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
+                is BodyMovieReportEvent.ClickFollow -> {
+                    toggleFollow()
+                }
                 is BodyMovieReportEvent.ClickMoreButton -> {
                     getMovieContent()
                 }

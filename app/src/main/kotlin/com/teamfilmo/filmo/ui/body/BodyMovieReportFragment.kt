@@ -35,6 +35,14 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
     override fun onBindLayout() {
         super.onBindLayout()
 
+        binding.movieDetail.btnBack.visibility = View.GONE
+        /*
+         팔로잉 버튼 클릭 시
+         */
+        binding.btnUserFollow.setOnClickListener {
+            viewModel.handleEvent(BodyMovieReportEvent.ClickFollow)
+        }
+
         /*
         미트볼 버튼 클릭 시
          */
@@ -100,8 +108,17 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            is BodyMovieReportEffect.CancelFollow -> {
+                // 팔로우 취소
+                binding.btnUserFollow.isSelected = false
+                Toast.makeText(context, "팔로우 취소", Toast.LENGTH_SHORT).show()
+            }
+            is BodyMovieReportEffect.SaveFollow -> {
+                // 팔로우한 경우
+                binding.btnUserFollow.isSelected = true
+                Toast.makeText(context, "팔로우 완료!", Toast.LENGTH_SHORT).show()
+            }
             is BodyMovieReportEffect.DeleteReport -> {
-                // todo : 삭제 후 뒤로가기
                 // 전체 감상문 리스트에서 삭제 완료되었다는 토스트 메시지 +ㄴ 토스트 띄우기
                 Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
                 navController.navigate(R.id.allMovieReportFragment)
