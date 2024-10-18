@@ -63,7 +63,9 @@
                 android:textColor="@color/white"
                 android:textSize="23sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
@@ -145,7 +147,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button"
+            android:id="@+id/btn_follow"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="65dp"
             android:layout_height="35dp"
@@ -158,21 +160,22 @@
             app:layout_constraintTop_toTopOf="@+id/image_user" />
 
         <ImageButton
+            android:id="@+id/btn_meat_ball"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:background="@drawable/ic_more"
-            app:layout_constraintBottom_toBottomOf="@+id/button"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_follow"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button"
-            app:layout_constraintTop_toTopOf="@+id/button" />
+            app:layout_constraintStart_toEndOf="@+id/btn_follow"
+            app:layout_constraintTop_toTopOf="@+id/btn_follow" />
 
         <include
             android:id="@+id/movie_detail"
             layout="@layout/fragment_movie_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/button"
+            app:layout_constraintTop_toBottomOf="@id/btn_follow"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

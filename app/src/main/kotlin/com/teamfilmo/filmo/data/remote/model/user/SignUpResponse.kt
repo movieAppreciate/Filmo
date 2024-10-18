@@ -9,4 +9,4 @@ data class SignUpResponse(
     override val lastLoginDate: String,
     override val introduction: String,
     override val role: List<String> = emptyList(),
-) : UserResponse(uid, userId, nickname, type, profileUrl, lastLoginDate, introduction, role)
+) : OpenUserResponse(uid, userId, nickname, type, profileUrl, lastLoginDate, introduction, role)

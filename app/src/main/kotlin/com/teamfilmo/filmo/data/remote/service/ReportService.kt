@@ -6,6 +6,7 @@ import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -62,9 +63,9 @@ interface ReportService {
     /**
      * 감상문 수정
      */
-    @POST("/report/modifyReport")
-    suspend fun modifyReport(
-        @Body searchReportRequest: SearchReportRequest,
+    @POST("/report/updateReport")
+    suspend fun updateReport(
+        @Body updateReportRequest: UpdateReportRequest,
     ): Result<String>
 
     /*

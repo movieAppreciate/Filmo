@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.ui.body
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,24 +12,35 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
+import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
+import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
     FragmentBodyMovieReportBinding::inflate,
 ) {
+    private var reportId: String? = null
     override val viewModel: BodyMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
+    val args: BodyMovieReportFragmentArgs by navArgs()
 
     override fun onBindLayout() {
         super.onBindLayout()
 
-        val args: BodyMovieReportFragmentArgs by navArgs()
+        /*
+        미트볼 버튼 클릭 시
+         */
+        binding.btnMeatBall.setOnClickListener {
+            showMeatBallDialog()
+        }
 
         with(binding.movieDetail) {
             readMore.setOnClickListener {
@@ -38,17 +50,17 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             }
         }
 
-        // val reportId = arguments?.getString("REPORT_ID") ?: ""
-
         viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
 
         binding.btnReply.setOnClickListener {
+            Timber.d("args.reportId : ${args.reportId}")
             navigateToReply(args.reportId)
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.getReportResponse.collect {
+                    reportId = it.reportId
                     binding.tvMovieTitle.text = it.movieId.toString()
                     binding.tvReportTitle.text = it.title
                     binding.reportListView.text = it.content
@@ -88,6 +100,12 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            is BodyMovieReportEffect.DeleteReport -> {
+                // todo : 삭제 후 뒤로가기
+                // 전체 감상문 리스트에서 삭제 완료되었다는 토스트 메시지 +ㄴ 토스트 띄우기
+                Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.allMovieReportFragment)
+            }
             is BodyMovieReportEffect.ShowMovieContent -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -99,7 +117,16 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             }
             is BodyMovieReportEffect.ShowReport -> {
                 lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    launch {
+                        viewModel.isMyPost.collect {
+                            if (it) {
+                                binding.btnMeatBall.visibility = View.VISIBLE
+                            } else {
+                                binding.btnMeatBall.visibility = View.GONE
+                            }
+                        }
+                    }
+                    launch {
                         viewModel.getReportResponse.collect {
                             binding.tvMovieTitle.text = it.movieId.toString()
                             binding.tvReportTitle.text = it.title
@@ -175,6 +202,37 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             .asBitmap()
             .load(imageUrl)
             .into(view as ImageView)
+    }
+
+    private fun showMeatBallDialog() {
+        val bottomSheet =
+            ModalBottomSheet.newInstance(
+                listOf("수정하기", "삭제하기", "취소"),
+            )
+
+        bottomSheet.show(parentFragmentManager, ModalBottomSheet.TAG)
+        bottomSheet.setListener(
+            object : OnButtonSelectedListener {
+                override fun onButtonSelected(text: String) {
+                    when (text) {
+                        "수정하기" -> {
+                            // todo : 감상문 작성 페이지로 이동 , 기존 내용이 다 보여야함
+                            bottomSheet.dismiss()
+                        }
+
+                        "삭제하기" -> {
+                            if (reportId == null) return
+                            viewModel.handleEvent(BodyMovieReportEvent.DeleteReport(reportId!!))
+                            bottomSheet.dismiss()
+                        }
+
+                        "취소" -> {
+                            bottomSheet.dismiss()
+                        }
+                    }
+                }
+            },
+        )
     }
 
     companion object {

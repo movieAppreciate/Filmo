@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DetailMovieResponse(
     val adult: Boolean?,
-    val backdrop_path: String?,
+    val backdrop_path: String? = null,
     val belongs_to_collection: BelongsToCollection? = null,
     val budget: Int?,
     val genres: List<Genre>?,
@@ -15,7 +15,7 @@ data class DetailMovieResponse(
     val original_title: String?,
     val overview: String?,
     val popularity: Double?,
-    val poster_path: String?,
+    val poster_path: String? = null,
     val providers: Providers? = null,
     val production_companies: List<ProductionCompany>?,
     val production_countries: List<ProductionCountry>?,

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.ui.reply.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.databinding.SubReplyItemBinding
 import timber.log.Timber
@@ -13,6 +14,14 @@ class SubReplyViewHolder(
     val writeTime = binding.txtTime
     val likeCount = binding.txtLikeCount
     val createDate = binding.txtTime
+
+    fun setIsMySubReply(isMySubReply: Boolean) {
+        if (isMySubReply) {
+            binding.btnMeatBall.visibility = View.VISIBLE
+        } else {
+            binding.btnMeatBall.visibility = View.GONE
+        }
+    }
 
     init {
         binding.btnMeatBall.setOnClickListener {
