@@ -74,7 +74,7 @@ class BodyMovieReportViewModel
          */
         private val _movieDetailInfo =
             MutableStateFlow(
-                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ""),
             )
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()
@@ -184,6 +184,7 @@ class BodyMovieReportViewModel
                 searchMovieDetailUseCase(movieId).collect {
                     if (it != null) {
                         _movieDetailInfo.value = it
+                        Timber.d("영화 연령 정보 : ${_movieDetailInfo.value.certification}")
                         sendEffect(BodyMovieReportEffect.ShowMovieInfo)
                     }
                 }

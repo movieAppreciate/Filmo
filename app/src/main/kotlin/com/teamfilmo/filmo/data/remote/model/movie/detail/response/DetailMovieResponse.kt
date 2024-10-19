@@ -29,4 +29,5 @@ data class DetailMovieResponse(
     val video: Boolean?,
     val vote_average: Double?,
     val vote_count: Int?,
+    val certification: String,
 )
