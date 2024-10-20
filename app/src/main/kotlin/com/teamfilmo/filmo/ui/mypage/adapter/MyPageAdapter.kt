@@ -9,6 +9,8 @@ import com.teamfilmo.filmo.databinding.MyReportItemBinding
 class MyPageAdapter : RecyclerView.Adapter<MyPageAdapter.MyPageViewHolder>() {
     private var myReportList: List<MyPageReportItem> = emptyList()
 
+    // DiffUtil 적용하기
+
     fun setMyReportList(reportList: List<MyPageReportItem>) {
         this.myReportList = reportList
         notifyDataSetChanged()

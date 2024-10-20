@@ -30,9 +30,19 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
     private var reportId: String? = null
     override val viewModel: BodyMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
-    val args: BodyMovieReportFragmentArgs by navArgs()
 
     override fun onBindLayout() {
+        val args: BodyMovieReportFragmentArgs by navArgs()
+
+        /*
+        유저 이름 클릭 시 감상문을  작성한 유저의 페이지로 이동
+         */
+        binding.txtUserName.setOnClickListener {
+            val userId = viewModel.getReportResponse.value.userId
+            Timber.d("전달된 userId : $userId")
+            val action = BodyMovieReportFragmentDirections.navigateToMyPageFromBody(userId)
+            navController.navigate(action)
+        }
         super.onBindLayout()
 
         binding.movieDetail.btnBack.visibility = View.GONE

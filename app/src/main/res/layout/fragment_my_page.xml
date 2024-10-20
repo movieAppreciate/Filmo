@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +37,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_duck"
+            android:src="@drawable/profile_image"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
             app:shapeAppearance="@style/Circle50"
             tools:layout_editor_absoluteX="10dp" />
@@ -102,10 +101,10 @@
         app:layout_constraintTop_toTopOf="@+id/textView18" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_following"
+        android:id="@+id/btn_follow"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:src="@drawable/btn_my_page_follow"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
@@ -137,6 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

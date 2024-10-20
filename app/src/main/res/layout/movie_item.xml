@@ -9,7 +9,6 @@
     android:orientation="vertical">
 
 <com.google.android.material.card.MaterialCardView
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp"
@@ -108,16 +107,17 @@
                 app:layout_constraintStart_toEndOf="@+id/frameLayout4" />
 
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_user"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_duck"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_content"
-                app:shapeAppearance="@style/Circle50" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_user"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/profile_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_content"
+            app:shapeAppearance="@style/Circle50" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView

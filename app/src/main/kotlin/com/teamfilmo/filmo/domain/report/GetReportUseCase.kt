@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
+/*
+개별 감상문 조회
+ */
 class GetReportUseCase
     @Inject
     constructor(

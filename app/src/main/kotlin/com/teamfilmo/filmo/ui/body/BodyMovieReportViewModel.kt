@@ -43,6 +43,10 @@ class BodyMovieReportViewModel
                     }
                 }
             }
+
+            // 팔로우 여부 확인
+            viewModelScope.launch {
+            }
         }
 
     /*
