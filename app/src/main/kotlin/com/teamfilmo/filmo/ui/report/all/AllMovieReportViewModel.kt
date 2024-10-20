@@ -130,7 +130,7 @@ class AllMovieReportViewModel
                     getBookmarkListUseCase(),
                 ) { reportList, bookmarkList ->
                     val reports =
-                        reportList?.map { reportItem ->
+                        reportList.map { reportItem ->
 
                             async {
                                 ReportItem(
@@ -150,9 +150,8 @@ class AllMovieReportViewModel
                                     getName(reportItem.reportId),
                                 )
                             }
-                        }?.awaitAll()
-
-                    reports?.let {
+                        }.awaitAll()
+                    reports.let {
                         _likeState.value =
                             reports.map { reportItem ->
                                 AllReportLikeState(
@@ -175,6 +174,7 @@ class AllMovieReportViewModel
                 }.collect { reports ->
                     if (reports != null) {
                         _allMovieReportList.value = reports
+                        Timber.d("전체 감상문 : ${_allMovieReportList.value}")
                     }
                     sendEffect(AllMovieReportEffect.RefreshReport(_allMovieReportList.value))
                     Timber.d("${_allMovieReportList.value}")

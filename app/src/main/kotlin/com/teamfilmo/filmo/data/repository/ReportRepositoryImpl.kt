@@ -4,7 +4,9 @@ import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListRequest
 import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.domain.repository.ReportRepository
@@ -23,16 +25,18 @@ class ReportRepositoryImpl
             return reportDataSource.deleteReport(reportId)
         }
 
+        override suspend fun searchUserReport(targetId: SearchUserReportListRequest): Result<SearchReportResponse> {
+            return reportDataSource.searchUserReport(targetId)
+        }
+
         override suspend fun searchAllReport(body: SearchAllReportRequest): Result<SearchReportResponse> {
             return reportDataSource.searchAllReport(body)
         }
 
         override suspend fun searchReport(
-            lastReportId: String?,
-            keyword: String?,
-            targetId: String?,
+            searchReportRequest: SearchReportRequest,
         ): Result<SearchReportResponse> {
-            return reportDataSource.searchReport()
+            return reportDataSource.searchReport(searchReportRequest)
         }
 
         override suspend fun getReport(reportId: String): Result<GetReportResponse> {

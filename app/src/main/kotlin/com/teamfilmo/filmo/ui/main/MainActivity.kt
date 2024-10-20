@@ -71,7 +71,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect
                 }
                 R.id.myPageFragment -> {
                     if (navController.currentDestination?.id != R.id.myPageFragment) {
-                        Timber.d("마이페이지 클릭")
                         navController.navigate(R.id.myPageFragment)
                     }
                     return@setOnItemSelectedListener true

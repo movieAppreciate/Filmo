@@ -6,6 +6,7 @@ import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportResponse
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListRequest
 import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -49,6 +50,14 @@ import retrofit2.http.Query
  * 감상문 삭제
  */
 interface ReportService {
+    /*
+    유저 감상문
+     */
+    @POST("/report/searchReport")
+    suspend fun searchUserReport(
+        @Body body: SearchUserReportListRequest,
+    ): Result<SearchReportResponse>
+
     /**
      * 감상문 등록
      */

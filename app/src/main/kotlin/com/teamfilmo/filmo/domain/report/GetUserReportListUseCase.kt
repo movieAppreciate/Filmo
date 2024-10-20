@@ -1,30 +1,30 @@
 package com.teamfilmo.filmo.domain.report
 
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportItem
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListRequest
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 /*
-    전체 감상문 조회
+사용자의 감상문 리스트 조회
  */
-
-class GetReportListUseCase
+class GetUserReportListUseCase
     @Inject
     constructor(
         private val reportRepository: ReportRepository,
     ) {
-        operator fun invoke() =
+        operator fun invoke(targetId: String): Flow<List<SearchReportItem>> =
             flow {
-                // todo : 그냥 "" 로 넣어줘도 됨 수정할 것
-                val result = reportRepository.searchAllReport(SearchAllReportRequest)
+                val result = reportRepository.searchUserReport(SearchUserReportListRequest(targetId))
                 result.onFailure {
                     throw it
                 }
                 emit(result.getOrNull()?.searchReport ?: emptyList())
             }.catch {
-                Timber.e(it.localizedMessage)
+                Timber.e("failed to search user Report list")
             }
     }
