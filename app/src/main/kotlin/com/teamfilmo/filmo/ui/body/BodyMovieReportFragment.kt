@@ -12,7 +12,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
@@ -147,7 +146,8 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
             is BodyMovieReportEffect.DeleteReport -> {
                 // 전체 감상문 리스트에서 삭제 완료되었다는 토스트 메시지 +ㄴ 토스트 띄우기
                 Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.allMovieReportFragment)
+                navController.popBackStack()
+                //    navController.navigate(R.id.allMovieReportFragment)
             }
             is BodyMovieReportEffect.ShowMovieContent -> {
                 lifecycleScope.launch {

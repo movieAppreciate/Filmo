@@ -2,11 +2,13 @@ package com.teamfilmo.filmo.ui.report.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.MovieItemBinding
+import com.teamfilmo.filmo.ui.report.ReportDiffCallback
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,12 +74,15 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
     fun setReportInfo(
         newReportList: List<ReportItem>,
     ) {
-        val list = newReportList
-        val currentSize = reportList.size
+        val diffCallback = ReportDiffCallback(reportList, newReportList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+//        val list = newReportList
+//        val currentSize = reportList.size
         reportList.clear()
-        reportList.addAll(list)
-        notifyItemRangeRemoved(0, currentSize)
-        notifyItemRangeInserted(0, reportList.size)
+        reportList.addAll(newReportList)
+        diffResult.dispatchUpdatesTo(this)
+//        notifyItemRangeRemoved(0, currentSize)
+//        notifyItemRangeInserted(0, reportList.size)
     }
 
     override fun onCreateViewHolder(

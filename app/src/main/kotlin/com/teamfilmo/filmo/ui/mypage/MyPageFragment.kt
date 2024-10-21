@@ -64,7 +64,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel, MyPa
                     binding.txtCountFollowing.text = it.toString()
                 }
             }
-
         }
     }
 
