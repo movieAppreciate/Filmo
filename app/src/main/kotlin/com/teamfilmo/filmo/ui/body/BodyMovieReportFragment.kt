@@ -146,8 +146,6 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
-            is BodyMovieReportEffect.DeleteReport -> {
-            }
             is BodyMovieReportEffect.CancelFollow -> {
                 // 팔로우 취소
                 binding.btnUserFollow.isSelected = false

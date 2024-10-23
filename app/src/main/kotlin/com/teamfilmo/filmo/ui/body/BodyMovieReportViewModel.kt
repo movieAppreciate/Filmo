@@ -199,7 +199,6 @@ class BodyMovieReportViewModel
             viewModelScope.launch {
                 deleteReportUseCase(reportId).collect {
                     Timber.d("삭제 결과 :$it")
-                    sendEffect(BodyMovieReportEffect.DeleteReport)
                 }
             }
         }
