@@ -17,35 +17,21 @@ class ReportDataSourceImpl
     constructor(
         private val reportService: ReportService,
     ) : ReportDataSource {
-        override suspend fun deleteReport(reportId: String): Result<String> {
-            return reportService.deleteReport(reportId)
-        }
+        override suspend fun deleteReport(reportId: String): Result<String> = reportService.deleteReport(reportId)
 
-        override suspend fun updateReport(request: UpdateReportRequest): Result<String> {
-            return reportService.updateReport(request)
-        }
+        override suspend fun updateReport(request: UpdateReportRequest): Result<String> = reportService.updateReport(request)
 
-        override suspend fun searchUserReport(searchUserRequest: SearchUserReportListRequest): Result<SearchReportResponse> {
-            return reportService.searchUserReport(searchUserRequest)
-        }
+        override suspend fun searchUserReport(searchUserRequest: SearchUserReportListRequest): Result<SearchReportResponse> = reportService.searchUserReport(searchUserRequest)
 
-        override suspend fun searchAllReport(body: SearchAllReportRequest): Result<SearchReportResponse> {
-            return reportService.searchAllReport(body)
-        }
+        override suspend fun searchAllReport(body: SearchAllReportRequest): Result<SearchReportResponse> = reportService.searchAllReport(body)
 
         override suspend fun searchReport(
             searchReportRequest: SearchReportRequest,
-        ): Result<SearchReportResponse> {
-            return reportService.searchReport()
-        }
+        ): Result<SearchReportResponse> = reportService.searchReport(searchReportRequest)
 
-        override suspend fun getReport(reportId: String): Result<GetReportResponse> {
-            return reportService.getReport(reportId)
-        }
+        override suspend fun getReport(reportId: String): Result<GetReportResponse> = reportService.getReport(reportId)
 
         override suspend fun registReport(
             request: RegistReportRequest,
-        ): Result<RegistReportResponse> {
-            return reportService.registReport(request)
-        }
+        ): Result<RegistReportResponse> = reportService.registReport(request)
     }

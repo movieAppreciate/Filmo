@@ -1,19 +1,24 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.LoadState
 import com.teamfilmo.filmo.base.fragment.BaseFragment
+import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -23,14 +28,22 @@ class AllMovieReportFragment :
     ) {
     override val viewModel: AllMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
-
-    private var currentPage: Int = 1
-    val allMovieReportAdapter by lazy {
+    private val allMovieReportAdapter by lazy {
         AllMovieReportAdapter()
     }
-
     val movieInfoAdapter by lazy {
         MovieInfoAdapter()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        lifecycleScope.launch {
+            viewModel.handleEvent(AllMovieReportEvent.LoadReport)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun handleEffect(effect: AllMovieReportEffect) {
@@ -57,37 +70,35 @@ class AllMovieReportFragment :
                 }
             is AllMovieReportEffect.DeleteBookmark ->
                 allMovieReportAdapter.updateBookmarkState(effect.reportId, false)
-            is AllMovieReportEffect.RefreshReport ->
-                allMovieReportAdapter.setReportInfo(effect.reportList)
             else -> {}
         }
     }
 
     override fun onBindLayout() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagingData.collectLatest {
+                allMovieReportAdapter.submitData(pagingData = it)
+            }
+        }
+
+        // 로딩 추가
+
+        // moviePosterAdapter의 loadStateFlow 속성에서 값을 수집한다.
+        // 데이터의 현재 로드상태(로드 중, 성공적으로 로드되었는지, 오류가 발생했는지)를 내보낸다.
+        // collectLatest : 흐름에서 방출된 최신값을 수집한다.
+        // 가장 최근 상태만 중요한 UI 업데이트에서 유용하다.
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                allMovieReportAdapter.loadStateFlow.collectLatest {
+                    binding.reportProgressBar.isVisible = it.source.append is LoadState.Loading
+                }
+            }
+        }
+
         childFragmentManager.commit {
             setReorderingAllowed(true)
 
             with(binding) {
-                allMovieReportRecyclerview.addOnScrollListener(
-                    object : RecyclerView.OnScrollListener() {
-                        override fun onScrolled(
-                            recyclerView: RecyclerView,
-                            dx: Int,
-                            dy: Int,
-                        ) {
-                            super.onScrolled(recyclerView, dx, dy)
-
-                            val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                            val itemTotalCount = recyclerView.adapter?.itemCount?.minus(1)
-
-                            // 스크롤이 끝에 도달했는지 확인
-                            if (lastVisibleItemPosition == itemTotalCount) {
-                                currentPage++
-                                viewModel.handleEvent(AllMovieReportEvent.LoadNextPageReport(currentPage))
-                            }
-                        }
-                    },
-                )
                 allMovieReportRecyclerview.adapter = allMovieReportAdapter
                 movieRecyclerview.adapter = movieInfoAdapter
                 swiperefresh.setOnRefreshListener {
@@ -97,13 +108,6 @@ class AllMovieReportFragment :
             }
 
             lifecycleScope.launch {
-                launch {
-                    viewModel.allMovieReportList.collect {
-                        binding.allMovieReportRecyclerview.apply {
-                            allMovieReportAdapter.setReportInfo(viewModel.allMovieReportList.value)
-                        }
-                    }
-                }
                 launch {
                     viewModel.upcomingMovieList.collect { movieInfoList ->
                         binding.movieRecyclerview.apply {
@@ -125,20 +129,17 @@ class AllMovieReportFragment :
 
         allMovieReportAdapter.itemClick =
             object : AllMovieReportAdapter.ItemClick {
-                override fun onClick(position: Int) {
-                    val report = allMovieReportAdapter.reportList[position]
+                override fun onClick(report: ReportItem) {
                     navigateToBodyReport(report.reportId)
                 }
 
-                override fun onLikeClick(position: Int) {
-                    val report = allMovieReportAdapter.reportList[position]
+                override fun onLikeClick(report: ReportItem) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         viewModel.handleEvent(AllMovieReportEvent.ClickLike(report.reportId))
                     }
                 }
 
-                override fun onBookmarkClick(position: Int) {
-                    val report = allMovieReportAdapter.reportList[position]
+                override fun onBookmarkClick(report: ReportItem) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         viewModel.handleEvent(AllMovieReportEvent.ClickBookmark(report.reportId))
                     }

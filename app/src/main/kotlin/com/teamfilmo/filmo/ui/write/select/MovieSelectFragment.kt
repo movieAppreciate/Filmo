@@ -20,9 +20,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelectViewModel, MovieSelectEffect, MovieSelectEvent>(
-    FragmentSelectMovieBinding::inflate,
-) {
+class MovieSelectFragment :
+    BaseFragment<FragmentSelectMovieBinding, MovieSelectViewModel, MovieSelectEffect, MovieSelectEvent>(
+        FragmentSelectMovieBinding::inflate,
+    ) {
     private var queryText: String? = null
     private val moviePosterAdapter by lazy {
         context?.let { MoviePosterAdapter(it) }
@@ -42,7 +43,7 @@ class MovieSelectFragment : BaseFragment<FragmentSelectMovieBinding, MovieSelect
         movieName: String,
         movieId: Int,
     ) {
-        val action = MovieSelectFragmentDirections.actionToWriteReport("", movieName, movieId)
+        val action = MovieSelectFragmentDirections.navigateToWriteReport(movieName = movieName, movieId = movieId.toString())
 
         navController.navigate(action)
     }

@@ -2,48 +2,78 @@ package com.teamfilmo.filmo.ui.report.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.MovieItemBinding
-import com.teamfilmo.filmo.ui.report.ReportDiffCallback
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import timber.log.Timber
 
 sealed class ReportPayload {
-    data class BookmarkPayload(var isBookmarked: Boolean) : ReportPayload()
+    data class BookmarkPayload(
+        var isBookmarked: Boolean,
+    ) : ReportPayload()
 
-    data class LikePayload(val isLiked: Boolean) : ReportPayload()
+    data class LikePayload(
+        val isLiked: Boolean,
+    ) : ReportPayload()
 
-    data class LikeCountPayload(val likeCount: Int) : ReportPayload()
+    data class LikeCountPayload(
+        val likeCount: Int,
+    ) : ReportPayload()
 }
 
-class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovieReportViewHolder>() {
-    var reportList: ArrayList<ReportItem> = arrayListOf()
+class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapter.AllMovieReportViewHolder>(DIFF_CALLBACK) {
+// 1. reportList 변수 제거
+    // getItem(position) 을 통해 아이템 접근
+    // snapshot().items 를 통해 현재 표시된 아이템의 목록에 접근
+    //    var reportList: ArrayList<ReportItem> = arrayListOf()
+
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<ReportItem>() {
+                override fun areItemsTheSame(
+                    oldItem: ReportItem,
+                    newItem: ReportItem,
+                ): Boolean = oldItem.reportId == newItem.reportId
+
+                override fun areContentsTheSame(
+                    oldItem: ReportItem,
+                    newItem: ReportItem,
+                ): Boolean {
+                    Timber.d("oldItem: $oldItem")
+                    Timber.d("newItem: $newItem")
+                    return oldItem == newItem
+                }
+            }
+    }
 
     interface ItemClick {
         fun onClick(
-            position: Int,
+            report: ReportItem,
         )
 
-        fun onLikeClick(position: Int)
+        fun onLikeClick(report: ReportItem)
 
-        fun onBookmarkClick(position: Int)
+        fun onBookmarkClick(report: ReportItem)
     }
 
     fun updateLikeState(
         reportId: String,
         isLiked: Boolean,
     ) {
-        val position = reportList.indexOfFirst { it.reportId == reportId }
+        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
-            reportList[position].isLiked = isLiked
-            notifyItemChanged(position, ReportPayload.LikePayload(isLiked))
+            getItem(position)?.let {
+                val updatedItem = it.copy(isLiked = isLiked)
+            }
         }
     }
 
@@ -51,10 +81,12 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         reportId: String,
         likeCount: Int,
     ) {
-        val position = reportList.indexOfFirst { it.reportId == reportId }
+        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
-            reportList[position].likeCount = likeCount
-            notifyItemChanged(position, ReportPayload.LikeCountPayload(likeCount))
+            getItem(position)?.let { currentItem ->
+                val updatedItem = currentItem.copy(likeCount = likeCount).copy(likeCount = likeCount)
+                notifyItemChanged(position, ReportPayload.LikeCountPayload(likeCount))
+            }
         }
     }
 
@@ -62,28 +94,15 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         reportId: String,
         isBookmarked: Boolean,
     ) {
-        val position = reportList.indexOfFirst { it.reportId == reportId }
+        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
-            reportList[position].isBookmark = isBookmarked
+            getItem(position)?.isBookmark = isBookmarked
             notifyItemChanged(position, ReportPayload.BookmarkPayload(isBookmarked))
+            Timber.d("북마크 등록")
         }
     }
 
     var itemClick: ItemClick? = null
-
-    fun setReportInfo(
-        newReportList: List<ReportItem>,
-    ) {
-        val diffCallback = ReportDiffCallback(reportList, newReportList)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-//        val list = newReportList
-//        val currentSize = reportList.size
-        reportList.clear()
-        reportList.addAll(newReportList)
-        diffResult.dispatchUpdatesTo(this)
-//        notifyItemRangeRemoved(0, currentSize)
-//        notifyItemRangeInserted(0, reportList.size)
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -97,11 +116,13 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         holder: AllMovieReportViewHolder,
         position: Int,
     ) {
-        holder.bindItems(reportList[position])
-        holder.bindLikeImage(reportList[position].isLiked)
-        holder.bindLikeCount(reportList[position].likeCount)
-        holder.bindBookmarkButton(reportList[position].isBookmark)
-        holder.bindMovieImage(reportList[position].imageUrl.toString())
+        getItem(position)?.let { item ->
+            holder.bindItems(item)
+            holder.bindLikeImage(item.isLiked)
+            holder.bindLikeCount(item.likeCount)
+            holder.bindBookmarkButton(item.isBookmark)
+            holder.bindMovieImage(item.imageUrl.toString())
+        }
     }
 
     override fun onBindViewHolder(
@@ -115,17 +136,17 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
             payloads.forEach {
                 when (val payload = it as ReportPayload) {
                     is ReportPayload.BookmarkPayload -> {
-                        this.reportList[position].isBookmark = payload.isBookmarked
+                        getItem(position)?.isBookmark = payload.isBookmarked
                         holder.bindBookmarkButton(payload.isBookmarked)
                     }
 
                     is ReportPayload.LikePayload -> {
-                        this.reportList[position].isLiked = payload.isLiked
+                        getItem(position)?.isLiked = payload.isLiked
                         holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
                     }
 
                     is ReportPayload.LikeCountPayload -> {
-                        this.reportList[position].likeCount = payload.likeCount
+                        getItem(position)?.likeCount = payload.likeCount
                         holder.bindLikeCount(payload.likeCount)
                     }
                 }
@@ -133,29 +154,39 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
     }
 
-    override fun getItemCount(): Int {
-        return reportList.size
-    }
-
-    inner class AllMovieReportViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AllMovieReportViewHolder(
+        private val binding: MovieItemBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.movieImage.setOnClickListener {
-                itemClick?.onClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onClick(report)
+                }
             }
             binding.tvTitle.setOnClickListener {
-                itemClick?.onClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onClick(report)
+                }
             }
             binding.tvContent.setOnClickListener {
-                itemClick?.onClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onClick(report)
+                }
             }
             binding.btnReply.setOnClickListener {
-                itemClick?.onClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onClick(report)
+                }
             }
             binding.likeButton.setOnClickListener {
-                itemClick?.onLikeClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onLikeClick(report)
+                }
             }
             binding.bookmarkButton.setOnClickListener {
-                itemClick?.onBookmarkClick(adapterPosition)
+                getItem(position)?.let { report ->
+                    itemClick?.onBookmarkClick(report)
+                }
             }
         }
 
@@ -220,7 +251,8 @@ class AllMovieReportAdapter : RecyclerView.Adapter<AllMovieReportAdapter.AllMovi
         }
 
         fun bindMovieImage(imageUrl: String) {
-            Glide.with(binding.root.context)
+            Glide
+                .with(binding.root.context)
                 .load(imageUrl)
                 .into(binding.movieImage)
         }

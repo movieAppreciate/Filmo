@@ -43,6 +43,12 @@
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/report_progress_bar"
+                    android:indeterminate="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"/>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/movie_recyclerview"

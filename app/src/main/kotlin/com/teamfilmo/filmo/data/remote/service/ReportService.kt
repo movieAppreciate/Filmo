@@ -94,7 +94,7 @@ interface ReportService {
         /**
          * 마지막으로 조회된 감상문 아이디
          */
-        @Body requestAllReport: SearchReportRequest? = null,
+        @Body requestAllReport: SearchReportRequest,
     ): Result<SearchReportResponse>
 
     /**

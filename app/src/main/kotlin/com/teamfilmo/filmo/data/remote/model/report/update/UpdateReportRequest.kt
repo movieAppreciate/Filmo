@@ -8,6 +8,6 @@ data class UpdateReportRequest(
     val title: String,
     val content: String,
     val movieId: String,
-    val imageUri: String,
+    val imageUrl: String,
     val tagString: String,
 )

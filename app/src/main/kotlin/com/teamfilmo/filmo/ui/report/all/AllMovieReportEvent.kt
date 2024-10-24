@@ -3,9 +3,9 @@ package com.teamfilmo.filmo.ui.report.all
 import com.teamfilmo.filmo.base.event.BaseEvent
 
 sealed class AllMovieReportEvent : BaseEvent() {
-    data class LoadNextPageReport(
-        val currentPage: Int,
-    ) : AllMovieReportEvent()
+    data object GetMovieInfoList : AllMovieReportEvent()
+
+    data object LoadReport : AllMovieReportEvent()
 
     data class ClickMovie(
         val movieId: Int,

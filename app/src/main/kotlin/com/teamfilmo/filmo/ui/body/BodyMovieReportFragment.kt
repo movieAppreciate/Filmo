@@ -24,16 +24,19 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
-    FragmentBodyMovieReportBinding::inflate,
-) {
+class BodyMovieReportFragment :
+    BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
+        FragmentBodyMovieReportBinding::inflate,
+    ) {
     private var movieName: String = ""
     override val viewModel: BodyMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
+    val args: BodyMovieReportFragmentArgs by navArgs()
 
     override fun onBindLayout() {
-        val args: BodyMovieReportFragmentArgs by navArgs()
-
+        binding.btnBack.setOnClickListener {
+            navController.popBackStack()
+        }
         /*
         유저 이름 클릭 시 감상문을  작성한 유저의 페이지로 이동
          */
@@ -90,13 +93,14 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                         } else {
                             it.replyCount.toString()
                         }
+                    getImage(it.imageUrl.toString(), binding.movieImage)
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
-                    it.imageUrl?.let { it1 -> getImage(it1, binding.movieImage) }
                 }
             }
         }
 
-        requireActivity().onBackPressedDispatcher
+        requireActivity()
+            .onBackPressedDispatcher
             .addCallback(
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(true) {
@@ -183,11 +187,12 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                             binding.tvReportTitle.text = it.title
                             binding.tvLikeCount.text = it.likeCount.toString()
                             binding.tvReplyCount.text = it.replyCount.toString()
-                            it.imageUrl?.let { it1 -> getImage(it1, binding.movieImage) }
+                            getImage(it.imageUrl.toString(), binding.movieImage)
                         }
                     }
                 }
             }
+
             is BodyMovieReportEffect.ShowMovieInfo -> {
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -211,19 +216,25 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                                 getImage("https://image.tmdb.org/t/p/original" + it.poster_path, movieImage)
 
                                 val rentLogoPath =
-                                    it.providers?.rent?.map {
-                                        "https://image.tmdb.org/t/p/original" + it.logo_path
-                                    }?.distinct()
+                                    it.providers
+                                        ?.rent
+                                        ?.map {
+                                            "https://image.tmdb.org/t/p/original" + it.logo_path
+                                        }?.distinct()
 
                                 val buyLogoPath =
-                                    it.providers?.buy?.map {
-                                        "https://image.tmdb.org/t/p/original" + it.logo_path
-                                    }?.distinct()
+                                    it.providers
+                                        ?.buy
+                                        ?.map {
+                                            "https://image.tmdb.org/t/p/original" + it.logo_path
+                                        }?.distinct()
 
                                 val flatrateLogoPath =
-                                    it.providers?.flatrate?.map {
-                                        "https://image.tmdb.org/t/p/original" + it.logo_path
-                                    }?.distinct()
+                                    it.providers
+                                        ?.flatrate
+                                        ?.map {
+                                            "https://image.tmdb.org/t/p/original" + it.logo_path
+                                        }?.distinct()
 
                                 val combinedLogoPaths =
                                     listOfNotNull(
@@ -251,7 +262,8 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
         imageUrl: String,
         view: View,
     ) {
-        Glide.with(binding.root.context)
+        Glide
+            .with(binding.root.context)
             .asBitmap()
             .load(imageUrl)
             .into(view as ImageView)
@@ -270,10 +282,15 @@ class BodyMovieReportFragment : BaseFragment<FragmentBodyMovieReportBinding, Bod
                     when (text) {
                         "수정하기" -> {
                             Toast.makeText(context, "감상문을 수정합니다.", Toast.LENGTH_SHORT).show()
-                            val action = BodyMovieReportFragmentDirections.navigateToModifyReport(movieName, reportId = viewModel.getReportResponse.value.reportId, movieId = null)
-                            if (action != null) {
-                                navController.navigate(action)
-                            }
+                            val action =
+                                BodyMovieReportFragmentDirections.navigateToModifyReport(
+                                    movieName,
+                                    reportId = viewModel.getReportResponse.value.reportId,
+                                    movieId =
+                                        viewModel.getReportResponse.value.movieId
+                                            .toString(),
+                                )
+                            navController.navigate(action)
                             bottomSheet.dismiss()
                         }
 

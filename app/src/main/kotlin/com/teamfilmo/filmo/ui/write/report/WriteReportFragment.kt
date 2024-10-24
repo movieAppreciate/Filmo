@@ -21,11 +21,13 @@ import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
-class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReportViewModel, WriteReportEffect, WriteReportEvent>(
-    FragmentWriteReportBinding::inflate,
-) {
+class WriteReportFragment :
+    BaseFragment<FragmentWriteReportBinding, WriteReportViewModel, WriteReportEffect, WriteReportEvent>(
+        FragmentWriteReportBinding::inflate,
+    ) {
     override val viewModel: WriteReportViewModel by viewModels()
     private var tagString: String? = null
     private val navController by lazy { findNavController() }
@@ -100,7 +102,8 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
         // ReportThumbnailFragment에서 보낸 데이터 받기
         setFragmentResultListener("requestKey") { key, bundle ->
             uri = bundle.getString("uri")
-            Glide.with(this@WriteReportFragment)
+            Glide
+                .with(this@WriteReportFragment)
                 .load(uri)
                 .into(binding.ivThumbnail)
             binding.btnSelectPoster.text = "이미지 변경"
@@ -131,6 +134,7 @@ class WriteReportFragment : BaseFragment<FragmentWriteReportBinding, WriteReport
         }
 
         binding.btnSelectPoster.setOnClickListener {
+            Timber.d("write report : $args")
             val action = WriteReportFragmentDirections.navigateToThumbnail(movieName = args.movieName, movieId = args.movieId)
             navController.navigate(action)
         }

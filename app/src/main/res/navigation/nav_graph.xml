@@ -113,8 +113,11 @@
             app:destination="@id/reportThumbnailFragment" />
         <argument
             android:name="movieId"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string"/>
+
+        <action
+            android:id="@+id/navigateToBody"
+            app:destination="@id/bodyMovieReportFragment" />
     </fragment>
     <activity
         android:id="@+id/writeActivity"

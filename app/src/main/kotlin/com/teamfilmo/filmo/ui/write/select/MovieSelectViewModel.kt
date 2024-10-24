@@ -24,8 +24,7 @@ class MovieSelectViewModel
     constructor(
         private val searchMovieListUseCase: SearchMovieListUseCase,
         private val getTotalPageMovieListUseCase: GetTotalPageMovieListUseCase,
-    ) :
-    BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
+    ) : BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
         private val _moviePosterList = MutableStateFlow<MutableList<MovieContentResultWithIndex>>(mutableListOf())
         val moviePosterList: StateFlow<MutableList<MovieContentResultWithIndex>> = _moviePosterList
         private val _moviePosterPathFlow = MutableStateFlow<PagingData<MovieContentResultWithIndex>>(PagingData.empty())

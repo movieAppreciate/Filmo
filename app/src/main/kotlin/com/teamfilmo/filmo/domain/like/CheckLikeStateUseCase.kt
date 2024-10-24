@@ -10,9 +10,12 @@ class CheckLikeStateUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        suspend operator fun invoke(reportId: String): Flow<Boolean> =
+        suspend operator fun invoke(
+            targetId: String,
+            type: String,
+        ): Flow<Boolean> =
             flow {
-                val result = likeRepository.checkLike(reportId)
+                val result = likeRepository.checkLike(targetId, type)
                 emit(result.getOrDefault(false))
             }
     }

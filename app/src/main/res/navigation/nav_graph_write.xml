@@ -8,18 +8,15 @@
         android:id="@+id/movieSelectFragment"
         android:name="com.teamfilmo.filmo.ui.write.select.MovieSelectFragment"
         android:label="MovieSelectFragment" >
+        <argument
+            android:name="movieName"
+            app:argType="string"/>
+        <argument
+            android:name="movieId"
+            app:argType="string"/>
         <action
             android:id="@+id/navigateToWriteReport"
             app:destination="@id/writeReportFragment" />
-
-        <action
-            android:id="@+id/actionToWriteReport"
-            app:destination="@id/writeReportFragment" >
-            <argument
-                android:name="posterUri" />
-            <argument
-                android:name="movieName" />
-        </action>
     </fragment>
 
 
@@ -31,15 +28,12 @@
         <action
             android:id="@+id/navigateToThumbnail"
             app:destination="@id/reportThumbnailFragment" />
-<argument
-    android:name="posterUri"
-    app:argType="string"/>
         <argument
             android:name="movieName"
             app:argType="string" />
         <argument
             android:name="movieId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@+id/navigaToAllMovieReport"
             app:destination="@id/allMovieReportFragment" />
@@ -51,14 +45,12 @@
         android:label="ReportThumbnailFragment" >
         <argument
             android:name="movieId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@+id/navigateToWriteReport"
             app:destination="@id/writeReportFragment" >
             <argument
                 android:name="posterUri" />
-            <argument
-                android:name="movieName" />
         </action>
         <argument
             android:name="movieName"
