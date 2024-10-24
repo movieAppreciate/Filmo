@@ -1,12 +1,13 @@
 package com.teamfilmo.filmo.data.remote.model.report.update
 
-import com.teamfilmo.filmo.data.remote.model.report.ReportRequest
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UpdateReportRequest(
     val reportId: String,
-    override val title: String,
-    override val content: String,
-    override val movieId: String,
-    override val imageUri: String,
-    override val tagString: String,
-) : ReportRequest(title, content, movieId, imageUri, tagString)
+    val title: String,
+    val content: String,
+    val movieId: String,
+    val imageUrl: String,
+    val tagString: String,
+)

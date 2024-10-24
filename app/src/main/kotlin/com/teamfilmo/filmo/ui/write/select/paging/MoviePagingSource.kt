@@ -7,7 +7,10 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
 import kotlinx.coroutines.flow.first
 
-data class MovieContentResultWithIndex(val index: Int, val result: MovieContentResult)
+data class MovieContentResultWithIndex(
+    val index: Int,
+    val result: MovieContentResult,
+)
 
 class MoviePagingSource(
     private val searchMovieListUseCase: SearchMovieListUseCase,
@@ -29,8 +32,8 @@ class MoviePagingSource(
     anchorPage?.nextKey?.minus(1) : prevKey가 null 인 경우 nextKey가 존재하는지 확인한다.
 
      */
-    override fun getRefreshKey(state: PagingState<Int, MovieContentResultWithIndex>): Int? {
-        return state.anchorPosition?.let {
+    override fun getRefreshKey(state: PagingState<Int, MovieContentResultWithIndex>): Int? =
+        state.anchorPosition?.let {
             // anchorPosition 현재 아이템에 표시된 아이템 중
             // 가장 처음 위치한 아이템의 인덱스
             val anchorPage = state.closestPageToPosition(it)
@@ -41,7 +44,6 @@ class MoviePagingSource(
              현재 페이지인 anchorPage를 구할 수 있다.
              */
         }
-    }
 
     /*
    PagingSource의 생성자에 제공된 매개변스를  load 메서드에 넘겨주어  적합한 데이터를 로드한다.

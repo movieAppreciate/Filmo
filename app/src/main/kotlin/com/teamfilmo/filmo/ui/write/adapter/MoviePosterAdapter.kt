@@ -17,24 +17,22 @@ PagingDataAdapter를 확장하여 MoviePosterAdapter 어댑터를 만들어 Movi
 RecyclerView 어댑터를 제공하고  MoviePosterViewHolder ,MovieBackgroundViewHolder를 뷰홀더로 사용하고 있다.
 
  */
-class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<MovieContentResultWithIndex, MoviePosterAdapter.MoviePosterViewHolder>(MovieDiffCallback()) {
+class MoviePosterAdapter(
+    private val context: Context,
+) : PagingDataAdapter<MovieContentResultWithIndex, MoviePosterAdapter.MoviePosterViewHolder>(MovieDiffCallback()) {
     /*
     DiffUtil.ItemCallback 지정
      */
-    private class MovieDiffCallback : DiffUtil.ItemCallback<MovieContentResultWithIndex>() {
+    private class MovieDiffCallback : DiffUtil.ItemCallback<com.teamfilmo.filmo.ui.write.select.paging.MovieContentResultWithIndex>() {
         override fun areItemsTheSame(
             oldItem: MovieContentResultWithIndex,
             newItem: MovieContentResultWithIndex,
-        ): Boolean {
-            return oldItem.index == newItem.index
-        }
+        ): Boolean = oldItem.index == newItem.index
 
         override fun areContentsTheSame(
             oldItem: MovieContentResultWithIndex,
             newItem: MovieContentResultWithIndex,
-        ): Boolean {
-            return oldItem.index == newItem.index
-        }
+        ): Boolean = oldItem.index == newItem.index
     }
 
     interface OnItemClickListener {
@@ -71,7 +69,9 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Movie
         }
     }
 
-    inner class MoviePosterViewHolder(private val binding: MoviePosterItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MoviePosterViewHolder(
+        private val binding: MoviePosterItemBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.ivMoviePoster.setOnClickListener {
                 Timber.d("clicked : $position")
@@ -84,7 +84,8 @@ class MoviePosterAdapter(private val context: Context) : PagingDataAdapter<Movie
         }
 
         fun bind(movie: MovieContentResultWithIndex) {
-            Glide.with(context)
+            Glide
+                .with(context)
                 .load("https://image.tmdb.org/t/p/original${movie.result.posterPath}")
                 .into(binding.ivMoviePoster)
         }

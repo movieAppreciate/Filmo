@@ -1,9 +1,15 @@
 package com.teamfilmo.filmo.domain.repository
 
-interface LikeRepository {
-    suspend fun registLike(reportId: String): Result<String>
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 
-    suspend fun checkLike(reportId: String): Result<Boolean>
+interface LikeRepository {
+    suspend fun saveLike(saveLikeRequest: SaveLikeRequest): Result<SaveLikeResponse>
+
+    suspend fun checkLike(
+        targetId: String,
+        type: String,
+    ): Result<Boolean>
 
     suspend fun cancleLike(reportId: String): Result<String>
 

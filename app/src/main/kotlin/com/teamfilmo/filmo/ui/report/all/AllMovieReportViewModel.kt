@@ -1,39 +1,35 @@
 package com.teamfilmo.filmo.ui.report.all
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
-import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
-import com.teamfilmo.filmo.domain.like.RegistLikeUseCase
+import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
+import com.teamfilmo.filmo.ui.report.all.paging.ReportPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 data class AllReportLikeState(
     val reportId: String = "",
@@ -55,23 +51,23 @@ class AllMovieReportViewModel
         private val getReportListUseCase: GetReportListUseCase,
         private val getBookmarkListUseCase: GetBookmarkLIstUseCase,
         private val checkLikeStateUseCase: CheckLikeStateUseCase,
-        private val registerLikeUseCase: RegistLikeUseCase,
+        private val registerLikeUseCase: SaveLikeUseCase,
         private val cancelLikeUseCase: CancelLikeUseCase,
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
-        init {
-            fetchAllMovieReportList()
-        }
+        /*
+        감상문 페이징
+         */
+
+        private val _pagingData = MutableStateFlow<PagingData<ReportItem>>(PagingData.empty())
+        val pagingData = _pagingData.asStateFlow()
 
         private val _movieName = MutableStateFlow<String>("")
         val movieName: StateFlow<String> = _movieName
-        private val _hasNextPage = MutableStateFlow<Boolean>(false)
-        val hasNextPage: StateFlow<Boolean> = _hasNextPage
 
         private val _upcomingMovieList = MutableStateFlow<List<MovieInfo>>(emptyList())
-        private val _allMovieReportList = MutableStateFlow<List<ReportItem>>(emptyList())
 
         private val _likeState = MutableStateFlow<List<AllReportLikeState>>(emptyList())
         val likeState: StateFlow<List<AllReportLikeState>> = _likeState.asStateFlow()
@@ -80,26 +76,57 @@ class AllMovieReportViewModel
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
+                //  is AllMovieReportEvent.GetMovieInfoList -> getUpcomingMovieList()
+                is AllMovieReportEvent.LoadReport -> {
+                    getMovieReports()
+                    getUpcomingMovieList()
+                }
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
-                is AllMovieReportEvent.RefreshReport -> fetchAllMovieReportList()
+                // is AllMovieReportEvent.RefreshReport -> fetchNextReportList()
                 else -> {}
             }
         }
 
     /*
-    영화 api : 최신 영화 정보 리스트 가져오기
+    감상문 페이징
      */
+
+        private fun getMovieReports() {
+            viewModelScope.launch {
+                Pager(
+                    config =
+                        PagingConfig(
+                            pageSize = 20,
+                            enablePlaceholders = false,
+                            prefetchDistance = 3,
+                        ),
+                    pagingSourceFactory = {
+                        ReportPagingSource(
+                            getReportUseCase,
+                            getMovieNameUseCase,
+                            getReportListUseCase,
+                            getBookmarkListUseCase,
+                            checkLikeStateUseCase,
+                        )
+                    },
+                ).flow.cachedIn(viewModelScope).collect {
+                    _pagingData.value = it
+                }
+            }
+        }
+
+        // 영화 api : 최신 영화 정보 리스트 가져오기
 
         private fun getUpcomingMovieList() {
             viewModelScope.launch {
                 val list = mutableListOf<MovieInfo>()
                 getUpcomingMovieUseCase()
-                    .take(3).collect {
+                    .take(3)
+                    .collect {
                         it.take(3).map { movieResult ->
                             val imageBaseUrl = "https://image.tmdb.org/t/p/original"
                             MovieInfo(
-                                movieAge = 16,
                                 movieImage = imageBaseUrl + movieResult.posterPath,
                                 movieName = movieResult.title,
                                 genres = movieResult.genres,
@@ -113,82 +140,7 @@ class AllMovieReportViewModel
             }
         }
 
-        val upcomingMovieList: StateFlow<List<MovieInfo>> =
-            _upcomingMovieList.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = emptyList(),
-            )
-
-    /*
-    감상문 리스트 가져온 후 결합 (좋아요, 북마크 여부)
-     */
-        private fun fetchAllMovieReportList() {
-            viewModelScope.launch {
-                combine(
-                    getReportListUseCase(),
-                    getBookmarkListUseCase(),
-                ) { reportList, bookmarkList ->
-                    val reports =
-                        reportList.map { reportItem ->
-
-                            async {
-                                ReportItem(
-                                    reportItem.reportId,
-                                    reportItem.title,
-                                    reportItem.content,
-                                    reportItem.createDate,
-                                    reportItem.imageUrl,
-                                    reportItem.nickname,
-                                    reportItem.likeCount,
-                                    reportItem.replyCount,
-                                    reportItem.bookmarkCount,
-                                    bookmarkList.any {
-                                        it.reportId == reportItem.reportId
-                                    },
-                                    checkLikeStateUseCase(reportItem.reportId).first(),
-                                    getName(reportItem.reportId),
-                                )
-                            }
-                        }.awaitAll()
-                    reports.let {
-                        _likeState.value =
-                            reports.map { reportItem ->
-                                AllReportLikeState(
-                                    reportId = reportItem.reportId,
-                                    likeCount = reportItem.likeCount,
-                                )
-                            }
-
-                        bookmarkState.value =
-                            reports.map { reportItem ->
-                                val bookmark = bookmarkList.find { it.reportId == reportItem.reportId }
-                                AllReportBookmarkState(
-                                    reportId = reportItem.reportId,
-                                    bookmarkId = bookmark?.id ?: 0L,
-                                    isBookmarked = reportItem.isBookmark,
-                                )
-                            }
-                    }
-                    reports
-                }.collect { reports ->
-                    if (reports != null) {
-                        _allMovieReportList.value = reports
-                        Timber.d("전체 감상문 : ${_allMovieReportList.value}")
-                    }
-                    sendEffect(AllMovieReportEffect.RefreshReport(_allMovieReportList.value))
-                    Timber.d("${_allMovieReportList.value}")
-                }
-            }
-            getUpcomingMovieList()
-        }
-
-        val allMovieReportList: StateFlow<List<ReportItem>> =
-            _allMovieReportList.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = emptyList(),
-            )
+        val upcomingMovieList: StateFlow<List<MovieInfo>> = _upcomingMovieList
 
     /*
      영화 이름
@@ -225,25 +177,17 @@ class AllMovieReportViewModel
                  연속적인 값을 처리할 때 유용
     collect는 흐름이 완료될 때까지 모든 값을 처리
     firstOrNull은 첫번째 값만을 처리한다.
+*/
 
-
-    getName : 왜 suspend로 해줘야하지?
-     */
-
-        private suspend fun getName(reportId: String): String {
-            return withContext(Dispatchers.IO) {
-                val report = getReportUseCase(reportId).firstOrNull()
-                report?.let {
-                    getMovieNameUseCase(DetailMovieRequest(it?.movieId.toString())).firstOrNull() ?: ""
-                } ?: ""
-            }
-        }
-
-    /* 좋아요 등록
-     */
-        private fun registLike(reportId: String) {
+        // 좋아요 등록
+        private fun saveLike(reportId: String) {
             viewModelScope.launch {
-                registerLikeUseCase(reportId)
+                registerLikeUseCase(
+                    SaveLikeRequest(
+                        targetId = reportId,
+                        type = "report",
+                    ),
+                )
                 sendEffect(AllMovieReportEffect.RegistLike(reportId))
                 updateLikeCount(reportId, true)
             }
@@ -260,16 +204,17 @@ class AllMovieReportViewModel
             }
         }
 
-/*
-좋아요 토글
- */
-        private fun toggleLike(reportId: String) {
+        // 좋아요 토글
+        private fun toggleLike(
+            targetId: String,
+            type: String = "report",
+        ) {
             viewModelScope.launch {
-                checkLikeStateUseCase(reportId).collect {
+                checkLikeStateUseCase(targetId, type).collect {
                     if (it) {
-                        cancelLike(reportId)
+                        cancelLike(targetId)
                     } else {
-                        registLike(reportId)
+                        saveLike(targetId)
                     }
                 }
             }

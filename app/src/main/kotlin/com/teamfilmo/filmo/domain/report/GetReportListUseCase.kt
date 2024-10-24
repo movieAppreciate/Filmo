@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.report
 
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
@@ -16,14 +16,15 @@ class GetReportListUseCase
     constructor(
         private val reportRepository: ReportRepository,
     ) {
-        operator fun invoke() =
+        operator fun invoke(lastReportId: String?) =
             flow {
                 // todo : 그냥 "" 로 넣어줘도 됨 수정할 것
-                val result = reportRepository.searchAllReport(SearchAllReportRequest)
+                val result = reportRepository.searchReport(SearchReportRequest(lastReportId = lastReportId))
                 result.onFailure {
                     throw it
                 }
-                emit(result.getOrNull()?.searchReport ?: emptyList())
+//                emit(result.getOrNull()?.searchReport ?: emptyList())
+                emit(result.getOrNull())
             }.catch {
                 Timber.e(it.localizedMessage)
             }

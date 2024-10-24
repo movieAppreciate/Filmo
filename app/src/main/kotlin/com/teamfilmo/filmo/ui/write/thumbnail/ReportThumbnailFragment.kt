@@ -15,11 +15,13 @@ import com.teamfilmo.filmo.ui.write.adapter.MovieThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
-class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, ReportThumbnailViewModel, ReportThumbnailEffect, ReportThumbnailEvent>(
-    FragmentReportThumbnailBinding::inflate,
-) {
+class ReportThumbnailFragment :
+    BaseFragment<FragmentReportThumbnailBinding, ReportThumbnailViewModel, ReportThumbnailEffect, ReportThumbnailEvent>(
+        FragmentReportThumbnailBinding::inflate,
+    ) {
     override val viewModel: ReportThumbnailViewModel by viewModels()
     private val movieThumbnailAdapter by lazy {
         context?.let { MovieThumbnailAdapter(it) }
@@ -37,6 +39,7 @@ class ReportThumbnailFragment : BaseFragment<FragmentReportThumbnailBinding, Rep
 
     override fun onBindLayout() {
         val args: ReportThumbnailFragmentArgs by navArgs()
+        Timber.d("args : $args")
 
         // 기본 스팬 적용
         val span = 3

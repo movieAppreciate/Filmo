@@ -30,15 +30,18 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
         notifyItemRangeInserted(0, movieList.size)
     }
 
-    inner class MovieInfoViewHolder(val binding: UpcomingMovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MovieInfoViewHolder(
+        val binding: UpcomingMovieItemBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bindMovieItem(item: MovieInfo) {
             val title = item.movieName
-            val age = item.movieAge
+//            val age = item.movieAge
             val genre = item.genres
             val image = item.movieImage
 
             Timber.d("무비 이미지 경로 : ${item.movieImage}")
-            Glide.with(binding.root.context)
+            Glide
+                .with(binding.root.context)
                 .asBitmap()
                 .load(image)
                 .into(binding.movieImage)
@@ -47,7 +50,7 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
                 itemClick?.onClick(adapterPosition)
             }
             binding.movieTitleTxt.text = title
-            binding.ageTxt.text = age.toString()
+//            binding.ageTxt.text = age.toString()
 
             // todo : 추후 수정
             binding.genreTxt.text = genre.first().toString()

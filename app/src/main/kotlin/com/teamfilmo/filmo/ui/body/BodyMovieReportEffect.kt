@@ -7,8 +7,6 @@ sealed interface BodyMovieReportEffect : BaseEffect {
 
     data object SaveFollow : BodyMovieReportEffect
 
-    data object DeleteReport : BodyMovieReportEffect
-
     data object ShowReport : BodyMovieReportEffect
 
     data object ShowMovieInfo : BodyMovieReportEffect

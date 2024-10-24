@@ -1,5 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -8,14 +11,13 @@ interface LikeService {
     /**
      * 좋아요 등록/취소
      */
-    @POST("/like/regist")
-    suspend fun regist(
+    @POST("/like/save")
+    suspend fun saveLike(
         /**
-         * 감상문 아이디
+         * 좋아요할 타겟 아이디와 타입
          */
-        @Query("reportId")
-        reportId: String,
-    ): Result<String>
+        @Body saveLikeRequest: SaveLikeRequest,
+    ): Result<SaveLikeResponse>
 
     @POST("/like/cancel")
     suspend fun cancel(
@@ -39,11 +41,10 @@ interface LikeService {
      * 좋아요 확인
      */
     @GET("/like/check")
-    suspend fun check(
-        /**
-         * 감상문 아이디
-         */
-        @Query("reportId")
-        reportId: String,
+    suspend fun checkLike(
+        @Query("targetId")
+        targetId: String,
+        @Query("type")
+        type: String,
     ): Result<Boolean>
 }

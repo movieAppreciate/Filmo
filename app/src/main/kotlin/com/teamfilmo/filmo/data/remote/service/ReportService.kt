@@ -10,6 +10,7 @@ import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListR
 import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -72,7 +73,7 @@ interface ReportService {
     /**
      * 감상문 수정
      */
-    @POST("/report/updateReport")
+    @PATCH("/report/updateReport")
     suspend fun updateReport(
         @Body updateReportRequest: UpdateReportRequest,
     ): Result<String>
@@ -93,7 +94,7 @@ interface ReportService {
         /**
          * 마지막으로 조회된 감상문 아이디
          */
-        @Body requestAllReport: SearchReportRequest? = null,
+        @Body requestAllReport: SearchReportRequest,
     ): Result<SearchReportResponse>
 
     /**

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchReportRequest(
-    val lastReportId: String = "",
-    val keyWord: String = "",
-    val targetId: String = "",
+    val lastReportId: String? = null,
+    val keyWord: String? = null,
+    val targetId: String? = null,
 )
