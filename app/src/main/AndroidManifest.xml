@@ -5,43 +5,40 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
         android:name=".app.FilmoApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Filmo"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+        <activity
+            android:name=".ui.auth.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-
-        <activity android:name=".ui.auth.AuthActivity"
-            android:exported="true">
-
-
         </activity>
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.notification.NotificationActivity" />
-        <activity android:name=".ui.write.WriteActivity"
-            android:windowSoftInputMode="adjustNothing">
-        </activity>
+        <activity
+            android:name=".ui.write.WriteActivity"
+            android:windowSoftInputMode="adjustNothing"/>
 
-        <activity android:name=".ui.report.ReportActivity"/>
-
-        <!-- Kakao Login Page -->
+       <!-- Kakao Login Page -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -50,7 +47,6 @@
 
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
 
                 <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
                 <data
@@ -74,7 +70,6 @@
                 android:name="com.teamfilmo.filmo.app.initializer.KakaoInitializer"
                 android:value="androidx.startup" />
         </provider>
-
     </application>
 
 </manifest>

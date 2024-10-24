@@ -185,6 +185,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             }
             binding.bookmarkButton.setOnClickListener {
                 getItem(position)?.let { report ->
+                    Timber.d("북마크 클릭")
                     itemClick?.onBookmarkClick(report)
                 }
             }

@@ -17,9 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel, MainEffect, MainEvent>(
-    ActivityMainBinding::inflate,
-) {
+class MainActivity :
+    BaseActivity<ActivityMainBinding, MainViewModel, MainEffect, MainEvent>(
+        ActivityMainBinding::inflate,
+    ) {
     override val viewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
 
