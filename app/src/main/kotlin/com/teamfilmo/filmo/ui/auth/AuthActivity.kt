@@ -88,13 +88,15 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                     append('\n')
                     append("(마케팅 정보 수신 동의 포함)에 동의하게 됩니다.")
                 }
-
             movementMethod = LinkMovementMethod.getInstance()
         }
     }
 
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
+            AuthEffect.NavigateToSignUp -> {
+                Timber.d("회원가입")
+            }
             AuthEffect.LoginSuccess -> {
                 lifecycleScope.launch {
                     showToast("로그인 성공")
@@ -115,13 +117,15 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             val credentialManager = CredentialManager.create(this@AuthActivity)
 
             val credentialOption =
-                GetGoogleIdOption.Builder()
+                GetGoogleIdOption
+                    .Builder()
                     .setFilterByAuthorizedAccounts(false)
                     .setServerClientId(getString(R.string.google_client_key))
                     .build()
 
             val credentialRequest =
-                GetCredentialRequest.Builder()
+                GetCredentialRequest
+                    .Builder()
                     .addCredentialOption(credentialOption)
                     .build()
 

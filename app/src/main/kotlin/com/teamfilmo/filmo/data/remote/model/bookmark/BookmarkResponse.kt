@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BookmarkResponse(
     @SerialName("bookmarkId")
-    val id: Long,
+    val bookmarkId: Long,
     val userId: String,
     val reportId: String,
 )

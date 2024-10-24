@@ -17,6 +17,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import retrofit2.HttpException
 import timber.log.Timber
 
 @HiltViewModel
@@ -56,10 +57,14 @@ class AuthViewModel
                         Timber.d("kakao login success")
                         userTokenSource.setUserToken(it.accessToken)
                         sendEffect(AuthEffect.LoginSuccess)
-                    }
-                    .onFailure {
-                        Timber.e("kakao login failed: ${it.message}")
-                        sendEffect(AuthEffect.LoginFailed)
+                    }.onFailure {
+                        if (it is HttpException && it.code() == 401) {
+                            Timber.e("회원가입으로 이동")
+                            sendEffect(AuthEffect.NavigateToSignUp)
+                        } else {
+                            Timber.e("로그인 실패")
+                            sendEffect(AuthEffect.LoginFailed)
+                        }
                     }
             }
         }
@@ -109,8 +114,7 @@ class AuthViewModel
                         Timber.d("naver login success : $it")
                         userTokenSource.setUserToken(it.accessToken)
                         sendEffect(AuthEffect.LoginSuccess)
-                    }
-                    .onFailure {
+                    }.onFailure {
                         Timber.e("naver login failed: ${it.message}")
                         sendEffect(AuthEffect.LoginFailed)
                     }
@@ -124,17 +128,10 @@ class AuthViewModel
                         Timber.d("google login success")
                         userTokenSource.setUserToken(it.accessToken)
                         sendEffect(AuthEffect.LoginSuccess)
-                    }
-                    .onFailure {
+                    }.onFailure {
                         Timber.e("google login failed: ${it.message}")
                         sendEffect(AuthEffect.LoginFailed)
                     }
             }
         }
-
-//        fun parse(loginResponse: LoginResponse): String {
-//            val json = Json { ignoreUnknownKeys = true }
-//            val tokenVersion: TokenValue
-//            return tokenVersion.accessToken
-//        }
     }

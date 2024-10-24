@@ -20,6 +20,7 @@ import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -141,6 +142,7 @@ class AllMovieReportFragment :
 
                 override fun onBookmarkClick(report: ReportItem) {
                     viewLifecycleOwner.lifecycleScope.launch {
+                        Timber.d("북마크 클릭")
                         viewModel.handleEvent(AllMovieReportEvent.ClickBookmark(report.reportId))
                     }
                 }

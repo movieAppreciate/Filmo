@@ -250,7 +250,7 @@ class AllMovieReportViewModel
                         stateList.map { bookmark ->
                             if (bookmark.reportId == reportId) {
                                 bookmark.copy(
-                                    bookmarkId = result.id,
+                                    bookmarkId = result.bookmarkId,
                                     isBookmarked = true,
                                 )
                             } else {
@@ -292,9 +292,9 @@ class AllMovieReportViewModel
             if (bookmark != null) {
                 if (bookmark.isBookmarked) {
                     deleteBookmark(reportId, bookmark.bookmarkId)
-                } else {
-                    registerBookmark(reportId)
                 }
+            } else {
+                registerBookmark(reportId)
             }
         }
     }

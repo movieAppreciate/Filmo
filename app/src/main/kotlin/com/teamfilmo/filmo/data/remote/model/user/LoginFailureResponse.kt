@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginFailureResponse(
+    val timeStamp: String,
+    val status: Int,
+    val error: String,
     val message: String,
-    val status: String,
+    val path: String,
 )
