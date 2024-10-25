@@ -1,12 +1,17 @@
 package com.teamfilmo.filmo.data.remote.model.user
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SignUpResponse(
-    override val uid: String,
-    override val userId: String,
-    override val nickname: String,
-    override val type: String,
-    override val profileUrl: String? = null,
-    override val lastLoginDate: String,
-    override val introduction: String,
-    override val role: List<String> = emptyList(),
-) : OpenUserResponse(uid, userId, nickname, type, profileUrl, lastLoginDate, introduction, role)
+    val email: String,
+    val userId: String,
+    val type: String,
+    val nickname: String,
+    val profileUrl: String? = null,
+    val lastLoginDate: String? = null,
+    val introduction: String? = null,
+    val roles: List<String> = emptyList(),
+    val createDate: String,
+    val lastModifiedDate: String,
+)

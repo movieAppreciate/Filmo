@@ -16,9 +16,10 @@ class GoogleLoginRequestUseCase
     ) {
         suspend operator fun invoke(credential: Credential): Result<LoginResponse> {
             val userId = getUserIdFromCredential(credential)
-            return authRepository.login(
-                LoginRequest(userId, AuthType.GOOGLE.value),
-            )
+            return authRepository
+                .login(
+                    LoginRequest(userId, AuthType.GOOGLE.value),
+                )
         }
 
         private fun getUserIdFromCredential(credential: Credential): String {

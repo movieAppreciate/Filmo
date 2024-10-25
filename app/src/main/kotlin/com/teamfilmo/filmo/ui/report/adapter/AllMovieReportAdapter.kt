@@ -17,10 +17,6 @@ import kotlin.math.abs
 import timber.log.Timber
 
 sealed class ReportPayload {
-    data class BookmarkPayload(
-        var isBookmarked: Boolean,
-    ) : ReportPayload()
-
     data class LikePayload(
         val isLiked: Boolean,
     ) : ReportPayload()
@@ -56,13 +52,9 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
     }
 
     interface ItemClick {
-        fun onClick(
-            report: ReportItem,
-        )
+        fun onClick(report: ReportItem)
 
         fun onLikeClick(report: ReportItem)
-
-        fun onBookmarkClick(report: ReportItem)
     }
 
     fun updateLikeState(
@@ -90,18 +82,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         }
     }
 
-    fun updateBookmarkState(
-        reportId: String,
-        isBookmarked: Boolean,
-    ) {
-        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
-        if (position != -1) {
-            getItem(position)?.isBookmark = isBookmarked
-            notifyItemChanged(position, ReportPayload.BookmarkPayload(isBookmarked))
-            Timber.d("북마크 등록")
-        }
-    }
-
     var itemClick: ItemClick? = null
 
     override fun onCreateViewHolder(
@@ -120,7 +100,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             holder.bindItems(item)
             holder.bindLikeImage(item.isLiked)
             holder.bindLikeCount(item.likeCount)
-            holder.bindBookmarkButton(item.isBookmark)
             holder.bindMovieImage(item.imageUrl.toString())
         }
     }
@@ -135,11 +114,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         } else {
             payloads.forEach {
                 when (val payload = it as ReportPayload) {
-                    is ReportPayload.BookmarkPayload -> {
-                        getItem(position)?.isBookmark = payload.isBookmarked
-                        holder.bindBookmarkButton(payload.isBookmarked)
-                    }
-
                     is ReportPayload.LikePayload -> {
                         getItem(position)?.isLiked = payload.isLiked
                         holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
@@ -181,12 +155,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             binding.likeButton.setOnClickListener {
                 getItem(position)?.let { report ->
                     itemClick?.onLikeClick(report)
-                }
-            }
-            binding.bookmarkButton.setOnClickListener {
-                getItem(position)?.let { report ->
-                    Timber.d("북마크 클릭")
-                    itemClick?.onBookmarkClick(report)
                 }
             }
         }
@@ -256,14 +224,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                 .with(binding.root.context)
                 .load(imageUrl)
                 .into(binding.movieImage)
-        }
-
-        fun bindBookmarkButton(isBookmarked: Boolean) {
-            if (isBookmarked) {
-                binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_selected)
-            } else {
-                binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_unselected)
-            }
         }
 
         fun bindLikeButton(imageSrc: Int) {

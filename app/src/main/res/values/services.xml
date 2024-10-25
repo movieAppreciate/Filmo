@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="service_url" translatable="false">http://ec2-54-180-121-146.ap-northeast-2.compute.amazonaws.com:8080/</string>
+
+    <string name="service_url" translatable="false">http://ec2-54-180-100-251.ap-northeast-2.compute.amazonaws.com:8080/</string>
     <string name="movie_service_url" translatable="false">https://api.themoviedb.org/</string>
     <string name="movie_service_api_key" translatable="false">"a03cd18043a24a01005b3c585cdcc01a"</string>
     <string name="access_token" translatable="false"></string>

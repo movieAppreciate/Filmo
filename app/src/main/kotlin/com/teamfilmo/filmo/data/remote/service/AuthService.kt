@@ -17,7 +17,7 @@ interface AuthService {
     @POST("/user/signup")
     @Headers("NO-AUTH: true")
     suspend fun signUp(
-        request: SignUpRequest,
+        @Body request: SignUpRequest,
     ): Result<SignUpResponse>
 
     /**

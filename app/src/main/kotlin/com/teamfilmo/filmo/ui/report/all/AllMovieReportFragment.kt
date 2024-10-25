@@ -20,7 +20,6 @@ import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -65,12 +64,6 @@ class AllMovieReportFragment :
                         }
                     }
                 }
-            is AllMovieReportEffect.RegistBookmark ->
-                lifecycleScope.launch {
-                    allMovieReportAdapter.updateBookmarkState(effect.reportId, true)
-                }
-            is AllMovieReportEffect.DeleteBookmark ->
-                allMovieReportAdapter.updateBookmarkState(effect.reportId, false)
             else -> {}
         }
     }
@@ -83,7 +76,6 @@ class AllMovieReportFragment :
         }
 
         // 로딩 추가
-
         // moviePosterAdapter의 loadStateFlow 속성에서 값을 수집한다.
         // 데이터의 현재 로드상태(로드 중, 성공적으로 로드되었는지, 오류가 발생했는지)를 내보낸다.
         // collectLatest : 흐름에서 방출된 최신값을 수집한다.
@@ -137,13 +129,6 @@ class AllMovieReportFragment :
                 override fun onLikeClick(report: ReportItem) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         viewModel.handleEvent(AllMovieReportEvent.ClickLike(report.reportId))
-                    }
-                }
-
-                override fun onBookmarkClick(report: ReportItem) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        Timber.d("북마크 클릭")
-                        viewModel.handleEvent(AllMovieReportEvent.ClickBookmark(report.reportId))
                     }
                 }
             }

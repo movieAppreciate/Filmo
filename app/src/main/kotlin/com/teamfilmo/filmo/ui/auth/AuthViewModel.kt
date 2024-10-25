@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
+import com.google.protobuf.type
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
@@ -8,22 +9,24 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.NaverLoginRequestUseCase
+import com.teamfilmo.filmo.domain.auth.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
-import retrofit2.HttpException
 import timber.log.Timber
 
 @HiltViewModel
 class AuthViewModel
     @Inject
     constructor(
+        private val signUpUsecase: SignUpUseCase,
         private val userTokenSource: UserTokenSource,
         private val naverLoginRequestUseCase: NaverLoginRequestUseCase,
         private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
@@ -35,6 +38,20 @@ class AuthViewModel
                 is AuthEvent.RequestNaverLogin -> requestNaverLogin(event.token)
                 is AuthEvent.RequestKakaoLogin -> requestKakaoLogin(event.token)
             }
+        }
+
+        // 회원 가입
+        private suspend fun handleSignUp(
+            email: String,
+            type: String,
+        ) {
+            signUpUsecase(SignUpRequest(email = email, type = type))
+                .onSuccess {
+                    Timber.d("회원가입 성공")
+                    // 회원 가입 성공 후 로그인 처리
+                }.onFailure {
+                    Timber.d("회원가입 실패")
+                }
         }
 
         private fun requestKakaoLogin(token: OAuthToken) {
@@ -58,13 +75,8 @@ class AuthViewModel
                         userTokenSource.setUserToken(it.accessToken)
                         sendEffect(AuthEffect.LoginSuccess)
                     }.onFailure {
-                        if (it is HttpException && it.code() == 401) {
-                            Timber.e("회원가입으로 이동")
-                            sendEffect(AuthEffect.NavigateToSignUp)
-                        } else {
-                            Timber.e("로그인 실패")
-                            sendEffect(AuthEffect.LoginFailed)
-                        }
+                        Timber.e("로그인 실패")
+                        handleSignUp(email, "kakao")
                     }
             }
         }
@@ -116,6 +128,7 @@ class AuthViewModel
                         sendEffect(AuthEffect.LoginSuccess)
                     }.onFailure {
                         Timber.e("naver login failed: ${it.message}")
+                        handleSignUp(email, "naver")
                         sendEffect(AuthEffect.LoginFailed)
                     }
             }
@@ -129,7 +142,9 @@ class AuthViewModel
                         userTokenSource.setUserToken(it.accessToken)
                         sendEffect(AuthEffect.LoginSuccess)
                     }.onFailure {
-                        Timber.e("google login failed: ${it.message}")
+                        val id = credential.data.getString("idToken")
+                        Timber.e("google login failed: $id")
+                        // handleSignUp("tjdgustjdan@gmail.com", "google")
                         sendEffect(AuthEffect.LoginFailed)
                     }
             }
