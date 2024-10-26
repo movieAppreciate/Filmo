@@ -11,7 +11,7 @@ interface LikeRepository {
         type: String,
     ): Result<Boolean>
 
-    suspend fun cancleLike(reportId: String): Result<String>
+    suspend fun cancelLike(likeId: String): Result<String>
 
-    suspend fun countLike(reportId: String): Result<Int>
+    suspend fun countLike(targetId: String): Result<Int>
 }

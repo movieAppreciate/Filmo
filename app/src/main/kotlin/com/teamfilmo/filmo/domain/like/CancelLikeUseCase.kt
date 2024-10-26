@@ -10,11 +10,11 @@ class CancelLikeUseCase
         private val likeRepository: LikeRepository,
     ) {
         suspend operator fun invoke(reportId: String): Result<String?> =
-            likeRepository.cancleLike(reportId)
+            likeRepository
+                .cancelLike(reportId)
                 .onSuccess {
                     Timber.d("success to cancel like")
-                }
-                .onFailure {
+                }.onFailure {
                     Timber.d("failed to cancel like : ${it.message}")
                 }
     }

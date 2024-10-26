@@ -12,11 +12,14 @@ class CountLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        operator fun invoke(reportId: String): Flow<Int> =
+        operator fun invoke(targetId: String): Flow<Int> =
             flow {
-                val result = likeRepository.countLike(reportId)
+                val result = likeRepository.countLike(targetId)
+                result.onFailure {
+                    throw it
+                }
                 emit(result.getOrDefault(0))
             }.catch {
-                Timber.e(it)
+                Timber.e("failed to count like : ${it.localizedMessage}")
             }
     }

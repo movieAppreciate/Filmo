@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
@@ -14,6 +15,7 @@ import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
+import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
@@ -30,9 +32,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class AllReportLikeState(
     val reportId: String = "",
+    val likeId: String = "",
     var likeCount: Int = 0,
 )
 
@@ -46,6 +50,7 @@ data class AllReportBookmarkState(
 class AllMovieReportViewModel
     @Inject
     constructor(
+        private val countLikeUseCase: CountLikeUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val getMovieNameUseCase: GetMovieNameUseCase,
         private val getReportListUseCase: GetReportListUseCase,
@@ -57,6 +62,17 @@ class AllMovieReportViewModel
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
+        /*
+         좋아요 수 변수
+         */
+        private val _likeCount = MutableStateFlow<Int>(0)
+        val likeCount: StateFlow<Int> = _likeCount
+
+        /*
+        좋아요 저장 변수
+         */
+        private val _saveLikeResponse = MutableStateFlow(SaveLikeResponse())
+        val saveLikeResponse: StateFlow<SaveLikeResponse> = _saveLikeResponse
         /*
         감상문 페이징
          */
@@ -187,20 +203,22 @@ class AllMovieReportViewModel
                         targetId = reportId,
                         type = "report",
                     ),
-                )
+                ).collect {
+                    _saveLikeResponse.value = it
+                    updateLikeCount(reportId, true)
+                }
                 sendEffect(AllMovieReportEffect.RegistLike(reportId))
-                updateLikeCount(reportId, true)
             }
         }
 
 /*
 좋아요 취소
  */
-        private fun cancelLike(reportId: String) {
+        private fun cancelLike() {
             viewModelScope.launch {
-                cancelLikeUseCase(reportId)
-                sendEffect(AllMovieReportEffect.CancelLike(reportId))
-                updateLikeCount(reportId, false)
+                cancelLikeUseCase(_saveLikeResponse.value.likeId)
+                updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
+                sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
             }
         }
 
@@ -212,7 +230,7 @@ class AllMovieReportViewModel
             viewModelScope.launch {
                 checkLikeStateUseCase(targetId, type).collect {
                     if (it) {
-                        cancelLike(targetId)
+                        cancelLike()
                     } else {
                         saveLike(targetId)
                     }
@@ -225,18 +243,25 @@ class AllMovieReportViewModel
             reportId: String,
             isLiked: Boolean,
         ) {
-            var updatedLikeCount = 0
-            _likeState.update { uiStateList ->
-                uiStateList.map { uiState ->
-                    if (uiState.reportId == reportId) {
-                        updatedLikeCount = if (isLiked) uiState.likeCount + 1 else uiState.likeCount - 1
-                        uiState.copy(likeCount = updatedLikeCount)
-                    } else {
-                        uiState
-                    }
+            viewModelScope.launch {
+                countLikeUseCase(reportId).collect {
+                    _likeCount.value = it
                 }
+                Timber.d("업데이트 like count : ${_likeCount.value}")
+                sendEffect(AllMovieReportEffect.CountLike(reportId, _likeCount.value))
             }
-            sendEffect(AllMovieReportEffect.CountLike(reportId, updatedLikeCount))
+
+//            var updatedLikeCount = 0
+//            _likeState.update { uiStateList ->
+//                uiStateList.map { uiState ->
+//                    if (uiState.reportId == reportId) {
+//                        updatedLikeCount = if (isLiked) uiState.likeCount + 1 else uiState.likeCount - 1
+//                        uiState.copy(likeCount = updatedLikeCount)
+//                    } else {
+//                        uiState
+//                    }
+//                }
+//            }
         }
 
     /*
