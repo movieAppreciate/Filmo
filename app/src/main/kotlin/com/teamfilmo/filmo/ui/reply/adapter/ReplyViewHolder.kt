@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.ui.reply.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponseWithRole
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
@@ -95,6 +96,14 @@ class ReplyViewHolder(
         } else {
             binding.btnMore.visibility = View.GONE
         }
+
+        if (reply.isLiked) {
+            binding.btnLike.setImageResource(R.drawable.ic_like_selected)
+        } else {
+            binding.btnLike.setImageResource(R.drawable.ic_like_unselected)
+        }
+        // 좋아요 수 반영
+        binding.txtLikeCount.text = reply.likeCount.toString()
 
         Timber.d("답글 :${reply.subReply}")
 

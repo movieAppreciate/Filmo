@@ -12,7 +12,7 @@ data class GetReportResponse(
     val content: String,
     val userId: String,
     val movieId: Int,
-    val tagString: String,
+    val tagString: String? = null,
     val complaintCount: Int,
     val replyCount: Int,
     val likeCount: Int,

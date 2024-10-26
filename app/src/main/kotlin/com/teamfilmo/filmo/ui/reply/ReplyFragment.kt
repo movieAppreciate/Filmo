@@ -23,12 +23,12 @@ import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
-class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
-    FragmentReplyBinding::inflate,
-) {
+class ReplyFragment :
+    BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
+        FragmentReplyBinding::inflate,
+    ) {
     private var isReplyingToComment = false
     private var upReplyId = ""
 
@@ -113,7 +113,10 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
         adapter.itemClick =
             object : ReplyItemClick {
                 override fun onLikeClick(position: Int) {
-                    Timber.d("좋아요 클릭")
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        val replyId = adapter.replyList[position].replyId
+                        viewModel.handleEvent(ReplyEvent.ClickLike(replyId))
+                    }
                 }
 
                 override fun onReplyClick(position: Int) {
@@ -236,6 +239,20 @@ class ReplyFragment : BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEf
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
+            is ReplyEffect.SaveLike -> {
+                adapter.updateLikeState(viewModel.replyListStateFlow.value)
+            }
+            is ReplyEffect.CancelLike -> {
+                adapter.updateLikeState(viewModel.replyListStateFlow.value)
+            }
+            is ReplyEffect.ToggleLike -> {
+                lifecycleScope.launch {
+                    viewModel.likeCount.collect {
+                        adapter.updateLikeState(viewModel.replyListStateFlow.value)
+                    }
+                }
+            }
+
             is ReplyEffect.ScrollToTop -> {
                 binding.recyclerView.scrollToPosition(viewModel.replyListStateFlow.value.size - 1)
             }

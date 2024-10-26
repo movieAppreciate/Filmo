@@ -10,4 +10,6 @@ data class GetReplyResponseItemWithRole(
     val subReply: ArrayList<SubReplyResponse>? = null,
     val userId: String,
     var isMyReply: Boolean,
+    val isLiked: Boolean = false,
+    val likeCount: Int,
 )

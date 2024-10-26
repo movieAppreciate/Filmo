@@ -39,6 +39,19 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
     }
 
     /*
+    좋아요 등록
+     */
+    fun updateLikeState(
+        newList: List<GetReplyResponseItemWithRole>,
+    ) {
+        val diffCallBack = ReplyDiffCallBack(this.replyList, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallBack)
+        replyList.clear()
+        replyList.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    /*
     댓글 삭제
      */
     fun removeReplyItem(position: Int) {
@@ -49,14 +62,9 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
     fun setReplyList(replyList: List<GetReplyResponseItemWithRole>) {
         val diffCallBack = ReplyDiffCallBack(this.replyList, replyList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
-//        Timber.d("받은 데이터 : $replyList")
-//        val list = replyList
-//        val currentSize = this.replyList.size
         this.replyList.clear()
         this.replyList.addAll(replyList)
         diffResult.dispatchUpdatesTo(this)
-//        notifyItemRangeRemoved(0, currentSize)
-//        notifyItemRangeInserted(0, replyList.size)
     }
 
     override fun onCreateViewHolder(

@@ -20,5 +20,5 @@ class LikeDataSourceImpl
 
         override suspend fun cancelLike(reportId: String): Result<String> = likeService.cancel(reportId)
 
-        override suspend fun countLike(reportId: String): Result<Int> = likeService.count(reportId)
+        override suspend fun countLike(targetId: String): Result<Int> = likeService.count(targetId)
     }
