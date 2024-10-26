@@ -64,7 +64,8 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
             getItem(position)?.let {
-                val updatedItem = it.copy(isLiked = isLiked)
+                it.isLiked = isLiked
+                notifyItemChanged(position, ReportPayload.LikePayload(isLiked))
             }
         }
     }
@@ -75,8 +76,8 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
     ) {
         val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
-            getItem(position)?.let { currentItem ->
-                val updatedItem = currentItem.copy(likeCount = likeCount).copy(likeCount = likeCount)
+            getItem(position)?.let {
+                it.likeCount = likeCount
                 notifyItemChanged(position, ReportPayload.LikeCountPayload(likeCount))
             }
         }

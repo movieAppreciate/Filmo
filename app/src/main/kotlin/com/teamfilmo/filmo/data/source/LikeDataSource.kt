@@ -11,7 +11,7 @@ interface LikeDataSource {
         type: String,
     ): Result<Boolean>
 
-    suspend fun cancelLike(reportId: String): Result<String>
+    suspend fun cancelLike(likeId: String): Result<String>
 
     suspend fun countLike(reportId: String): Result<Int>
 }

@@ -2,10 +2,16 @@ package com.teamfilmo.filmo.ui.reply
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
+import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
+import com.teamfilmo.filmo.domain.like.CountLikeUseCase
+import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.reply.SaveReplyUseCase
@@ -14,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -21,6 +28,10 @@ import timber.log.Timber
 class ReplyViewModel
     @Inject
     constructor(
+        private val countLikeUseCase: CountLikeUseCase,
+        private val checkLikeUseCase: CheckLikeStateUseCase,
+        private val saveLikeUseCase: SaveLikeUseCase,
+        private val cancelLikeUseCase: CancelLikeUseCase,
         private val getUserInfoUseCase: GetUserInfoUseCase,
         private val getReplyUseCase: GetReplyUseCase,
         private val saveReplyUseCase: SaveReplyUseCase,
@@ -37,6 +48,25 @@ class ReplyViewModel
                 }
             }
         }
+
+    /*
+    좋아요 상태
+     */
+        private val _isLiked = MutableStateFlow(false)
+        val isLiked: StateFlow<Boolean> = _isLiked
+    /*
+    좋아요 저장
+     */
+
+        private val _saveReplyLikeResponse = MutableStateFlow(SaveLikeResponse())
+        val saveReplyLikeResponse: StateFlow<SaveLikeResponse> = _saveReplyLikeResponse
+
+    /*
+    좋아요 수
+
+     */
+        private val _likeCount = MutableStateFlow(0)
+        val likeCount: StateFlow<Int> = _likeCount
 
     /*
      본인의 게시글인기?
@@ -79,11 +109,14 @@ class ReplyViewModel
 
         override fun handleEvent(event: ReplyEvent) {
             when (event) {
+                is ReplyEvent.ClickLike -> {
+                    toggleLike(event.replyId)
+                }
                 is ReplyEvent.SaveReply -> {
                     saveReply(event.upReplyId, event.reportId, event.content)
                 }
                 is ReplyEvent.DeleteReply -> {
-                    deleteReply(event.replyId, event.reportId)
+                    deleteReply(event.replyId)
                 }
                 is ReplyEvent.DeleteSubReply -> {
                     deleteSubReply(event.replyId, event.reportId)
@@ -91,6 +124,93 @@ class ReplyViewModel
                 is ReplyEvent.SaveSubReply -> {
                     saveSubReply(event.upReplyId, event.reportId, event.content)
                 }
+            }
+        }
+
+    /*
+    댓글 좋아요
+     */
+
+        private fun saveReplyLike(
+            targetId: String,
+            type: String = "reply",
+        ) {
+            viewModelScope.launch {
+                saveLikeUseCase(SaveLikeRequest(targetId, type)).collect {
+                    _saveReplyLikeResponse.value = it
+                    _isLiked.value = true
+                }
+            }
+        }
+
+        private fun cancelReplyLike(
+            targetId: String,
+            likeId: String,
+        ) {
+            viewModelScope.launch {
+                cancelLikeUseCase(likeId)
+                    .onSuccess {
+                        Timber.d("좋아요 취소 성공")
+                    }.onFailure {
+                        Timber.d("좋아요 취소 실패")
+                    }
+            }
+        }
+
+        // 좋아요 토글 , 좋아요 여부가 true인 경우 취소, 좋아요 여부가 False인 경우 좋아요 등록
+        private fun toggleLike(
+            targetId: String,
+            type: String = "reply",
+        ) {
+            viewModelScope.launch {
+                combine(
+                    checkLikeUseCase(targetId, type),
+                    countLikeUseCase(targetId),
+                ) { isLiked, likeCount ->
+                    Pair(isLiked, likeCount)
+                }.collect { (isLiked, likeCount) ->
+                    if (isLiked) {
+                        // todo : likeId 수정 필요
+                        cancelReplyLike(targetId = targetId, likeId = _saveReplyLikeResponse.value.likeId)
+                        // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
+                        updateLikeState(targetId, false, likeCount - 1)
+                        sendEffect(ReplyEffect.CancelLike(replyId = targetId))
+                    } else {
+                        saveReplyLike(targetId, type)
+                        updateLikeState(targetId, true, likeCount + 1)
+                        sendEffect(ReplyEffect.SaveLike(targetId))
+                    }
+                }
+            }
+        }
+
+        private fun updateLikeState(
+            targetId: String,
+            isLiked: Boolean,
+            likeCount: Int,
+        ) {
+            viewModelScope.launch {
+                val currentList = _replyListStateFlow.value.toMutableList()
+                val position = currentList.indexOfFirst { it.replyId == targetId }
+                val updatedReply =
+                    currentList[position].copy(isLiked = isLiked, likeCount = likeCount)
+                currentList[position] = updatedReply
+                _replyListStateFlow.value = currentList
+            }
+        }
+
+        private fun updateLikeCountState(
+            targetId: String,
+            likeCount: Int,
+        ) {
+            viewModelScope.launch {
+                val currentList = _replyListStateFlow.value.toMutableList()
+                val position = currentList.indexOfFirst { it.replyId == targetId }
+                val updatedReply =
+                    currentList[position].copy(likeCount = likeCount)
+                currentList[position] = updatedReply
+                _replyListStateFlow.value = currentList
+                sendEffect(ReplyEffect.ToggleLike)
             }
         }
 
@@ -109,14 +229,12 @@ class ReplyViewModel
                 ).collect {
                     if (it != null) {
                         _subReplyStateFlow.value = it
-                        getReply(reportId)
                     }
                 }
             }
         }
 
         private fun deleteReply(
-            reportId: String,
             replyId: String,
         ) {
             viewModelScope.launch {
@@ -126,7 +244,6 @@ class ReplyViewModel
                             it.replyId == replyId
                         }
                     sendEffect(ReplyEffect.DeleteReply(position))
-                    // getReply(reportId)
                 }
             }
         }
@@ -157,11 +274,10 @@ class ReplyViewModel
                         content,
                     ),
                 ).collect {
-                    Timber.d("댓글 등록 : ${it?.content}")
                     if (it != null) {
                         _replyItemStateFlow.value = it
-                        getReply(reportId)
                         sendEffect(ReplyEffect.ScrollToTop)
+                        getReply(reportId)
                     }
                 }
             }
@@ -171,22 +287,39 @@ class ReplyViewModel
             viewModelScope.launch {
                 getReplyUseCase(reportId).collect { replyList ->
                     if (replyList != null) {
-                        // map 함수의 역할
-                        val replyListWithRole =
+                        val likeStateFlows =
                             replyList.map {
+                                checkLikeUseCase(it.replyId)
+                            }
+                        val countStateFlows =
+                            replyList.map {
+                                countLikeUseCase(it.replyId)
+                            }
+                        combine(likeStateFlows + countStateFlows) { combinedStates ->
+                            // combinedStates 배열에서 좋아요 상태와 좋아요 수를 분리
+                            val likeStates = combinedStates.take(replyList.size)
+                            val likeCounts = combinedStates.drop(replyList.size)
+
+                            // map 함수의 역할
+                            replyList.mapIndexed { index, reply ->
                                 GetReplyResponseItemWithRole(
-                                    replyId = it.replyId,
-                                    reportId = it.reportId,
-                                    content = it.content,
-                                    createDate = it.createDate,
-                                    lastModifiedDate = it.lastModifiedDate,
-                                    nickname = it.nickname,
-                                    userId = it.userId,
-                                    isMyReply = it.userId == _userInfo.value.userId,
-                                    subReply = it.subReply,
+                                    replyId = reply.replyId,
+                                    reportId = reply.reportId,
+                                    content = reply.content,
+                                    createDate = reply.createDate,
+                                    lastModifiedDate = reply.lastModifiedDate,
+                                    nickname = reply.nickname,
+                                    userId = reply.userId,
+                                    isMyReply = reply.userId == _userInfo.value.userId,
+                                    subReply = reply.subReply,
+                                    isLiked = likeStates[index] as Boolean,
+                                    likeCount = likeCounts[index] as Int,
                                 )
                             }
-                        _replyListStateFlow.value = replyListWithRole
+                        }.collect {
+                            _replyListStateFlow.value = it
+                            sendEffect(ReplyEffect.ScrollToTop)
+                        }
                     }
                 }
             }

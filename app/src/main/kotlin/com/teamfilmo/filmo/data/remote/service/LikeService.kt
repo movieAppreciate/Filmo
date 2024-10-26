@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.data.remote.service
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -19,10 +20,10 @@ interface LikeService {
         @Body saveLikeRequest: SaveLikeRequest,
     ): Result<SaveLikeResponse>
 
-    @POST("/like/cancel")
+    @DELETE("/like/cancel")
     suspend fun cancel(
-        @Query("reportId")
-        reportId: String,
+        @Query("likeId")
+        likeId: String,
     ): Result<String>
 
     /**
@@ -33,8 +34,8 @@ interface LikeService {
         /**
          * 감상문 아이디
          */
-        @Query("reportId")
-        reportId: String,
+        @Query("targetId")
+        targetId: String,
     ): Result<Int>
 
     /**

@@ -18,7 +18,7 @@ class LikeRepositoryImpl
             type: String,
         ): Result<Boolean> = likeDataSource.checkLike(targetId, type)
 
-        override suspend fun cancleLike(reportId: String): Result<String> = likeDataSource.cancelLike(reportId)
+        override suspend fun cancelLike(likeId: String): Result<String> = likeDataSource.cancelLike(likeId)
 
-        override suspend fun countLike(reportId: String): Result<Int> = likeDataSource.countLike(reportId)
+        override suspend fun countLike(targetId: String): Result<Int> = likeDataSource.countLike(targetId)
     }
