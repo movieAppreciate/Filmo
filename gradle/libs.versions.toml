@@ -5,6 +5,7 @@ lottieVersion = "6.5.2"
 minSdk = "24"
 navigationFragmentKtx = "2.5.1"
 navigationUiKtx = "2.5.1"
+shimmer = "0.5.0"
 targetSdk = "34"
 
 # Gradle
@@ -293,6 +294,7 @@ junit5-android-runner = { group = "de.mannodermaus.junit5", name = "android-test
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 truth-ext = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }

@@ -9,15 +9,6 @@
       android:id="@+id/app_bar"
       layout="@layout/widget_app_bar"/>
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/all_movie_report_fragment_container_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
@@ -48,6 +39,26 @@
                     android:indeterminate="true"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"/>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/layout_shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/report_item_shimmer"/>
+                        <include layout="@layout/report_item_shimmer"/>
+                        <include layout="@layout/report_item_shimmer"/>
+
+
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
 
                 <androidx.recyclerview.widget.RecyclerView
