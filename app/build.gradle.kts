@@ -26,12 +26,21 @@ object Version {
 
 android {
     namespace = "com.teamfilmo.filmo"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.teamfilmo.filmo"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
         versionCode = Version.version_code
         versionName = Version.version_name
 
@@ -217,10 +226,15 @@ dependencies {
     androidTestImplementation(libs.hilt.test)
     implementation(libs.androidx.navigation.fragment.ktx.v251)
     implementation(libs.androidx.navigation.ui.ktx.v251)
+
+    implementation(libs.shimmer)
 }
 
 protobuf {
-    val protobufVersion = libs.versions.protobuf.asProvider().get()
+    val protobufVersion =
+        libs.versions.protobuf
+            .asProvider()
+            .get()
 
     protoc {
         artifact = "com.google.protobuf:protoc:$protobufVersion"

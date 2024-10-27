@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -69,8 +68,11 @@ class AllMovieReportFragment :
     }
 
     override fun onBindLayout() {
+        binding.layoutShimmer.startShimmer()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingData.collectLatest {
+                binding.layoutShimmer.stopShimmer()
+                binding.layoutShimmer.visibility = View.GONE
                 allMovieReportAdapter.submitData(pagingData = it)
             }
         }
@@ -83,7 +85,25 @@ class AllMovieReportFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 allMovieReportAdapter.loadStateFlow.collectLatest {
-                    binding.reportProgressBar.isVisible = it.source.append is LoadState.Loading
+                    when (it.refresh) {
+                        is LoadState.Loading -> {
+                            binding.layoutShimmer.visibility = View.VISIBLE
+                            binding.layoutShimmer.startShimmer()
+                            binding.reportProgressBar.visibility = View.GONE
+                            binding.movieRecyclerview.visibility = View.GONE
+                        }
+                        is LoadState.NotLoading -> {
+                            binding.layoutShimmer.stopShimmer()
+                            binding.layoutShimmer.visibility = View.GONE
+                            binding.reportProgressBar.visibility = View.GONE
+                            binding.movieRecyclerview.visibility = View.VISIBLE
+                        }
+                        is LoadState.Error -> {
+                            binding.layoutShimmer.stopShimmer()
+                            binding.layoutShimmer.visibility = View.GONE
+                            binding.reportProgressBar.visibility = View.GONE
+                        }
+                    }
                 }
             }
         }
