@@ -45,6 +45,12 @@ class MainActivity :
         navController = navHostFragment.navController
         binding.navBar.setupWithNavController(navController)
 
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
+
         if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
             navController.navigate(R.id.allMovieReportFragment)
         } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
@@ -65,12 +71,14 @@ class MainActivity :
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.allMovieReportFragment -> {
+                    Timber.d("홈 클릭 ")
                     if (navController.currentDestination?.id != R.id.allMovieReportFragment) {
                         navController.navigate(R.id.allMovieReportFragment)
                     }
                     return@setOnItemSelectedListener true
                 }
                 R.id.myPageFragment -> {
+                    Timber.d("마이 페이지 ")
                     if (navController.currentDestination?.id != R.id.myPageFragment) {
                         navController.navigate(R.id.myPageFragment)
                     }
@@ -78,6 +86,7 @@ class MainActivity :
                 }
 
                 R.id.writeActivity -> {
+                    Timber.d("감상문 작성 ")
                     val intent = Intent(this, WriteActivity::class.java)
                     Timber.d("감상문 작성 클릭")
                     startActivity(intent)

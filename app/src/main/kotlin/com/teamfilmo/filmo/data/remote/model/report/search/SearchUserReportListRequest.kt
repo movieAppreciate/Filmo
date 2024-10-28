@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class SearchUserReportListRequest(
-    val targetId: String,
+    val targetId: String?,
 )

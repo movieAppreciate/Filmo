@@ -40,7 +40,7 @@ class BodyMovieReportFragment :
          */
         binding.txtUserName.setOnClickListener {
             val userId = viewModel.getReportResponse.value.userId
-            val action = BodyMovieReportFragmentDirections.navigateToMyPageFromBody(userId)
+            val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
             navController.navigate(action)
         }
         super.onBindLayout()
