@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.databinding.FragmentModifyReportBinding
+import com.teamfilmo.filmo.ui.widget.CustomDialog
+import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -60,6 +62,31 @@ class ModifyReportFragment :
             }
         }
         return super.onCreate(savedInstanceState)
+    }
+
+    // 감상문 수정 이탈 다이얼로그
+    private fun showCancelModifyReportDialog() {
+        val button1Text = "종료"
+        val dialog =
+            context?.let {
+                val dialogMessage = "수정하기를 종료하시겠어요?"
+                val dialogSubMessage = "변경된 내용은 저장되지 않아요"
+                val button2Text = "계속 작성"
+                CustomDialog(
+                    dialogMessage = dialogMessage,
+                    dialogSubMessage = dialogSubMessage,
+                    button1Text = button1Text,
+                    button2Text = button2Text,
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    dialog.dismiss()
+                }
+            },
+        )
     }
 
     override fun onBindLayout() {
@@ -114,7 +141,8 @@ class ModifyReportFragment :
             }
 
             btnBack.setOnClickListener {
-                navController.popBackStack()
+                // todo : 다이얼로그 띄우기
+                showCancelModifyReportDialog()
             }
 
             editReportTag.apply {

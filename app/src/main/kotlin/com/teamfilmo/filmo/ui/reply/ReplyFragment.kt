@@ -23,7 +23,6 @@ import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment :
@@ -42,6 +41,52 @@ class ReplyFragment :
 
     val args: ReplyFragmentArgs by navArgs()
 
+    // 차단 다이얼로그
+    fun showBlockDialog(
+        reportId: String,
+        replyId: String,
+        position: Int,
+    ) {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "차단",
+                    dialogMessage = resources.getString(R.string.txt_block_reply),
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+    }
+
+    // 신고 다이얼로그
+    fun showComplaintDialog(
+        reportId: String,
+        replyId: String,
+        position: Int,
+    ) {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "신고",
+                    dialogMessage = resources.getString(R.string.txt_complaint_reply),
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+    }
+
     fun showDeleteDialog(
         reportId: String,
         replyId: String,
@@ -49,7 +94,10 @@ class ReplyFragment :
     ) {
         val dialog =
             context?.let {
-                CustomDialog(resources.getString(R.string.txt_delete_reply), it)
+                CustomDialog(
+                    button2Text = "삭제",
+                    dialogMessage = resources.getString(R.string.txt_delete_reply),
+                )
             }
         dialog?.setItemClickListener(
             object : ItemClickListener {
@@ -60,7 +108,9 @@ class ReplyFragment :
                 }
             },
         )
-        dialog?.show()
+        // 다이얼로그가 띄워져 있는 동안 배경 클릭 막기
+        dialog?.isCancelable = false
+        dialog?.show(activity?.supportFragmentManager!!, "CustomDialog")
     }
 
     fun showDeleteSubReplyDialog(
@@ -70,7 +120,10 @@ class ReplyFragment :
     ) {
         val dialog =
             context?.let {
-                CustomDialog(resources.getString(R.string.txt_delete_sub_reply), it)
+                CustomDialog(
+                    button2Text = "삭제",
+                    dialogMessage = resources.getString(R.string.txt_delete_sub_reply),
+                )
             }
         dialog?.setItemClickListener(
             object : ItemClickListener {
@@ -81,7 +134,7 @@ class ReplyFragment :
                 }
             },
         )
-        dialog?.show()
+        dialog?.show(activity?.supportFragmentManager!!, "CustomDialog")
     }
 
     override fun onBindLayout() {
@@ -157,10 +210,12 @@ class ReplyFragment :
                                 val reply = adapter.replyList.get(position).replyId
                                 when (text) {
                                     "신고" -> {
-                                        Timber.d("신고하기")
+                                        showComplaintDialog(args.reportId, reply, position)
+                                        bottomSheet.dismiss()
                                     }
                                     "차단" -> {
-                                        Timber.d("차단하기")
+                                        showBlockDialog(args.reportId, reply, position)
+                                        bottomSheet.dismiss()
                                     }
                                     "삭제하기" -> {
                                         showDeleteDialog(args.reportId, reply, position)

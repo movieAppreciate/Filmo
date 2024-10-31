@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/view_round_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:id="@+id/txt_dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="30dp"
+        android:paddingTop="30dp"
+        android:text="해당 댓글을 삭제하시겠습니까?"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:paddingBottom="30dp"
+        android:id="@+id/txt_dialog_sub_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:text="변경된 내용은 저장되지 않아요"
+        android:textColor="@color/gray02"
+        app:layout_constraintBottom_toTopOf="@+id/button1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_dialog_message" />
+
+    <Button
+        android:textColor="@color/primary"
+        android:textStyle="bold"
+        android:id="@+id/button1"
+        style="@style/Widget.Material3.Button.TextButton.Dialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="종료"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <View
+        android:background="@color/gray03"
+        android:layout_width="2dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/button1"
+        app:layout_constraintTop_toTopOf="@+id/button1" />
+
+
+    <Button
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:id="@+id/button2"
+        style="@style/Widget.Material3.Button.TextButton.Dialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="계속 진행"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button1" />
+</androidx.constraintlayout.widget.ConstraintLayout>

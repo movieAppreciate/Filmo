@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentBodyMovieReportBinding
+import com.teamfilmo.filmo.ui.widget.CustomDialog
+import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,9 +35,8 @@ class BodyMovieReportFragment :
     val args: BodyMovieReportFragmentArgs by navArgs()
 
     override fun onBindLayout() {
-        binding.btnBack.setOnClickListener {
-            navController.popBackStack()
-        }
+        super.onBindLayout()
+        binding.btnBack.setOnClickListener { navController.popBackStack() }
         /*
         유저 이름 클릭 시 감상문을  작성한 유저의 페이지로 이동
          */
@@ -44,7 +45,6 @@ class BodyMovieReportFragment :
             val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
             navController.navigate(action)
         }
-        super.onBindLayout()
 
         binding.movieDetail.btnBack.visibility = View.GONE
         /*
@@ -131,13 +131,75 @@ class BodyMovieReportFragment :
         return rank
     }
 
+    // 신고  다이얼로그
+    fun showComplaintDialog() {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "신고",
+                    dialogMessage = "감상문을 신고할까요?",
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    // todo : 감상문 신고 뷰모델 로직 호출
+                    navController.navigate(R.id.allMovieReportFragment)
+                    Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+    }
+
+    // 차단  다이얼로그
+    fun showBlockDialog() {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "차단",
+                    dialogMessage = "감상문을 차단할까요?",
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    // todo : 감상문 차단 뷰모델 로직 호출
+                    navController.navigate(R.id.allMovieReportFragment)
+                    Toast.makeText(context, "감상문을 차단했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+    }
+
+    // 삭제 다이얼로그
+    fun showDeleteDialog() {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "삭제",
+                    dialogMessage = "감상문을 삭제할까요?",
+                )
+            }
+
+        dialog?.setItemClickListener(
+            object : ItemClickListener {
+                override fun onClick() {
+                    viewModel.handleEvent(BodyMovieReportEvent.DeleteReport(viewModel.getReportResponse.value.reportId))
+                    navController.navigate(R.id.allMovieReportFragment)
+                    Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+    }
+
+    // 감상문 삭제 다이얼로그
     private fun showReportDeleteDialog() {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("감상문 삭제")
         dialogBuilder.setMessage("감상문을 삭제하시겠습니까?")
         dialogBuilder.setPositiveButton("네!") { _, _ ->
-            viewModel.handleEvent(BodyMovieReportEvent.DeleteReport(viewModel.getReportResponse.value.reportId))
-            navController.navigate(R.id.allMovieReportFragment)
         }
         dialogBuilder.setNegativeButton("아니요!") { dialog, _ ->
             dialog.dismiss()
@@ -285,10 +347,10 @@ class BodyMovieReportFragment :
                     when (text) {
                         // Todo : 신고 차단 기능 추가 필요
                         "신고" -> {
-                            Toast.makeText(context, "감상문을 신고합니다.", Toast.LENGTH_SHORT).show()
+                            showComplaintDialog()
                         }
                         "차단" -> {
-                            Toast.makeText(context, "감상문을 차단합니다.", Toast.LENGTH_SHORT).show()
+                            showBlockDialog()
                         }
 
                         "수정하기" -> {
@@ -306,7 +368,7 @@ class BodyMovieReportFragment :
                         }
 
                         "삭제하기" -> {
-                            showReportDeleteDialog()
+                            showDeleteDialog()
                             bottomSheet.dismiss()
                         }
 
