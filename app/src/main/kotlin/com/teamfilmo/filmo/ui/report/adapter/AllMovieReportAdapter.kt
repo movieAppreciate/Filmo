@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
-import timber.log.Timber
 
 sealed class ReportPayload {
     data class LikePayload(
@@ -43,11 +42,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                 override fun areContentsTheSame(
                     oldItem: ReportItem,
                     newItem: ReportItem,
-                ): Boolean {
-                    Timber.d("oldItem: $oldItem")
-                    Timber.d("newItem: $newItem")
-                    return oldItem == newItem
-                }
+                ): Boolean = oldItem == newItem
             }
     }
 
