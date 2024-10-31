@@ -9,7 +9,7 @@
         android:id="@+id/image_user"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_duck"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,7 +18,7 @@
         app:shapeAppearance="@style/Circle50" />
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/txt_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

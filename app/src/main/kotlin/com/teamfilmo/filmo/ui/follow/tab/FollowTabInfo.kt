@@ -7,17 +7,19 @@ import com.teamfilmo.filmo.ui.follow.following.FollowingFragment
 enum class FollowTabInfo(
     val position: Int,
     val title: String,
-    val fragment: () -> Fragment,
+    val fragment: (String) -> Fragment,
 ) {
     Follower(
         0,
         "팔로워",
-        FollowerFragment::newInstance,
+        { userId ->
+            FollowerFragment.newInstance(userId)
+        },
     ),
     Following(
         1,
         "팔로잉",
-        FollowingFragment::newInstance,
+        { userId -> FollowingFragment.newInstance(userId) },
     ),
     ;
 

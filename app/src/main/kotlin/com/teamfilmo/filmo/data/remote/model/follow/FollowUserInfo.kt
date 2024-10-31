@@ -1,0 +1,17 @@
+package com.teamfilmo.filmo.data.remote.model.follow
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class FollowUserInfo(
+    val email: String? = null,
+    val userId: String? = null,
+    val type: String? = null,
+    val nickname: String? = null,
+    val profileUrl: String? = null,
+    val lastLoginDate: String? = null,
+    val introduction: String? = null,
+    val roles: String? = null,
+    val createDate: String? = null,
+    val lastModifiedDate: String? = null,
+)

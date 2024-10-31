@@ -6,12 +6,9 @@ import com.teamfilmo.filmo.ui.follow.tab.FollowTabInfo
 
 class FollowPagerAdapter(
     fragment: Fragment,
+    val userId: String,
 ) : FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int {
-        return FollowTabInfo.entries.size
-    }
+    override fun getItemCount(): Int = FollowTabInfo.entries.size
 
-    override fun createFragment(position: Int): Fragment {
-        return FollowTabInfo.getTabInfoAt(position).fragment()
-    }
+    override fun createFragment(position: Int): Fragment = FollowTabInfo.getTabInfoAt(position).fragment(userId)
 }

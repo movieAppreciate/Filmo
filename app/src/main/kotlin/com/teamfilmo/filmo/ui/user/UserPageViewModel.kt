@@ -38,7 +38,7 @@ class UserPageViewModel
         private val getMovieNameUseCase: GetMovieNameUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val searchUserReportListUseCase: GetUserReportListUseCase,
-        private val followCountFollowUseCase: CountFollowUseCase,
+        private val countFollowUseCase: CountFollowUseCase,
     ) : BaseViewModel<UserPageEffect, UserPageEvent>() {
         init {
         }
@@ -48,6 +48,7 @@ class UserPageViewModel
                 is UserPageEvent.GetUserReportList -> {
                     getUserInfo(event.targetId)
                     getUserReportList(event.targetId)
+                    getFollowCount(event.targetId)
                 }
                 is UserPageEvent.ClickFollow -> {
                     toggleFollow()
@@ -186,6 +187,7 @@ class UserPageViewModel
                 getUserInfoUseCase(targetId).collect {
                     if (it != null) {
                         _userInfo.value = it
+                        getFollowCount(it.userId)
                     }
                 }
             }
@@ -221,7 +223,7 @@ class UserPageViewModel
 
         fun getFollowCount(otherUserId: String) {
             viewModelScope.launch {
-                followCountFollowUseCase(otherUserId = otherUserId).collect {
+                countFollowUseCase(otherUserId = otherUserId).collect {
                     if (it != null) {
                         _followingCount.value = it.countFollowing
                     }

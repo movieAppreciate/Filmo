@@ -1,5 +1,7 @@
 package com.teamfilmo.filmo.data.remote.source
 
+import com.teamfilmo.filmo.data.remote.model.follow.FollowerListResponse
+import com.teamfilmo.filmo.data.remote.model.follow.FollowingListResponse
 import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.service.FollowService
@@ -11,19 +13,23 @@ class FollowDataSourceImpl
     constructor(
         private val followService: FollowService,
     ) : FollowDataSource {
-        override suspend fun checkIsFollow(targetId: String): Result<Boolean> {
-            return followService.isFollow(targetId)
-        }
+        override suspend fun getFollowingList(
+            userId: String?,
+            lastUserId: String?,
+            keyword: String?,
+        ): Result<FollowingListResponse> = followService.getFollowingList(userId, lastUserId, keyword)
 
-        override suspend fun cancelFollow(followId: String): Result<Unit> {
-            return followService.cancelFollow(followId)
-        }
+        override suspend fun getFollowerList(
+            userId: String?,
+            lastUserId: String?,
+            keyword: String?,
+        ): Result<FollowerListResponse> = followService.getFollowerList(userId, lastUserId, keyword)
 
-        override suspend fun saveFollow(saveFollowRequest: String): Result<SaveFollowResponse> {
-            return followService.saveFollow(saveFollowRequest)
-        }
+        override suspend fun checkIsFollow(targetId: String): Result<Boolean> = followService.isFollow(targetId)
 
-        override suspend fun countFollow(otherUserId: String): Result<FollowCountResponse> {
-            return followService.countFollow(otherUserId)
-        }
+        override suspend fun cancelFollow(followId: String): Result<Unit> = followService.cancelFollow(followId)
+
+        override suspend fun saveFollow(saveFollowRequest: String): Result<SaveFollowResponse> = followService.saveFollow(saveFollowRequest)
+
+        override suspend fun countFollow(otherUserId: String?): Result<FollowCountResponse> = followService.countFollow(otherUserId)
     }

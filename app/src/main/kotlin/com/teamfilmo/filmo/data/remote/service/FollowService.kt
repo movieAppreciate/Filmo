@@ -1,5 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.follow.FollowerListResponse
+import com.teamfilmo.filmo.data.remote.model.follow.FollowingListResponse
 import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import retrofit2.http.DELETE
@@ -49,7 +51,7 @@ interface FollowService {
         /**
          * 유저 아이디
          */
-        @Query("otherUserId") userId: String? = null,
+        @Query("userId") userId: String? = null,
         /**
          * 마지막으로 조회된 유저 아이디,
          */
@@ -58,7 +60,7 @@ interface FollowService {
          * 검색어
          */
         @Query("keyword") keyword: String? = null,
-    ): Result<String>
+    ): Result<FollowingListResponse>
 
     /**
      * 팔로워 목록
@@ -68,7 +70,7 @@ interface FollowService {
         /**
          * 유저 아이디
          */
-        @Query("userId") userId: String,
+        @Query("userId") userId: String? = null,
         /**
          * 마지막으로 조회된 유저 아이디,
          */
@@ -77,7 +79,7 @@ interface FollowService {
          * 검색어
          */
         @Query("keyword") keyword: String? = null,
-    ): Result<String>
+    ): Result<FollowerListResponse>
 
     /**
      * 팔로잉/팔로워/차단 수 확인
@@ -87,6 +89,6 @@ interface FollowService {
         /**
          * 확인할 유저의 아이디
          */
-        @Query("otherUserId") userId: String,
+        @Query("otherUserId") userId: String?,
     ): Result<FollowCountResponse>
 }
