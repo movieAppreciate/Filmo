@@ -101,6 +101,9 @@
             app:exitAnim="@anim/nav_default_exit_anim">
 
         </action>
+        <action
+            android:id="@+id/navigateToFollowFragment"
+            app:destination="@id/followFragment" />
 
     </fragment>
     <fragment
@@ -152,11 +155,48 @@
         <action
             android:id="@+id/navigateToSettingFromMyPage"
             app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_followFragment"
+            app:destination="@id/followFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.teamfilmo.filmo.ui.setting.SettingFragment"
         android:label="SettingFragment" />
+    <fragment
+        android:id="@+id/followFragment"
+        android:name="com.teamfilmo.filmo.ui.follow.FollowFragment"
+        android:label="FollowFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string"
+            app:nullable="true" />
+
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
+    <fragment
+        android:id="@+id/followerFragment"
+        android:name="com.teamfilmo.filmo.ui.follow.follower.FollowerFragment"
+        android:label="FollowerFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string"
+            app:nullable="true"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/followingFragment"
+        android:name="com.teamfilmo.filmo.ui.follow.following.FollowingFragment"
+        android:label="FollowingFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string"
+            app:nullable="true"/>
+
+    </fragment>
 
 
 </navigation>

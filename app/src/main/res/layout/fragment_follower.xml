@@ -6,6 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/follower_recycler_view"
         android:padding="10dp"
         tools:listitem="@layout/follower_item"
         android:layout_width="match_parent"

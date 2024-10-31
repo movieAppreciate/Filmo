@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FollowCountResponse(
-    val countFollowing: Int,
-    val countFollower: Int,
+    val countFollowing: Int = 0,
+    val countFollower: Int = 0,
 )

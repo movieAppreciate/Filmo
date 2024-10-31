@@ -22,17 +22,27 @@ class UserPageFragment :
     private val navController by lazy { findNavController() }
     private val adapter by lazy { UserPageAdapter() }
 
-    init {
-//        lifecycleScope.launch {
-//            launch {
-//                viewModel.getFollowCount("tjdgustjdan@gmail.com")
-//            }
-//        }
-    }
-
     override fun onBindLayout() {
         val args: UserPageFragmentArgs by navArgs()
         binding.myReportRecyclerView.adapter = adapter
+
+        binding.txtCountFollowing.setOnClickListener {
+            val action =
+                UserPageFragmentDirections.navigateToFollowFragment(
+                    userId = args.userId,
+                    position = 1,
+                )
+            navController.navigate(action)
+        }
+
+        binding.txtCountFollow.setOnClickListener {
+            val action =
+                UserPageFragmentDirections.navigateToFollowFragment(
+                    userId = args.userId,
+                    position = 0,
+                )
+            navController.navigate(action)
+        }
 
         lifecycleScope.launch {
             viewModel.handleEvent(UserPageEvent.GetUserReportList(args.userId))
