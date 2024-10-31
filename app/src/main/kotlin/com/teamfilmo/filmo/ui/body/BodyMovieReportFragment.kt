@@ -26,6 +26,7 @@ class BodyMovieReportFragment :
     BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
         FragmentBodyMovieReportBinding::inflate,
     ) {
+    private var isMyPost: Boolean = false
     private var movieName: String = ""
     override val viewModel: BodyMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
@@ -172,11 +173,7 @@ class BodyMovieReportFragment :
                 lifecycleScope.launch {
                     launch {
                         viewModel.isMyPost.collect {
-                            if (it) {
-                                binding.btnMeatBall.visibility = View.VISIBLE
-                            } else {
-                                binding.btnMeatBall.visibility = View.GONE
-                            }
+                            isMyPost = it
                         }
                     }
                     launch {
@@ -267,17 +264,33 @@ class BodyMovieReportFragment :
             .into(view as ImageView)
     }
 
+    // 본인 감상문인지 여부에 따라서 다르게 해야함
+
     private fun showMeatBallDialog() {
         val bottomSheet =
-            ModalBottomSheet.newInstance(
-                listOf("수정하기", "삭제하기", "취소"),
-            )
+            if (isMyPost) {
+                ModalBottomSheet.newInstance(
+                    listOf("수정하기", "삭제하기", "취소"),
+                )
+            } else {
+                ModalBottomSheet.newInstance(
+                    listOf("신고", "차단", "취소"),
+                )
+            }
 
         bottomSheet.show(parentFragmentManager, ModalBottomSheet.TAG)
         bottomSheet.setListener(
             object : OnButtonSelectedListener {
                 override fun onButtonSelected(text: String) {
                     when (text) {
+                        // Todo : 신고 차단 기능 추가 필요
+                        "신고" -> {
+                            Toast.makeText(context, "감상문을 신고합니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        "차단" -> {
+                            Toast.makeText(context, "감상문을 차단합니다.", Toast.LENGTH_SHORT).show()
+                        }
+
                         "수정하기" -> {
                             Toast.makeText(context, "감상문을 수정합니다.", Toast.LENGTH_SHORT).show()
                             val action =

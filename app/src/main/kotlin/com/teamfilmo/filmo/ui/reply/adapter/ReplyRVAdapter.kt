@@ -19,6 +19,7 @@ interface ReplyItemClick {
     )
 
     fun onMeatBallClick(
+        isMyReply: Boolean,
         position: Int,
     )
 

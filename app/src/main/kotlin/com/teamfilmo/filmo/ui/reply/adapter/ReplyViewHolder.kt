@@ -29,9 +29,6 @@ class ReplyViewHolder(
             btnReply.setOnClickListener {
                 itemClick?.onReplyClick(adapterPosition)
             }
-            btnMore.setOnClickListener {
-                itemClick?.onMeatBallClick(adapterPosition)
-            }
         }
         subReplyAdapter.subReplyItemClick =
             object : SubReplyItemClick {
@@ -90,12 +87,20 @@ class ReplyViewHolder(
         binding.userId.text = reply.nickname
         binding.txtTime.text = formatTimeDifference(reply.createDate)
 
-        // 본인 댓글이 아니라면 삭제 불가능하도록 하기
-        if (reply.isMyReply) {
-            binding.btnMore.visibility = View.VISIBLE
-        } else {
-            binding.btnMore.visibility = View.GONE
+        binding.btnMore.setOnClickListener {
+            if (reply.isMyReply) {
+                itemClick?.onMeatBallClick(true, adapterPosition)
+            } else {
+                itemClick?.onMeatBallClick(false, adapterPosition)
+            }
         }
+
+//        // 본인 댓글이 아니라면 삭제 불가능하도록 하기
+//        if (reply.isMyReply) {
+//            binding.btnMore.visibility = View.VISIBLE
+//        } else {
+//            binding.btnMore.visibility = View.GONE
+//        }
 
         if (reply.isLiked) {
             binding.btnLike.setImageResource(R.drawable.ic_like_selected)

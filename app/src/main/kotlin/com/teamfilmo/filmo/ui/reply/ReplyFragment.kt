@@ -23,6 +23,7 @@ import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment :
@@ -134,18 +135,33 @@ class ReplyFragment :
                     }
                 }
 
-                override fun onMeatBallClick(position: Int) {
+                // 본인이 작성한 댓글인지 아닌지에 따라서 미트볼 기능 분류
+                override fun onMeatBallClick(
+                    isMyReply: Boolean,
+                    position: Int,
+                ) {
                     val bottomSheet =
-                        ModalBottomSheet.newInstance(
-                            listOf("삭제하기", "취소"),
-                        )
-
+                        if (isMyReply) {
+                            ModalBottomSheet.newInstance(
+                                listOf("삭제하기", "취소"),
+                            )
+                        } else {
+                            ModalBottomSheet.newInstance(
+                                listOf("신고", "차단", "취소"),
+                            )
+                        }
                     bottomSheet.show(parentFragmentManager, ModalBottomSheet.TAG)
                     bottomSheet.setListener(
                         object : OnButtonSelectedListener {
                             override fun onButtonSelected(text: String) {
                                 val reply = adapter.replyList.get(position).replyId
                                 when (text) {
+                                    "신고" -> {
+                                        Timber.d("신고하기")
+                                    }
+                                    "차단" -> {
+                                        Timber.d("차단하기")
+                                    }
                                     "삭제하기" -> {
                                         showDeleteDialog(args.reportId, reply, position)
                                         bottomSheet.dismiss()
