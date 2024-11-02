@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.databinding.ReplyItemBinding
 import com.teamfilmo.filmo.ui.reply.diffutil.ReplyDiffCallBack
-import timber.log.Timber
 
 interface ReplyItemClick {
     fun onLikeClick(
@@ -36,7 +35,6 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
 
     fun setUserId(userId: String) {
         this.currentUserId = userId
-        Timber.d("어댑터에 currentUserId : $currentUserId")
     }
 
     /*

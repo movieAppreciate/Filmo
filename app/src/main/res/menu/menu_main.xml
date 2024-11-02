@@ -8,7 +8,7 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/writeActivity"
+        android:id="@+id/movieSelectFragment"
         android:enabled="true"
         android:icon="@drawable/ic_write"
         android:title="WriterReview" />

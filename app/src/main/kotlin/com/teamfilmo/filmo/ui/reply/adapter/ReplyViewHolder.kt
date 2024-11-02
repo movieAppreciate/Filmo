@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
-import timber.log.Timber
 
 class ReplyViewHolder(
     private val currenUserId: String,
@@ -110,8 +109,6 @@ class ReplyViewHolder(
         // 좋아요 수 반영
         binding.txtLikeCount.text = reply.likeCount.toString()
 
-        Timber.d("답글 :${reply.subReply}")
-
         val subReplyListWithRole =
             reply.subReply?.map {
                 SubReplyResponseWithRole(
@@ -123,6 +120,7 @@ class ReplyViewHolder(
                     reportId = it.reportId,
                     upReplyId = it.upReplyId,
                     userId = it.userId,
+                    // 내가 작성한 댓글인지 알기 위해서 감상문의 userId와 현재 로그인한 유저의 userId를 비교
                     isMySubReply = it.userId == currenUserId,
                 )
             }

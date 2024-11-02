@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_allMovieReportFragment_to_myPageFragment2"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_allMovieReportFragment_to_movieSelectFragment2"
+            app:destination="@id/movieSelectFragment" />
 
     </fragment>
 
@@ -196,6 +199,29 @@
             app:argType="string"
             app:nullable="true"/>
 
+    </fragment>
+    <fragment
+        android:id="@+id/movieSelectFragment"
+        android:name="com.teamfilmo.filmo.ui.write.select.MovieSelectFragment"
+        android:label="MovieSelectFragment" >
+        <action
+            android:id="@+id/navigateToWriteReport"
+            app:destination="@id/writeReportFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/writeReportFragment"
+        android:name="com.teamfilmo.filmo.ui.write.report.WriteReportFragment"
+        android:label="WriteReportFragment" >
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+        <argument
+            android:name="movieName"
+            app:argType="string" />
+        <action
+            android:id="@+id/navigateToThumbnail"
+            app:destination="@id/reportThumbnailFragment" />
     </fragment>
 
 

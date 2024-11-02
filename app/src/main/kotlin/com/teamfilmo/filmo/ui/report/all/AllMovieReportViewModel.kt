@@ -92,14 +92,14 @@ class AllMovieReportViewModel
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
-                //  is AllMovieReportEvent.GetMovieInfoList -> getUpcomingMovieList()
                 is AllMovieReportEvent.LoadReport -> {
                     getMovieReports()
                     getUpcomingMovieList()
                 }
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
-                // is AllMovieReportEvent.RefreshReport -> fetchNextReportList()
+                // 새로 고침
+                is AllMovieReportEvent.RefreshReport -> getMovieReports()
                 else -> {}
             }
         }

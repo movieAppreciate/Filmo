@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.follow
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.teamfilmo.filmo.base.fragment.BaseFragment
@@ -16,6 +17,7 @@ class FollowFragment :
     ) {
     private val args: FollowFragmentArgs by navArgs()
     override val viewModel: FollowViewModel by viewModels()
+    private val navController by lazy { findNavController() }
 
     override fun handleEffect(effect: FollowEffect) {
     }
@@ -23,6 +25,11 @@ class FollowFragment :
     override fun onBindLayout() {
         super.onBindLayout()
         val userId = args.userId
+
+        // 뒤로 가기
+        binding.btnBack.setOnClickListener {
+            navController.popBackStack()
+        }
 
         binding.followViewPager.adapter = userId?.let { FollowPagerAdapter(this, it) }
         binding.followViewPager.isUserInputEnabled = false

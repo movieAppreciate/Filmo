@@ -4,63 +4,63 @@
     android:id="@+id/nav_graph_write"
     app:startDestination="@id/movieSelectFragment">
 
-    <fragment
-        android:id="@+id/movieSelectFragment"
-        android:name="com.teamfilmo.filmo.ui.write.select.MovieSelectFragment"
-        android:label="MovieSelectFragment" >
-        <argument
-            android:name="movieName"
-            app:argType="string"/>
-        <argument
-            android:name="movieId"
-            app:argType="string"/>
-        <action
-            android:id="@+id/navigateToWriteReport"
-            app:destination="@id/writeReportFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/movieSelectFragment"-->
+<!--        android:name="com.teamfilmo.filmo.ui.write.select.MovieSelectFragment"-->
+<!--        android:label="MovieSelectFragment" >-->
+<!--        <argument-->
+<!--            android:name="movieName"-->
+<!--            app:argType="string"/>-->
+<!--        <argument-->
+<!--            android:name="movieId"-->
+<!--            app:argType="string"/>-->
+<!--        <action-->
+<!--            android:id="@+id/navigateToWriteReport"-->
+<!--            app:destination="@id/writeReportFragment" />-->
+<!--    </fragment>-->
 
 
 
-    <fragment
-        android:id="@+id/writeReportFragment"
-        android:name="com.teamfilmo.filmo.ui.write.report.WriteReportFragment"
-        android:label="WriteReportFragment" >
-        <action
-            android:id="@+id/navigateToThumbnail"
-            app:destination="@id/reportThumbnailFragment" />
-        <argument
-            android:name="movieName"
-            app:argType="string" />
-        <argument
-            android:name="movieId"
-            app:argType="string" />
-        <action
-            android:id="@+id/navigaToAllMovieReport"
-            app:destination="@id/allMovieReportFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/writeReportFragment"-->
+<!--        android:name="com.teamfilmo.filmo.ui.write.report.WriteReportFragment"-->
+<!--        android:label="WriteReportFragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/navigateToThumbnail"-->
+<!--            app:destination="@id/reportThumbnailFragment" />-->
+<!--        <argument-->
+<!--            android:name="movieName"-->
+<!--            app:argType="string" />-->
+<!--        <argument-->
+<!--            android:name="movieId"-->
+<!--            app:argType="string" />-->
+<!--        <action-->
+<!--            android:id="@+id/navigaToAllMovieReport"-->
+<!--            app:destination="@id/allMovieReportFragment" />-->
+<!--    </fragment>-->
 
-    <fragment
-        android:id="@+id/reportThumbnailFragment"
-        android:name="com.teamfilmo.filmo.ui.write.thumbnail.ReportThumbnailFragment"
-        android:label="ReportThumbnailFragment" >
-        <argument
-            android:name="movieId"
-            app:argType="string" />
-        <action
-            android:id="@+id/navigateToWriteReport"
-            app:destination="@id/writeReportFragment" >
-            <argument
-                android:name="posterUri" />
-        </action>
-        <argument
-            android:name="movieName"
-            app:argType="string" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/reportThumbnailFragment"-->
+<!--        android:name="com.teamfilmo.filmo.ui.write.thumbnail.ReportThumbnailFragment"-->
+<!--        android:label="ReportThumbnailFragment" >-->
+<!--        <argument-->
+<!--            android:name="movieId"-->
+<!--            app:argType="string" />-->
+<!--        <action-->
+<!--            android:id="@+id/navigateToWriteReport"-->
+<!--            app:destination="@id/writeReportFragment" >-->
+<!--            <argument-->
+<!--                android:name="posterUri" />-->
+<!--        </action>-->
+<!--        <argument-->
+<!--            android:name="movieName"-->
+<!--            app:argType="string" />-->
+<!--    </fragment>-->
 
 
-    <fragment
-        android:id="@+id/allMovieReportFragment"
-        android:name="com.teamfilmo.filmo.ui.report.all.AllMovieReportFragment"
-        android:label="AllMovieReportFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/allMovieReportFragment"-->
+<!--        android:name="com.teamfilmo.filmo.ui.report.all.AllMovieReportFragment"-->
+<!--        android:label="AllMovieReportFragment" />-->
 
 </navigation>
