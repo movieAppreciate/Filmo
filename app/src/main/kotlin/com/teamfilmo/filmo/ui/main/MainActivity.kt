@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -12,7 +13,6 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
-import com.teamfilmo.filmo.ui.write.WriteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -33,10 +33,6 @@ class MainActivity :
             }
         }
 
-    fun updateNavigationBar(selectedItemId: Int) {
-        binding.navBar.selectedItemId = selectedItemId
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val navHostFragment =
@@ -44,6 +40,16 @@ class MainActivity :
                 .findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
         navController = navHostFragment.navController
         binding.navBar.setupWithNavController(navController)
+
+        // 감상문 작성 과정에서 바텀바가 보이지 않도록 하기
+        navController.addOnDestinationChangedListener { _, desitnation, _ ->
+            binding.navBar.visibility =
+                if (desitnation.id == R.id.movieSelectFragment) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+        }
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -85,11 +91,14 @@ class MainActivity :
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.writeActivity -> {
+                R.id.movieSelectFragment -> {
                     Timber.d("감상문 작성 ")
-                    val intent = Intent(this, WriteActivity::class.java)
-                    Timber.d("감상문 작성 클릭")
-                    startActivity(intent)
+                    if (navController.currentDestination?.id != R.id.movieSelectFragment) {
+                        navController.navigate(R.id.movieSelectFragment)
+                    }
+//                    val intent = Intent(this, WriteActivity::class.java)
+//                    Timber.d("감상문 작성 클릭")
+//                    startActivity(intent)
                     return@setOnItemSelectedListener true
                 }
                 else -> {

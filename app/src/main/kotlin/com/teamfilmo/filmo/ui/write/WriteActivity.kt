@@ -11,9 +11,10 @@ import com.teamfilmo.filmo.databinding.ActivityWriteBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel, WriteEffect, WriteEvent>(
-    ActivityWriteBinding::inflate,
-) {
+class WriteActivity :
+    BaseActivity<ActivityWriteBinding, WriteViewModel, WriteEffect, WriteEvent>(
+        ActivityWriteBinding::inflate,
+    ) {
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {

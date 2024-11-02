@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -36,64 +35,56 @@ class BodyMovieReportFragment :
 
     override fun onBindLayout() {
         super.onBindLayout()
-        binding.btnBack.setOnClickListener { navController.popBackStack() }
-        /*
-        유저 이름 클릭 시 감상문을  작성한 유저의 페이지로 이동
-         */
-        binding.txtUserName.setOnClickListener {
-            val userId = viewModel.getReportResponse.value.userId
-            val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
-            navController.navigate(action)
-        }
-
-        binding.movieDetail.btnBack.visibility = View.GONE
-        /*
-         팔로잉 버튼 클릭 시
-         */
-        binding.btnUserFollow.setOnClickListener {
-            viewModel.handleEvent(BodyMovieReportEvent.ClickFollow)
-        }
-
-        /*
-        미트볼 버튼 클릭 시
-         */
-        binding.btnMeatBall.setOnClickListener {
-            showMeatBallDialog()
-        }
-
-        with(binding.movieDetail) {
-            readMore.setOnClickListener {
-                readMore.visibility = View.GONE
-                viewModel.handleEvent(BodyMovieReportEvent.ClickMoreButton)
-                txtSummary.maxLines = 100
-            }
-        }
 
         viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
 
-        binding.btnReply.setOnClickListener {
-            navigateToReply(args.reportId)
+        binding.apply {
+            // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
+            btnBack.setOnClickListener { navController.popBackStack() }
+
+            /*
+       유저 이름 클릭 시 감상문을  작성한 유저의 페이지로 이동
+             */
+            txtUserName.setOnClickListener {
+                val userId = viewModel.getReportResponse.value.userId
+                val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
+                navController.navigate(action)
+            }
+            movieDetail.btnBack.visibility = View.GONE
+            /*
+      팔로잉 버튼 클릭 시
+             */
+            btnUserFollow.setOnClickListener {
+                viewModel.handleEvent(BodyMovieReportEvent.ClickFollow)
+            }
+            /*
+       미트볼 버튼 클릭 시
+             */
+            btnMeatBall.setOnClickListener {
+                showMeatBallDialog()
+            }
+            movieDetail.apply {
+                readMore.setOnClickListener {
+                    readMore.visibility = View.GONE
+                    viewModel.handleEvent(BodyMovieReportEvent.ClickMoreButton)
+                    txtSummary.maxLines = 100
+                }
+            }
+            btnReply.setOnClickListener { navigateToReply(args.reportId) }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.getReportResponse.collect {
-                    binding.tvMovieTitle.text = it.movieId.toString()
-                    binding.tvReportTitle.text = it.title
-                    binding.reportListView.text = it.content
-                    binding.tvLikeCount.text = it.likeCount.toString()
-                    binding.tvReplyCount.text =
-                        if (it.replyCount > 100) {
-                            (
-                                {
-                                    binding.tvReplyCount.text = "100+"
-                                }
-                            ).toString()
-                        } else {
-                            it.replyCount.toString()
-                        }
-                    getImage(it.imageUrl.toString(), binding.movieImage)
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
+                    binding.apply {
+                        tvMovieTitle.text = movieName
+                        tvReportTitle.text = it.title
+                        reportListView.text = it.content
+                        tvLikeCount.text = it.likeCount.toString()
+                        tvReplyCount.text = if (it.replyCount > 100) "100+" else it.replyCount.toString()
+                    }
+                    getImage(it.imageUrl.toString(), binding.movieImage)
                 }
             }
         }
@@ -132,7 +123,7 @@ class BodyMovieReportFragment :
     }
 
     // 신고  다이얼로그
-    fun showComplaintDialog() {
+    private fun showComplaintDialog() {
         val dialog =
             context?.let {
                 CustomDialog(
@@ -153,7 +144,7 @@ class BodyMovieReportFragment :
     }
 
     // 차단  다이얼로그
-    fun showBlockDialog() {
+    private fun showBlockDialog() {
         val dialog =
             context?.let {
                 CustomDialog(
@@ -192,21 +183,6 @@ class BodyMovieReportFragment :
                 }
             },
         )
-    }
-
-    // 감상문 삭제 다이얼로그
-    private fun showReportDeleteDialog() {
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        dialogBuilder.setTitle("감상문 삭제")
-        dialogBuilder.setMessage("감상문을 삭제하시겠습니까?")
-        dialogBuilder.setPositiveButton("네!") { _, _ ->
-        }
-        dialogBuilder.setNegativeButton("아니요!") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
     }
 
     override fun handleEffect(effect: BodyMovieReportEffect) {

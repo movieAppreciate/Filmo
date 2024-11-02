@@ -69,6 +69,8 @@ class AllMovieReportFragment :
 
     override fun onBindLayout() {
         binding.layoutShimmer.startShimmer()
+
+        // todo : 뒤로 가기 시 앱 종료 확인 로직 추가
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingData.collectLatest {
                 binding.layoutShimmer.stopShimmer()
@@ -114,6 +116,7 @@ class AllMovieReportFragment :
             with(binding) {
                 allMovieReportRecyclerview.adapter = allMovieReportAdapter
                 movieRecyclerview.adapter = movieInfoAdapter
+                // 새로고침
                 swiperefresh.setOnRefreshListener {
                     viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
                     swiperefresh.isRefreshing = false

@@ -99,6 +99,7 @@ class MovieSelectFragment :
             }
         }
 
+        // 여기서 뒤로 가기를 하면 allmoviereportfragment가 새로굄된다.
         binding.btnBack.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
