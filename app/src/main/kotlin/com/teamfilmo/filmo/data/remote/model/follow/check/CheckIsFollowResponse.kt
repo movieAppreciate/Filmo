@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckIsFollowResponse(
-    val isFollowing: Boolean,
-//    val followId : String
+    val isFollowing: Boolean = false,
+    val followId: String = "",
 )

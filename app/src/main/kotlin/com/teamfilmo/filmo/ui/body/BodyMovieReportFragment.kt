@@ -78,6 +78,7 @@ class BodyMovieReportFragment :
                 viewModel.getReportResponse.collect {
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     binding.apply {
+                        txtUserName.text = "뚱"
                         tvMovieTitle.text = movieName
                         tvReportTitle.text = it.title
                         reportListView.text = it.content
@@ -85,6 +86,26 @@ class BodyMovieReportFragment :
                         tvReplyCount.text = if (it.replyCount > 100) "100+" else it.replyCount.toString()
                     }
                     getImage(it.imageUrl.toString(), binding.movieImage)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.checkIsFollowResponse.collect {
+                    binding.btnUserFollow.isSelected = it.isFollowing
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isMyPost.collect {
+                    if (it) {
+                        binding.btnUserFollow.visibility = View.GONE
+                    } else {
+                        binding.btnUserFollow.visibility = View.VISIBLE
+                    }
                 }
             }
         }
