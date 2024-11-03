@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.repository
 
 import com.teamfilmo.filmo.data.remote.model.follow.FollowerListResponse
 import com.teamfilmo.filmo.data.remote.model.follow.FollowingListResponse
+import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.source.FollowDataSource
@@ -25,7 +26,7 @@ class FollowRepositoryImpl
             keyword: String?,
         ): Result<FollowingListResponse> = followDataSource.getFollowingList(userId, lastUserId, keyword)
 
-        override suspend fun checkIsFollow(targetId: String): Result<Boolean> = followDataSource.checkIsFollow(targetId)
+        override suspend fun checkIsFollow(targetId: String): Result<CheckIsFollowResponse> = followDataSource.checkIsFollow(targetId)
 
         override suspend fun cancelFollow(followId: String): Result<Unit> = followDataSource.cancelFollow(followId)
 
