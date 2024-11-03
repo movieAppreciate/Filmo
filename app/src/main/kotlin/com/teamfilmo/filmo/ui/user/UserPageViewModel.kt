@@ -2,7 +2,6 @@ package com.teamfilmo.filmo.ui.user
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.data.remote.model.report.MyPageReportItem
@@ -66,8 +65,8 @@ class UserPageViewModel
     /*
     팔로우 여부 확인
      */
-        private val _checkIsFollowResponse = MutableStateFlow(CheckIsFollowResponse())
-        val checkIsFollowResponse: StateFlow<CheckIsFollowResponse> = _checkIsFollowResponse
+        private val _checkIsFollowResponse = MutableStateFlow(false)
+        val checkIsFollowResponse: StateFlow<Boolean> = _checkIsFollowResponse
 
     /*
     현재 로그인한 유저 정보
@@ -131,8 +130,7 @@ class UserPageViewModel
             viewModelScope.launch {
                 saveFollowUseCase(_userInfo.value.userId).collect {
                     _followInfo.value = it
-                    val updatedFollowResponse = _checkIsFollowResponse.value.copy(isFollowing = true)
-                    _checkIsFollowResponse.value = updatedFollowResponse
+                    _checkIsFollowResponse.value = true
                     sendEffect(UserPageEffect.SaveFollow)
                 }
             }
@@ -143,9 +141,8 @@ class UserPageViewModel
      */
         private fun cancelFollow() {
             viewModelScope.launch {
-                cancelFollowUseCase(_checkIsFollowResponse.value.followId).collect {
-                    val updatedFollowResponse = _checkIsFollowResponse.value.copy(isFollowing = false)
-                    _checkIsFollowResponse.value = updatedFollowResponse
+                cancelFollowUseCase(_followInfo.value.followId).collect {
+                    _checkIsFollowResponse.value = false
                     sendEffect(UserPageEffect.CancelFollow)
                 }
             }
@@ -155,7 +152,7 @@ class UserPageViewModel
      팔로우 토글
      */
         private fun toggleFollow() {
-            if (_checkIsFollowResponse.value.isFollowing) {
+            if (_checkIsFollowResponse.value) {
                 cancelFollow()
             } else {
                 saveFollow()
@@ -172,7 +169,7 @@ class UserPageViewModel
                     if (it != null) {
                         _checkIsFollowResponse.value = it
                         Timber.d("팔로우 여부 확인 : $it")
-                        if (it.isFollowing) {
+                        if (it) {
                             sendEffect(UserPageEffect.IsFollow)
                         } else {
                             sendEffect(UserPageEffect.IsNotFollow)
@@ -224,11 +221,13 @@ class UserPageViewModel
             }
         }
 
-        private fun getFollowCount(otherUserId: String) {
+        fun getFollowCount(otherUserId: String) {
             viewModelScope.launch {
                 countFollowUseCase(otherUserId = otherUserId).collect {
                     if (it != null) {
                         _followingCount.value = it.countFollowing
+                    }
+                    if (it != null) {
                         _followerCount.value = it.countFollower
                     }
                 }

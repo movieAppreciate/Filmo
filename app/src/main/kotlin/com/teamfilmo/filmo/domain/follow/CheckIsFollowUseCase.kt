@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.domain.follow
 
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.domain.repository.FollowRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +12,7 @@ class CheckIsFollowUseCase
     constructor(
         private val followRepository: FollowRepository,
     ) {
-        operator fun invoke(targetId: String): Flow<CheckIsFollowResponse?> =
+        operator fun invoke(targetId: String): Flow<Boolean?> =
             flow {
                 val result = followRepository.checkIsFollow(targetId)
                 result.onFailure {

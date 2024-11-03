@@ -2,7 +2,6 @@ package com.teamfilmo.filmo.data.source
 
 import com.teamfilmo.filmo.data.remote.model.follow.FollowerListResponse
 import com.teamfilmo.filmo.data.remote.model.follow.FollowingListResponse
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 
@@ -21,7 +20,7 @@ interface FollowDataSource {
 
     suspend fun checkIsFollow(
         targetId: String,
-    ): Result<CheckIsFollowResponse>
+    ): Result<Boolean>
 
     suspend fun cancelFollow(
         followId: String,
