@@ -20,6 +20,8 @@
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_back_white"
         app:layout_constraintStart_toStartOf="parent"

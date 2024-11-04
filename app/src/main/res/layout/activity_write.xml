@@ -6,7 +6,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph_write"
         android:id="@+id/report_fragment_container_view"
         android:layout_width="match_parent"
         app:defaultNavHost = "true"
