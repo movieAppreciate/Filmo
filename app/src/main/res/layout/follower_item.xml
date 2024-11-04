@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -27,15 +28,14 @@
         app:layout_constraintTop_toTopOf="@+id/image_user" />
 
     <Button
-        style="@style/Widget.Material3.Button.TextButton"
         android:id="@+id/btn_follow"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="팔로우"
         android:textColor="@color/primary60"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp"
         app:layout_constraintTop_toTopOf="parent" />
 
 
