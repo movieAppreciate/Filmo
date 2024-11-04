@@ -10,12 +10,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 class FollowingViewModel
@@ -27,16 +27,58 @@ class FollowingViewModel
         private val _followingList = MutableStateFlow<List<MutualFollowUserInfo>>(emptyList())
         val followingList: StateFlow<List<MutualFollowUserInfo>> = _followingList
 
+        // 1. map 으로 순차적으로 처리하기
         fun getFollowingList(userId: String) {
             viewModelScope.launch {
                 getFollowingListUseCase(userId)
-                    .flatMapLatest { followingResponse ->
-                        // followingResponse가 null이 아니고 followingUserInfoList가 있는 경우에만 처리
+                    .map { followingResponse ->
+                        println("1. 팔로잉 응답 처리 시작")
+
                         val userList = followingResponse?.followingUserInfoList ?: emptyList()
-                        // 각 유저의 팔로우 상태를 확인하는 Flow 리스트 생성
+
+                        // 순차적으로 각 사용자의 팔로우 상태 확인
+                        userList.map { user ->
+                            println("2. 사용자 ${user.userId} 팔로우 상태 확인 시작")
+                            val followResponse = checkIsFollowUseCase(user.userId ?: "").first()
+                            println("3. 사용자 ${user.userId} 팔로우 상태 확인 완료")
+                            MutualFollowUserInfo(
+                                email = user.email,
+                                userId = user.userId,
+                                type = user.type,
+                                nickname = user.nickname,
+                                profileUrl = user.profileUrl,
+                                lastLoginDate = user.lastLoginDate,
+                                introduction = user.introduction,
+                                roles = user.roles,
+                                createDate = user.createDate,
+                                lastModifiedDate = user.lastModifiedDate,
+                                isFollowing = followResponse?.isFollowing,
+                            )
+                        }
+                    }.catch {
+                        Timber.e("failed to get following list with followingState")
+                    }.collect {
+                        _followingList.value = it
+                    }
+            }
+        }
+
+        // 2 . 병렬 처리(map & combine 사용)
+        fun getFollowingListParallel(userId: String) {
+            viewModelScope.launch {
+                getFollowingListUseCase(userId)
+                    .map { followingResponse ->
+                        println("1. 팔로잉 응답 처리 시작")
+                        // null 체크 후 리스트 가져오기
+                        val userList = followingResponse?.followingUserInfoList ?: emptyList()
+
+                        // 각 사용자별로 Flow 생성
                         val followStatusFlows =
                             userList.map { user ->
+                                println("2. 사용자 ${user.userId} 팔로우 상태 확인 시작")
+                                // 각 사용자의 팔로우 상태를 확인하는 Flow 생성
                                 checkIsFollowUseCase(user.userId ?: "").map { followResponse ->
+                                    println("3. 사용자 ${user.userId} 팔로우 상태 확인 완료")
                                     MutualFollowUserInfo(
                                         email = user.email,
                                         userId = user.userId,
@@ -53,29 +95,20 @@ class FollowingViewModel
                                 }
                             }
 
-                        // Flow 리스트를 단일 Flow<List>로 결합
+                        // Flow 리스트가 비어있는 경우 처리
                         if (followStatusFlows.isEmpty()) {
                             flow { emit(emptyList()) }
                         } else {
-                            combine(followStatusFlows) { it.toList() }
+                            // combine을 사용해 모든 Flow를 병렬로 처리
+                            println("4. 팔로잉 리스트 병렬 처리 시작")
+                            combine(followStatusFlows) { userInfoArray ->
+                                println("5. 팔로잉 리스트 병렬 처리 완료")
+                                userInfoArray.toList()
+                            }
                         }
-                    }.catch { throwable ->
-                        // 에러 처리
-                        // _error.value = throwable.message
-                    }.collect { mutualFollowList ->
-                        _followingList.value = mutualFollowList
+                    }.collect {
+                        _followingList.value = it.first()
                     }
             }
         }
     }
-
-//        // 팔로잉 리스트
-//        fun getFollowingList(userId: String) {
-//            viewModelScope.launch {
-//                getFollowingListUseCase(userId).collect {
-//                    if (it != null) {
-//                        _followingList.value = it.followingUserInfoList
-//                    }
-//                }
-//            }
-//        }

@@ -8,7 +8,6 @@ import com.teamfilmo.filmo.databinding.FragmentFollowingBinding
 import com.teamfilmo.filmo.ui.follow.adapter.FollowingRVAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class FollowingFragment :
@@ -25,7 +24,6 @@ class FollowingFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 if (userId != null) {
-                    Timber.d("following list 얻어오기 ")
                     viewModel.getFollowingList(userId)
                 }
             }

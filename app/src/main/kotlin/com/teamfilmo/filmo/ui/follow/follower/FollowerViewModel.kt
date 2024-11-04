@@ -9,10 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -26,47 +23,31 @@ class FollowerViewModel
         private val _mutualFollowerList = MutableStateFlow<List<MutualFollowUserInfo>>(emptyList())
         val mutualFollowerList: StateFlow<List<MutualFollowUserInfo>> = _mutualFollowerList
 
-    /*
-팔로우 리스트
- 구현 : zip 연산자 사용
-     */
         fun getFollowerList(userId: String) {
             viewModelScope.launch {
                 getFollowerListUseCase(userId)
-                    .flatMapLatest { followerResponse ->
-                        // followingResponse가 null이 아니고 followingUserInfoList가 있는 경우에만 처리
-                        val userList = followerResponse.followerUserInfoList ?: emptyList()
-                        // 각 유저의 팔로우 상태를 확인하는 Flow 리스트 생성
-                        val followStatusFlows =
-                            userList.map { user ->
-                                checkIsFollowUseCase(user.userId ?: "").map { followResponse ->
+                    .map {
+                        it.followerUserInfoList
+                            .map { userInfo ->
+                                userInfo.userId?.let { it1 ->
+                                    val isFollowing = checkIsFollowUseCase(it1).first()?.isFollowing ?: false
                                     MutualFollowUserInfo(
-                                        email = user.email,
-                                        userId = user.userId,
-                                        type = user.type,
-                                        nickname = user.nickname,
-                                        profileUrl = user.profileUrl,
-                                        lastLoginDate = user.lastLoginDate,
-                                        introduction = user.introduction,
-                                        roles = user.roles,
-                                        createDate = user.createDate,
-                                        lastModifiedDate = user.lastModifiedDate,
-                                        isFollowing = followResponse?.isFollowing,
+                                        email = userInfo.email,
+                                        userId = userInfo.userId,
+                                        type = userInfo.type,
+                                        nickname = userInfo.nickname,
+                                        profileUrl = userInfo.profileUrl,
+                                        lastLoginDate = userInfo.lastLoginDate,
+                                        introduction = userInfo.introduction,
+                                        roles = userInfo.roles,
+                                        createDate = userInfo.createDate,
+                                        lastModifiedDate = userInfo.lastModifiedDate,
+                                        isFollowing = isFollowing,
                                     )
-                                }
+                                } ?: MutualFollowUserInfo()
                             }
-
-                        // Flow 리스트를 단일 Flow<List>로 결합
-                        if (followStatusFlows.isEmpty()) {
-                            flow { emit(emptyList()) }
-                        } else {
-                            combine(followStatusFlows) { it.toList() }
-                        }
-                    }.catch { throwable ->
-                        // 에러 처리
-                        // _error.value = throwable.message
-                    }.collect { mutualFollowList ->
-                        _mutualFollowerList.value = mutualFollowList
+                    }.collect {
+                        _mutualFollowerList.value = it
                     }
             }
         }

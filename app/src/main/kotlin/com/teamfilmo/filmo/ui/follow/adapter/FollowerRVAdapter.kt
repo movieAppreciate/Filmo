@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.databinding.FollowerItemBinding
 import com.teamfilmo.filmo.ui.follow.adapter.FollowerRVAdapter.FollowerViewHolder
+import timber.log.Timber
 
 // 나를 팔로잉 , 나는 팔로잉 x
 
 class FollowerRVAdapter : RecyclerView.Adapter<FollowerViewHolder>() {
     private val followers = ArrayList<MutualFollowUserInfo>()
     private lateinit var followerItemBinding: FollowerItemBinding
-    private var viewType: Int = 0
 
     inner class FollowerViewHolder(
         val binding: FollowerItemBinding,
@@ -29,13 +29,11 @@ class FollowerRVAdapter : RecyclerView.Adapter<FollowerViewHolder>() {
         }
     }
 
-    fun setViewType(viewType: Int) {
-        this.viewType = viewType
-    }
-
     fun setFollowers(newFollowers: List<MutualFollowUserInfo>) {
         this.followers.clear()
         this.followers.addAll(newFollowers)
+
+        Timber.d("전달된 팔로워 리스트 :$newFollowers")
         notifyDataSetChanged()
     }
 
