@@ -28,6 +28,7 @@
 
     <Button
         style="@style/Widget.Material3.Button.TextButton"
+        android:id="@+id/btn_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="팔로우"

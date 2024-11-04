@@ -159,7 +159,7 @@
             android:id="@+id/navigateToSettingFromMyPage"
             app:destination="@id/settingFragment" />
         <action
-            android:id="@+id/action_myPageFragment_to_followFragment"
+            android:id="@+id/navigateToFollowFragment"
             app:destination="@id/followFragment" />
     </fragment>
     <fragment
@@ -179,6 +179,10 @@
             android:name="position"
             app:argType="integer"
             android:defaultValue="0"/>
+        <argument
+            android:name="isMyPage"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/followerFragment"

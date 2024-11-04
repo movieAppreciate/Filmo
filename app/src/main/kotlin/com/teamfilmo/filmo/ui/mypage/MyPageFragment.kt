@@ -20,6 +20,25 @@ class MyPageFragment :
         binding.btnBack.setOnClickListener {
             navController.popBackStack()
         }
+
+        binding.txtCountFollow.setOnClickListener {
+            val action =
+                MyPageFragmentDirections.navigateToFollowFragment(
+                    position = 0,
+                    userId = viewModel.userInfo.value.userId,
+                    isMyPage = true,
+                )
+            navController.navigate(action)
+        }
+
+        binding.txtCountFollowing.setOnClickListener {
+            val action =
+                MyPageFragmentDirections.navigateToFollowFragment(
+                    position = 1,
+                    userId = viewModel.userInfo.value.userId,
+                )
+            navController.navigate(action)
+        }
         viewModel.followInfo.value.apply {
             binding.txtCountFollow.text = this.countFollower.toString()
             binding.txtCountFollowing.text = this.countFollowing.toString()
