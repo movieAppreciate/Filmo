@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.user
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,7 +12,6 @@ import com.teamfilmo.filmo.databinding.FragmentUserPageBinding
 import com.teamfilmo.filmo.ui.user.adapter.UserPageAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class UserPageFragment :
@@ -24,44 +24,50 @@ class UserPageFragment :
 
     override fun onBindLayout() {
         val args: UserPageFragmentArgs by navArgs()
-        binding.myReportRecyclerView.adapter = adapter
+        with(binding) {
+            myReportRecyclerView.adapter = adapter
 
-        binding.txtCountFollowing.setOnClickListener {
-            val action =
-                UserPageFragmentDirections.navigateToFollowFragment(
-                    userId = args.userId,
-                    position = 1,
-                )
-            navController.navigate(action)
-        }
+            btnBack.setOnClickListener {
+                navController.popBackStack()
+            }
 
-        binding.txtCountFollow.setOnClickListener {
-            val action =
-                UserPageFragmentDirections.navigateToFollowFragment(
-                    userId = args.userId,
-                    position = 0,
-                )
-            navController.navigate(action)
-        }
+            btnFollow.setOnClickListener {
+                viewModel.handleEvent(UserPageEvent.ClickFollow)
+            }
 
-        lifecycleScope.launch {
-            viewModel.handleEvent(UserPageEvent.GetUserReportList(args.userId))
-            viewModel.checkIsFollow(args.userId)
-        }
+            txtCountFollowing.setOnClickListener {
+                val action =
+                    UserPageFragmentDirections.navigateToFollowFragment(
+                        userId = args.userId,
+                        position = 1,
+                    )
+                navController.navigate(action)
+            }
 
-        binding.btnFollow.setOnClickListener {
-            viewModel.handleEvent(UserPageEvent.ClickFollow)
+            txtCountFollow.setOnClickListener {
+                val action =
+                    UserPageFragmentDirections.navigateToFollowFragment(
+                        userId = args.userId,
+                        position = 0,
+                    )
+                navController.navigate(action)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.handleEvent(UserPageEvent.GetUserReportList(args.userId))
+            viewModel.checkIsFollow(args.userId)
+
             launch {
                 viewModel.userInfo.collect {
                     binding.txtUserName.text = it.nickname
+                    if (it.userId == args.userId) {
+                        binding.btnFollow.visibility = View.GONE
+                    }
                 }
             }
             launch {
                 viewModel.userReportList.collect {
-                    Timber.d("사용자 게시글 : $it")
                     adapter.setMyReportList(it)
                 }
             }

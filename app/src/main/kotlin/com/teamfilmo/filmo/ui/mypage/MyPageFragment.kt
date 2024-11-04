@@ -17,15 +17,36 @@ class MyPageFragment :
 
     override fun onBindLayout() {
         super.onBindLayout()
-        binding.btnBack.setOnClickListener {
-            navController.popBackStack()
+        with(binding) {
+            btnSetting.setOnClickListener {
+                navController.navigate(R.id.settingFragment)
+            }
+
+            btnBack.setOnClickListener {
+                navController.popBackStack()
+            }
+
+            txtCountFollow.setOnClickListener {
+                val action =
+                    MyPageFragmentDirections.navigateToFollowFragment(
+                        position = 0,
+                        userId = viewModel.userInfo.value.userId,
+                    )
+                navController.navigate(action)
+            }
+
+            txtCountFollowing.setOnClickListener {
+                val action =
+                    MyPageFragmentDirections.navigateToFollowFragment(
+                        position = 1,
+                        userId = viewModel.userInfo.value.userId,
+                    )
+                navController.navigate(action)
+            }
         }
         viewModel.followInfo.value.apply {
             binding.txtCountFollow.text = this.countFollower.toString()
             binding.txtCountFollowing.text = this.countFollowing.toString()
-        }
-        binding.btnSetting.setOnClickListener {
-            navController.navigate(R.id.settingFragment)
         }
     }
 }

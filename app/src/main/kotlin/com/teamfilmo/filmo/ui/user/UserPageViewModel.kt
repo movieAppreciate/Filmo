@@ -125,7 +125,13 @@ class UserPageViewModel
         val userReportList: StateFlow<List<MyPageReportItem>> = _userReportList
 
     /*
- 팔로우 등록
+    todo : 내가  유저의 팔로워 중 팔로우 하는 사람이 있는지 구현 필요
+     */
+        private fun checkMutualFollowers() {
+        }
+
+    /*
+ 내가 사용자를 팔로우 등록(팔로워 증가해야함)
      */
         private fun saveFollow() {
             viewModelScope.launch {
@@ -133,19 +139,21 @@ class UserPageViewModel
                     _followInfo.value = it
                     val updatedFollowResponse = _checkIsFollowResponse.value.copy(isFollowing = true)
                     _checkIsFollowResponse.value = updatedFollowResponse
+                    _followerCount.value += 1
                     sendEffect(UserPageEffect.SaveFollow)
                 }
             }
         }
 
     /*
-  팔로우 취소
+  내가 사용자를 팔로우 취소( 팔로워 감소해야함)
      */
         private fun cancelFollow() {
             viewModelScope.launch {
                 cancelFollowUseCase(_checkIsFollowResponse.value.followId).collect {
                     val updatedFollowResponse = _checkIsFollowResponse.value.copy(isFollowing = false)
                     _checkIsFollowResponse.value = updatedFollowResponse
+                    _followerCount.value -= 1
                     sendEffect(UserPageEffect.CancelFollow)
                 }
             }

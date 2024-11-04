@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentFollowerBinding
-import com.teamfilmo.filmo.ui.follow.adapter.FollowRVAdapter
+import com.teamfilmo.filmo.ui.follow.adapter.FollowerRVAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -14,7 +14,7 @@ class FollowerFragment :
     BaseFragment<FragmentFollowerBinding, FollowerViewModel, FollowerEffect, FollowerEvent>(
         FragmentFollowerBinding::inflate,
     ) {
-    private val adapter = FollowRVAdapter()
+    private val adapter = FollowerRVAdapter()
     override val viewModel: FollowerViewModel by viewModels()
 
     override fun onBindLayout() {
@@ -28,8 +28,7 @@ class FollowerFragment :
                 }
             }
             launch {
-                viewModel.followerList.collect {
-                    adapter.setViewType(0)
+                viewModel.mutualFollowerList.collect {
                     adapter.setFollowers(it)
                 }
             }
