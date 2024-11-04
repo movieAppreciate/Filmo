@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.user
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +61,9 @@ class UserPageFragment :
             launch {
                 viewModel.userInfo.collect {
                     binding.txtUserName.text = it.nickname
+                    if (it.userId == args.userId) {
+                        binding.btnFollow.visibility = View.GONE
+                    }
                 }
             }
             launch {
