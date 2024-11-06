@@ -7,6 +7,7 @@ import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentFollowingBinding
 import com.teamfilmo.filmo.ui.follow.adapter.FollowingRVAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,8 +30,8 @@ class FollowingFragment :
             }
 
             launch {
-                viewModel.followingList.collect {
-                    adapter.setFollowers(it)
+                viewModel.pagingFollowingData.collectLatest {
+                    adapter.submitData(it)
                 }
             }
         }

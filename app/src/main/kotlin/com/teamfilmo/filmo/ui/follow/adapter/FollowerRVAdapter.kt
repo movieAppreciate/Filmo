@@ -3,17 +3,34 @@ package com.teamfilmo.filmo.ui.follow.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.databinding.FollowerItemBinding
 import com.teamfilmo.filmo.ui.follow.adapter.FollowerRVAdapter.FollowerViewHolder
-import timber.log.Timber
 
 // 나를 팔로잉 , 나는 팔로잉 x
 
-class FollowerRVAdapter : RecyclerView.Adapter<FollowerViewHolder>() {
-    private val followers = ArrayList<MutualFollowUserInfo>()
+class FollowerRVAdapter : PagingDataAdapter<MutualFollowUserInfo, FollowerViewHolder>(DIFF_CALLBACK) {
     private lateinit var followerItemBinding: FollowerItemBinding
+
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<MutualFollowUserInfo>() {
+                override fun areItemsTheSame(
+                    oldItem: MutualFollowUserInfo,
+                    newItem: MutualFollowUserInfo,
+                ): Boolean =
+                    oldItem.userId == newItem.userId
+
+                override fun areContentsTheSame(
+                    oldItem: MutualFollowUserInfo,
+                    newItem: MutualFollowUserInfo,
+                ): Boolean =
+                    oldItem == newItem
+            }
+    }
 
     inner class FollowerViewHolder(
         val binding: FollowerItemBinding,
@@ -29,14 +46,6 @@ class FollowerRVAdapter : RecyclerView.Adapter<FollowerViewHolder>() {
         }
     }
 
-    fun setFollowers(newFollowers: List<MutualFollowUserInfo>) {
-        this.followers.clear()
-        this.followers.addAll(newFollowers)
-
-        Timber.d("전달된 팔로워 리스트 :$newFollowers")
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -45,12 +54,10 @@ class FollowerRVAdapter : RecyclerView.Adapter<FollowerViewHolder>() {
         return FollowerViewHolder(followerItemBinding)
     }
 
-    override fun getItemCount(): Int = followers.size
-
     override fun onBindViewHolder(
         holder: FollowerViewHolder,
         position: Int,
     ) {
-        holder.bind(followers[position])
+        getItem(position)?.let { holder.bind(it) }
     }
 }
