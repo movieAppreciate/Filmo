@@ -62,11 +62,11 @@ class ReplyFragment :
                 }
             },
         )
+        dialog?.show(activity?.supportFragmentManager!!, "BlockDialog")
     }
 
     // 신고 다이얼로그
     fun showComplaintDialog(
-        reportId: String,
         replyId: String,
         position: Int,
     ) {
@@ -81,10 +81,11 @@ class ReplyFragment :
         dialog?.setItemClickListener(
             object : ItemClickListener {
                 override fun onClick() {
-                    Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+                    viewModel.handleEvent(ReplyEvent.SaveComplaint(replyId))
                 }
             },
         )
+        dialog?.show(activity?.supportFragmentManager!!, "ConstraintDialog")
     }
 
     fun showDeleteDialog(
@@ -207,10 +208,10 @@ class ReplyFragment :
                     bottomSheet.setListener(
                         object : OnButtonSelectedListener {
                             override fun onButtonSelected(text: String) {
-                                val reply = adapter.replyList.get(position).replyId
+                                val reply = adapter.replyList[position].replyId
                                 when (text) {
                                     "신고" -> {
-                                        showComplaintDialog(args.reportId, reply, position)
+                                        showComplaintDialog(reply, position)
                                         bottomSheet.dismiss()
                                     }
                                     "차단" -> {
@@ -279,6 +280,14 @@ class ReplyFragment :
         }
 
         lifecycleScope.launch {
+            /*
+            댓글 신고
+             */
+            launch {
+                viewModel.saveReplyComplaintResponse.collect {
+                    Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+                }
+            }
             /*
          전체 댓글 가져오기
              */

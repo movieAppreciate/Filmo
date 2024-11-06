@@ -13,7 +13,7 @@
         android:layout_height="50sp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ic_duck"
+        android:src="@drawable/profile_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearance="@style/Circle50" />
