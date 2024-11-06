@@ -20,6 +20,7 @@ import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,7 +39,7 @@ class BodyMovieReportFragment :
 
         viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
 
-        binding.apply {
+        with(binding) {
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener { navController.popBackStack() }
 
@@ -74,7 +75,17 @@ class BodyMovieReportFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
+                viewModel.registComplaintResponse.collectLatest {
+                    if (it == "success") {
+                        Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
+                        navController.navigate(R.id.allMovieReportFragment)
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
                 viewModel.getReportResponse.collect {
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     binding.apply {
@@ -88,18 +99,12 @@ class BodyMovieReportFragment :
                     getImage(it.imageUrl.toString(), binding.movieImage)
                 }
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
                 viewModel.checkIsFollowResponse.collect {
                     binding.btnUserFollow.isSelected = it.isFollowing
                 }
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
                 viewModel.isMyPost.collect {
                     if (it) {
                         binding.btnUserFollow.visibility = View.GONE
@@ -152,13 +157,13 @@ class BodyMovieReportFragment :
                     dialogMessage = "감상문을 신고할까요?",
                 )
             }
-
+        dialog?.show(parentFragmentManager, "ComplaintDialog")
         dialog?.setItemClickListener(
             object : ItemClickListener {
                 override fun onClick() {
                     // todo : 감상문 신고 뷰모델 로직 호출
-                    navController.navigate(R.id.allMovieReportFragment)
-                    Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                    viewModel.handleEvent(BodyMovieReportEvent.RegistComplaint)
                 }
             },
         )
@@ -183,19 +188,18 @@ class BodyMovieReportFragment :
                 }
             },
         )
+        dialog?.show(parentFragmentManager, "BlockDialog")
     }
 
     // 삭제 다이얼로그
     fun showDeleteDialog() {
         val dialog =
-            context?.let {
-                CustomDialog(
-                    button2Text = "삭제",
-                    dialogMessage = "감상문을 삭제할까요?",
-                )
-            }
+            CustomDialog(
+                button2Text = "삭제",
+                dialogMessage = "감상문을 삭제할까요?",
+            )
 
-        dialog?.setItemClickListener(
+        dialog.setItemClickListener(
             object : ItemClickListener {
                 override fun onClick() {
                     viewModel.handleEvent(BodyMovieReportEvent.DeleteReport(viewModel.getReportResponse.value.reportId))
@@ -204,10 +208,16 @@ class BodyMovieReportFragment :
                 }
             },
         )
+        dialog.show(parentFragmentManager, "DeleteDialog")
     }
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            // todo : 왜 여기에 UI 처리를 하면 안뜰까?
+            is BodyMovieReportEffect.ComplaintSuccess -> {
+                Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.allMovieReportFragment)
+            }
             is BodyMovieReportEffect.CancelFollow -> {
                 // 팔로우 취소
                 binding.btnUserFollow.isSelected = false
@@ -344,9 +354,11 @@ class BodyMovieReportFragment :
                     when (text) {
                         // Todo : 신고 차단 기능 추가 필요
                         "신고" -> {
+                            bottomSheet.dismiss()
                             showComplaintDialog()
                         }
                         "차단" -> {
+                            bottomSheet.dismiss()
                             showBlockDialog()
                         }
 
