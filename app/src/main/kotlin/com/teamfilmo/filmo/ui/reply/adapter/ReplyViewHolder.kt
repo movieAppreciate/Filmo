@@ -94,13 +94,6 @@ class ReplyViewHolder(
             }
         }
 
-//        // 본인 댓글이 아니라면 삭제 불가능하도록 하기
-//        if (reply.isMyReply) {
-//            binding.btnMore.visibility = View.VISIBLE
-//        } else {
-//            binding.btnMore.visibility = View.GONE
-//        }
-
         if (reply.isLiked) {
             binding.btnLike.setImageResource(R.drawable.ic_like_selected)
         } else {

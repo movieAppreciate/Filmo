@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.complaint.RegistComplaintResponse
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
+import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -9,17 +10,10 @@ interface ComplaintService {
     /**
      * 감상문 신고
      */
-    @POST("/complaint/registComplaint")
-    suspend fun registComplaint(
-        /**
-         * 신고당한 감상문 id
-         */
-        @Query("reportId") reportId: String? = null,
-        /**
-         * 신고 내용
-         */
-        @Query("content") content: String? = null,
-    ): Result<RegistComplaintResponse>
+    @POST("/complaint/save")
+    suspend fun saveComplaint(
+        @Body saveComplaintRequest: SaveComplaintRequest,
+    ): Result<String>
 
     /**
      * 감상문 신고 취소

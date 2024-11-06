@@ -2,12 +2,14 @@ package com.teamfilmo.filmo.ui.reply
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.CountLikeUseCase
@@ -28,6 +30,7 @@ import timber.log.Timber
 class ReplyViewModel
     @Inject
     constructor(
+        private val saveComplaintUseCase: SaveComplaintUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val checkLikeUseCase: CheckLikeStateUseCase,
         private val saveLikeUseCase: SaveLikeUseCase,
@@ -48,6 +51,12 @@ class ReplyViewModel
                 }
             }
         }
+
+    /*
+    댓글 신고
+     */
+        private val _saveReplyComplaintResponse = MutableStateFlow<String>("")
+        val saveReplyComplaintResponse: StateFlow<String> = _saveReplyComplaintResponse
 
     /*
     좋아요 상태
@@ -109,6 +118,9 @@ class ReplyViewModel
 
         override fun handleEvent(event: ReplyEvent) {
             when (event) {
+                is ReplyEvent.SaveComplaint -> {
+                    saveReplyComplaint(event.targetId)
+                }
                 is ReplyEvent.ClickLike -> {
                     toggleLike(event.replyId)
                 }
@@ -127,6 +139,18 @@ class ReplyViewModel
             }
         }
 
+    /*
+     댓글 신고
+     */
+        private fun saveReplyComplaint(targetId: String) {
+            viewModelScope.launch {
+                saveComplaintUseCase(SaveComplaintRequest(targetId, "reply")).collect {
+                    if (it != null) {
+                        _saveReplyComplaintResponse.value = it
+                    }
+                }
+            }
+        }
     /*
     댓글 좋아요
      */

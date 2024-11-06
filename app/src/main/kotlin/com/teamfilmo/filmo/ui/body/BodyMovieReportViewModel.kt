@@ -2,13 +2,14 @@ package com.teamfilmo.filmo.ui.body
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
-import com.teamfilmo.filmo.domain.complaint.RegistComplaintUseCase
+import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.SaveFollowUseCase
@@ -28,7 +29,7 @@ import timber.log.Timber
 class BodyMovieReportViewModel
     @Inject
     constructor(
-        private val registComplaintUseCase: RegistComplaintUseCase,
+        private val saveComplaintUseCase: SaveComplaintUseCase,
         private val checkIsFollowUseCase: CheckIsFollowUseCase,
         private val cancelFollowUseCase: CancelFollowUseCase,
         private val saveFollowUseCase: SaveFollowUseCase,
@@ -120,11 +121,16 @@ class BodyMovieReportViewModel
     /*
     감상문 신고
      */
-        private fun registComplaint() {
+        private fun saveComplaint() {
             viewModelScope.launch {
-                registComplaintUseCase(_getReportResponse.value.reportId).collect {
+                saveComplaintUseCase(
+                    SaveComplaintRequest(
+                        targetId = _getReportResponse.value.reportId,
+                        type = "report",
+                    ),
+                ).collect {
                     if (it != null) {
-                        _registComplaintResponse.value = it.content
+                        _registComplaintResponse.value = it
                     }
                     sendEffect(BodyMovieReportEffect.ComplaintSuccess)
                 }
@@ -266,7 +272,7 @@ class BodyMovieReportViewModel
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
                 is BodyMovieReportEvent.RegistComplaint -> {
-                    registComplaint()
+                    saveComplaint()
                 }
                 is BodyMovieReportEvent.ClickFollow -> {
                     toggleFollow()

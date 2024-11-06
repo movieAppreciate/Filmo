@@ -3,6 +3,10 @@ package com.teamfilmo.filmo.ui.reply
 import com.teamfilmo.filmo.base.event.BaseEvent
 
 sealed class ReplyEvent : BaseEvent() {
+    data class SaveComplaint(
+        val targetId: String,
+    ) : ReplyEvent()
+
     data class ClickLike(
         val replyId: String,
     ) : ReplyEvent()
