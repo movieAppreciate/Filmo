@@ -47,7 +47,7 @@ class CustomDialog(
         with(binding) {
             txtDialogSubMessage.text = dialogSubMessage
             button1.text = button1Text
-            button2.text = button1Text
+            button2.text = button2Text
             button1.setOnClickListener {
                 dismiss()
             }

@@ -8,6 +8,7 @@ import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.complaint.RegistComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.SaveFollowUseCase
@@ -27,6 +28,7 @@ import timber.log.Timber
 class BodyMovieReportViewModel
     @Inject
     constructor(
+        private val registComplaintUseCase: RegistComplaintUseCase,
         private val checkIsFollowUseCase: CheckIsFollowUseCase,
         private val cancelFollowUseCase: CancelFollowUseCase,
         private val saveFollowUseCase: SaveFollowUseCase,
@@ -45,6 +47,12 @@ class BodyMovieReportViewModel
                 }
             }
         }
+
+    /*
+    신고 등록
+     */
+        private val _registComplaintResponse = MutableStateFlow("")
+        val registComplaintResponse: StateFlow<String> = _registComplaintResponse
 
     /*
      본문 닉네임
@@ -108,6 +116,20 @@ class BodyMovieReportViewModel
                 ),
             )
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
+
+    /*
+    감상문 신고
+     */
+        private fun registComplaint() {
+            viewModelScope.launch {
+                registComplaintUseCase(_getReportResponse.value.reportId).collect {
+                    if (it != null) {
+                        _registComplaintResponse.value = it.content
+                    }
+                    sendEffect(BodyMovieReportEffect.ComplaintSuccess)
+                }
+            }
+        }
 
     /*
     사용자 닉네임
@@ -243,6 +265,9 @@ class BodyMovieReportViewModel
 
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
+                is BodyMovieReportEvent.RegistComplaint -> {
+                    registComplaint()
+                }
                 is BodyMovieReportEvent.ClickFollow -> {
                     toggleFollow()
                 }
