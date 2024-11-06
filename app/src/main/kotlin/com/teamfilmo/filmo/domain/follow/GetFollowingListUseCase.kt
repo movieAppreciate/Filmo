@@ -13,7 +13,10 @@ class GetFollowingListUseCase
     constructor(
         private val followRepository: FollowRepository,
     ) {
-        operator fun invoke(userId: String): Flow<FollowingListResponse?> =
+        operator fun invoke(
+            userId: String,
+            lastReportId: String? = null,
+        ): Flow<FollowingListResponse?> =
             flow {
                 val result = followRepository.getFollowingList(userId)
                 result.onFailure {

@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.ui.follow.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.databinding.FollowerItemBinding
@@ -14,10 +16,26 @@ const val IS_NOT_FOLLOW_IN_FOLLOWING = 0
 // 내가 이미 팔로잉한 경우
 const val IS_FOLLOW_IN_FOLLOWING = 1
 
-class FollowingRVAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val followings = ArrayList<MutualFollowUserInfo>()
+class FollowingRVAdapter : PagingDataAdapter<MutualFollowUserInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     private lateinit var followingItemBinding: FollowingItemBinding
     private lateinit var followerItemBinding: FollowerItemBinding
+
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<MutualFollowUserInfo>() {
+                override fun areItemsTheSame(
+                    oldItem: MutualFollowUserInfo,
+                    newItem: MutualFollowUserInfo,
+                ): Boolean =
+                    oldItem.userId == newItem.userId
+
+                override fun areContentsTheSame(
+                    oldItem: MutualFollowUserInfo,
+                    newItem: MutualFollowUserInfo,
+                ): Boolean =
+                    oldItem == newItem
+            }
+    }
 
     inner class FollowingViewHolder(
         val binding: FollowingItemBinding,
@@ -40,12 +58,6 @@ class FollowingRVAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 binding.btnFollow.visibility = View.VISIBLE
             }
         }
-    }
-
-    fun setFollowers(newFollowers: List<MutualFollowUserInfo>) {
-        this.followings.clear()
-        this.followings.addAll(newFollowers)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -96,21 +108,23 @@ class FollowingRVAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
-    override fun getItemCount(): Int = followings.size
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        if (holder is FollowingViewHolder) {
-            holder.bind(followings[position])
-        } else if (holder is FollowerViewHolder) {
-            holder.bind(followings[position])
+        getItem(position).let {
+            if (it != null) {
+                if (holder is FollowingViewHolder) {
+                    holder.bind(it)
+                } else if (holder is FollowerViewHolder) {
+                    holder.bind(it)
+                }
+            }
         }
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (followings[position].isFollowing == true) {
+        if (getItem(position)?.isFollowing == true) {
             IS_FOLLOW_IN_FOLLOWING
         } else {
             IS_NOT_FOLLOW_IN_FOLLOWING

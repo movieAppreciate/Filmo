@@ -1,16 +1,19 @@
 package com.teamfilmo.filmo.ui.follow.follower
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.GetFollowerListUseCase
+import com.teamfilmo.filmo.ui.follow.paging.FollowerPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -20,35 +23,31 @@ class FollowerViewModel
         private val checkIsFollowUseCase: CheckIsFollowUseCase,
         private val getFollowerListUseCase: GetFollowerListUseCase,
     ) : BaseViewModel<FollowerEffect, FollowerEvent>() {
-        private val _mutualFollowerList = MutableStateFlow<List<MutualFollowUserInfo>>(emptyList())
-        val mutualFollowerList: StateFlow<List<MutualFollowUserInfo>> = _mutualFollowerList
+        // 팔로워 리스트 페이징 데이터
+        private val _pagingFollowerData = MutableStateFlow<PagingData<MutualFollowUserInfo>>(PagingData.empty())
+        val pagingFollowerData: StateFlow<PagingData<MutualFollowUserInfo>> = _pagingFollowerData
 
         fun getFollowerList(userId: String) {
             viewModelScope.launch {
-                getFollowerListUseCase(userId)
-                    .map {
-                        it.followerUserInfoList
-                            .map { userInfo ->
-                                userInfo.userId?.let { it1 ->
-                                    val isFollowing = checkIsFollowUseCase(it1).first()?.isFollowing ?: false
-                                    MutualFollowUserInfo(
-                                        email = userInfo.email,
-                                        userId = userInfo.userId,
-                                        type = userInfo.type,
-                                        nickname = userInfo.nickname,
-                                        profileUrl = userInfo.profileUrl,
-                                        lastLoginDate = userInfo.lastLoginDate,
-                                        introduction = userInfo.introduction,
-                                        roles = userInfo.roles,
-                                        createDate = userInfo.createDate,
-                                        lastModifiedDate = userInfo.lastModifiedDate,
-                                        isFollowing = isFollowing,
-                                    )
-                                } ?: MutualFollowUserInfo()
-                            }
-                    }.collect {
-                        _mutualFollowerList.value = it
+                viewModelScope.launch {
+                    Pager(
+                        config =
+                            PagingConfig(
+                                pageSize = 20,
+                                enablePlaceholders = false,
+                                prefetchDistance = 3,
+                            ),
+                        pagingSourceFactory = {
+                            FollowerPagingSource(
+                                checkIsFollowUseCase = checkIsFollowUseCase,
+                                getFollowerListUseCase = getFollowerListUseCase,
+                                userId = userId,
+                            )
+                        },
+                    ).flow.cachedIn(viewModelScope).collect {
+                        _pagingFollowerData.value = it
                     }
+                }
             }
         }
     }
