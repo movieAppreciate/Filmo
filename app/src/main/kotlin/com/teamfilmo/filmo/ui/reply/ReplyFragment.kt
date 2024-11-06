@@ -43,9 +43,7 @@ class ReplyFragment :
 
     // 차단 다이얼로그
     fun showBlockDialog(
-        reportId: String,
         replyId: String,
-        position: Int,
     ) {
         val dialog =
             context?.let {
@@ -58,7 +56,7 @@ class ReplyFragment :
         dialog?.setItemClickListener(
             object : ItemClickListener {
                 override fun onClick() {
-                    Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
+                    viewModel.handleEvent(ReplyEvent.SaveBlock(replyId))
                 }
             },
         )
@@ -68,7 +66,6 @@ class ReplyFragment :
     // 신고 다이얼로그
     fun showComplaintDialog(
         replyId: String,
-        position: Int,
     ) {
         val dialog =
             context?.let {
@@ -208,18 +205,18 @@ class ReplyFragment :
                     bottomSheet.setListener(
                         object : OnButtonSelectedListener {
                             override fun onButtonSelected(text: String) {
-                                val reply = adapter.replyList[position].replyId
+                                val replyId = adapter.replyList[position].replyId
                                 when (text) {
                                     "신고" -> {
-                                        showComplaintDialog(reply, position)
+                                        showComplaintDialog(replyId)
                                         bottomSheet.dismiss()
                                     }
                                     "차단" -> {
-                                        showBlockDialog(args.reportId, reply, position)
+                                        showBlockDialog(replyId)
                                         bottomSheet.dismiss()
                                     }
                                     "삭제하기" -> {
-                                        showDeleteDialog(args.reportId, reply, position)
+                                        showDeleteDialog(args.reportId, replyId, position)
                                         bottomSheet.dismiss()
                                     }
 
@@ -281,11 +278,21 @@ class ReplyFragment :
 
         lifecycleScope.launch {
             /*
+            댓글 차단
+             */
+            launch {
+                viewModel.saveReplyBlockResponse.collect {
+                    Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
+                    // todo : 차단 시 UI 반영 사항은 ?
+                }
+            }
+            /*
             댓글 신고
              */
             launch {
                 viewModel.saveReplyComplaintResponse.collect {
                     Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+                    // todo : 차단 시 UI 반영 사항은 ?
                 }
             }
             /*

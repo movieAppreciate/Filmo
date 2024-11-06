@@ -2,6 +2,8 @@ package com.teamfilmo.filmo.ui.body
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
+import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
@@ -9,6 +11,7 @@ import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
@@ -29,6 +32,7 @@ import timber.log.Timber
 class BodyMovieReportViewModel
     @Inject
     constructor(
+        private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
         private val checkIsFollowUseCase: CheckIsFollowUseCase,
         private val cancelFollowUseCase: CancelFollowUseCase,
@@ -48,6 +52,12 @@ class BodyMovieReportViewModel
                 }
             }
         }
+
+    /*
+    차단 등록
+     */
+        private val _saveBlockResponse = MutableStateFlow(SaveBlockResponse())
+        val saveBlockResponse: StateFlow<SaveBlockResponse> = _saveBlockResponse
 
     /*
     신고 등록
@@ -119,6 +129,18 @@ class BodyMovieReportViewModel
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
     /*
+    감상문 차단
+     */
+        private fun saveBlock() {
+            viewModelScope.launch {
+                saveBlockUseCase(SaveBlockRequest(targetId = _getReportResponse.value.reportId)).collect {
+                    _saveBlockResponse.value = it
+                    sendEffect(BodyMovieReportEffect.BlockSuccess)
+                }
+            }
+        }
+
+    /*
     감상문 신고
      */
         private fun saveComplaint() {
@@ -131,8 +153,8 @@ class BodyMovieReportViewModel
                 ).collect {
                     if (it != null) {
                         _registComplaintResponse.value = it
+                        sendEffect(BodyMovieReportEffect.ComplaintSuccess)
                     }
-                    sendEffect(BodyMovieReportEffect.ComplaintSuccess)
                 }
             }
         }
@@ -271,7 +293,10 @@ class BodyMovieReportViewModel
 
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
-                is BodyMovieReportEvent.RegistComplaint -> {
+                is BodyMovieReportEvent.SaveBlock -> {
+                    saveBlock()
+                }
+                is BodyMovieReportEvent.SaveComplaint -> {
                     saveComplaint()
                 }
                 is BodyMovieReportEvent.ClickFollow -> {

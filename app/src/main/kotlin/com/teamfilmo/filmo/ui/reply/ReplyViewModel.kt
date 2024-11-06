@@ -2,6 +2,8 @@ package com.teamfilmo.filmo.ui.reply
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
+import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
@@ -9,6 +11,7 @@ import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithR
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
@@ -30,6 +33,7 @@ import timber.log.Timber
 class ReplyViewModel
     @Inject
     constructor(
+        private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val checkLikeUseCase: CheckLikeStateUseCase,
@@ -51,6 +55,12 @@ class ReplyViewModel
                 }
             }
         }
+
+    /*
+    댓글 차단
+     */
+        private val _saveReplyBlockResponse = MutableStateFlow(SaveBlockResponse())
+        val saveReplyBlockResponse: StateFlow<SaveBlockResponse> = _saveReplyBlockResponse
 
     /*
     댓글 신고
@@ -118,6 +128,9 @@ class ReplyViewModel
 
         override fun handleEvent(event: ReplyEvent) {
             when (event) {
+                is ReplyEvent.SaveBlock -> {
+                    saveReplyBlock(event.targetId)
+                }
                 is ReplyEvent.SaveComplaint -> {
                     saveReplyComplaint(event.targetId)
                 }
@@ -135,6 +148,17 @@ class ReplyViewModel
                 }
                 is ReplyEvent.SaveSubReply -> {
                     saveSubReply(event.upReplyId, event.reportId, event.content)
+                }
+            }
+        }
+
+    /*
+    댓글 차단
+     */
+        private fun saveReplyBlock(targetId: String) {
+            viewModelScope.launch {
+                saveBlockUseCase(SaveBlockRequest(targetId)).collect {
+                    _saveReplyBlockResponse.value = it
                 }
             }
         }

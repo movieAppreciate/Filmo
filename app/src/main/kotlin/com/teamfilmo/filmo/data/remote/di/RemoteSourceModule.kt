@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.data.remote.di
 
 import com.teamfilmo.filmo.data.remote.source.AuthRemoteDataSourceImpl
+import com.teamfilmo.filmo.data.remote.source.BlockDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.BookmarkDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.ComplaintDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.FollowDataSourceImpl
@@ -11,6 +12,7 @@ import com.teamfilmo.filmo.data.remote.source.ReplyDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.ReportDataSourceImpl
 import com.teamfilmo.filmo.data.remote.source.UserDataSourceImpl
 import com.teamfilmo.filmo.data.source.AuthRemoteDataSource
+import com.teamfilmo.filmo.data.source.BlockDataSource
 import com.teamfilmo.filmo.data.source.BookmarkDataSource
 import com.teamfilmo.filmo.data.source.ComplaintDataSource
 import com.teamfilmo.filmo.data.source.FollowDataSource
@@ -88,4 +90,10 @@ abstract class RemoteSourceModule {
     abstract fun bindComplaintDataSource(
         complaintDataSource: ComplaintDataSourceImpl,
     ): ComplaintDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindBlockDataSource(
+        blockDataSource: BlockDataSourceImpl,
+    ): BlockDataSource
 }

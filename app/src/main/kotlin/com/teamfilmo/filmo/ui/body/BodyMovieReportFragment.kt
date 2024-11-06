@@ -20,7 +20,6 @@ import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -76,15 +75,13 @@ class BodyMovieReportFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
-                viewModel.registComplaintResponse.collectLatest {
-                    if (it == "success") {
-                        Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
+                viewModel.saveBlockResponse.collect {
+                    if (it.blockId != null) {
+                        Toast.makeText(context, "감상문을 차단했어요!", Toast.LENGTH_SHORT).show()
                         navController.navigate(R.id.allMovieReportFragment)
                     }
                 }
             }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.getReportResponse.collect {
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
@@ -162,8 +159,7 @@ class BodyMovieReportFragment :
             object : ItemClickListener {
                 override fun onClick() {
                     // todo : 감상문 신고 뷰모델 로직 호출
-                    dialog.dismiss()
-                    viewModel.handleEvent(BodyMovieReportEvent.RegistComplaint)
+                    viewModel.handleEvent(BodyMovieReportEvent.SaveComplaint)
                 }
             },
         )
@@ -183,8 +179,7 @@ class BodyMovieReportFragment :
             object : ItemClickListener {
                 override fun onClick() {
                     // todo : 감상문 차단 뷰모델 로직 호출
-                    navController.navigate(R.id.allMovieReportFragment)
-                    Toast.makeText(context, "감상문을 차단했어요!", Toast.LENGTH_SHORT).show()
+                    viewModel.handleEvent(BodyMovieReportEvent.SaveBlock)
                 }
             },
         )
@@ -213,10 +208,16 @@ class BodyMovieReportFragment :
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            is BodyMovieReportEffect.BlockSuccess -> {}
             // todo : 왜 여기에 UI 처리를 하면 안뜰까?
             is BodyMovieReportEffect.ComplaintSuccess -> {
-                Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.allMovieReportFragment)
+                // 감상문 신고
+                lifecycleScope.launch {
+                    viewModel.registComplaintResponse.collect {
+                        Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
+                        navController.navigate(R.id.allMovieReportFragment)
+                    }
+                }
             }
             is BodyMovieReportEffect.CancelFollow -> {
                 // 팔로우 취소
