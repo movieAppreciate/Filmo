@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.data.di
 
 import com.teamfilmo.filmo.data.remote.source.ReportRepositoryImpl
 import com.teamfilmo.filmo.data.repository.AuthRepositoryImpl
+import com.teamfilmo.filmo.data.repository.BlockRepositoryImpl
 import com.teamfilmo.filmo.data.repository.BookmarkRepositoryImpl
 import com.teamfilmo.filmo.data.repository.ComplaintRepositoryImpl
 import com.teamfilmo.filmo.data.repository.FollowRepositoryImpl
@@ -11,6 +12,7 @@ import com.teamfilmo.filmo.data.repository.MovieRepositoryImpl
 import com.teamfilmo.filmo.data.repository.ReplyRepositoryImpl
 import com.teamfilmo.filmo.data.repository.UserRepositoryImpl
 import com.teamfilmo.filmo.domain.repository.AuthRepository
+import com.teamfilmo.filmo.domain.repository.BlockRepository
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import com.teamfilmo.filmo.domain.repository.ComplaintRepository
 import com.teamfilmo.filmo.domain.repository.FollowRepository
@@ -77,4 +79,9 @@ abstract class RepositoryModule {
     abstract fun bindComplaintRepository(
         complaintRepository: ComplaintRepositoryImpl,
     ): ComplaintRepository
+
+    @Binds
+    abstract fun bindBlockRepository(
+        blockRepository: BlockRepositoryImpl,
+    ): BlockRepository
 }

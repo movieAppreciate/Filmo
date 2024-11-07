@@ -4,7 +4,9 @@ import com.teamfilmo.filmo.base.event.BaseEvent
 import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
 
 sealed class BodyMovieReportEvent : BaseEvent() {
-    data object RegistComplaint : BodyMovieReportEvent()
+    data object SaveBlock : BodyMovieReportEvent()
+
+    data object SaveComplaint : BodyMovieReportEvent()
 
     data object ClickFollow : BodyMovieReportEvent()
 
