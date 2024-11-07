@@ -86,7 +86,6 @@ class MovieSelectViewModel
                 is MovieSelectEvent.InitializeMovieList -> {
                     _moviePosterPathFlow.value = PagingData.empty()
                 }
-                else -> {}
             }
         }
     }
