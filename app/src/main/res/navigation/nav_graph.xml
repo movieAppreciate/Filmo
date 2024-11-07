@@ -25,11 +25,6 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"/>
         <action
-            android:id="@+id/navigateToWriteActivity"
-            app:destination="@id/writeActivity"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"/>
-        <action
             android:id="@+id/action_allMovieReportFragment_to_myPageFragment2"
             app:destination="@id/myPageFragment" />
         <action
@@ -120,9 +115,6 @@
             android:name="reportId"
             app:argType="string" />
         <action
-            android:id="@+id/navigateToWriteActivity"
-            app:destination="@id/writeActivity" />
-        <action
             android:id="@+id/navigateToReportThumbnail"
             app:destination="@id/reportThumbnailFragment" />
         <argument
@@ -133,10 +125,6 @@
             android:id="@+id/navigateToBody"
             app:destination="@id/bodyMovieReportFragment" />
     </fragment>
-    <activity
-        android:id="@+id/writeActivity"
-        android:name="com.teamfilmo.filmo.ui.write.WriteActivity"
-        android:label="WriteActivity" />
     <fragment
         android:id="@+id/reportThumbnailFragment"
         android:name="com.teamfilmo.filmo.ui.write.thumbnail.ReportThumbnailFragment"
