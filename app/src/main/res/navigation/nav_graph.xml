@@ -153,7 +153,11 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.teamfilmo.filmo.ui.setting.SettingFragment"
-        android:label="SettingFragment" />
+        android:label="SettingFragment" >
+        <argument
+            android:name="nickName"
+            app:argType="string"/>
+    </fragment>
     <fragment
         android:id="@+id/followFragment"
         android:name="com.teamfilmo.filmo.ui.follow.FollowFragment"

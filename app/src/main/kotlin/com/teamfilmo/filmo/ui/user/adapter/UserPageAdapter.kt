@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.report.MyPageReportItem
-import com.teamfilmo.filmo.databinding.MyReportItemBinding
+import com.teamfilmo.filmo.databinding.ItemUserReportBinding
 
 class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>() {
     private var myReportList: List<MyPageReportItem> = emptyList()
@@ -16,7 +16,7 @@ class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>()
     }
 
     inner class MyPageViewHolder(
-        private val binding: MyReportItemBinding,
+        private val binding: ItemUserReportBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             binding.txtMovieName.text = myReportList[position].movieName
@@ -29,7 +29,7 @@ class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>()
         parent: ViewGroup,
         viewType: Int,
     ): MyPageViewHolder {
-        val binding = MyReportItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemUserReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyPageViewHolder(binding)
     }
 

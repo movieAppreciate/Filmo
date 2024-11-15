@@ -39,6 +39,13 @@ class BodyMovieReportFragment :
         viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
 
         with(binding) {
+            btnLike.setOnClickListener {
+                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton)
+            }
+
+            movieDetail.movieDetailShimmer.visibility = View.GONE
+            movieDetail.btnBack.visibility = View.INVISIBLE
+
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener { navController.popBackStack() }
 
@@ -50,7 +57,6 @@ class BodyMovieReportFragment :
                 val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
                 navController.navigate(action)
             }
-            movieDetail.btnBack.visibility = View.GONE
             /*
       팔로잉 버튼 클릭 시
              */
@@ -75,6 +81,11 @@ class BodyMovieReportFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
+                viewModel.likeCount.collect {
+                    binding.tvLikeCount.text = it.toString()
+                }
+            }
+            launch {
                 viewModel.saveBlockResponse.collect {
                     if (it.blockId != null) {
                         Toast.makeText(context, "감상문을 차단했어요!", Toast.LENGTH_SHORT).show()
@@ -86,7 +97,7 @@ class BodyMovieReportFragment :
                 viewModel.getReportResponse.collect {
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     binding.apply {
-                        txtUserName.text = "뚱"
+                        txtUserName.text = it.nickname
                         tvMovieTitle.text = movieName
                         tvReportTitle.text = it.title
                         reportListView.text = it.content
@@ -151,7 +162,7 @@ class BodyMovieReportFragment :
             context?.let {
                 CustomDialog(
                     button2Text = "신고",
-                    dialogMessage = "감상문을 신고할까요?",
+                    dialogMessage = "해당 감상문을 신고할까요?",
                 )
             }
         dialog?.show(parentFragmentManager, "ComplaintDialog")
@@ -171,7 +182,7 @@ class BodyMovieReportFragment :
             context?.let {
                 CustomDialog(
                     button2Text = "차단",
-                    dialogMessage = "감상문을 차단할까요?",
+                    dialogMessage = "계정을 차단할까요?",
                 )
             }
 
@@ -208,16 +219,21 @@ class BodyMovieReportFragment :
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
-            is BodyMovieReportEffect.BlockSuccess -> {}
+            is BodyMovieReportEffect.RegistLike -> {
+                binding.btnLike.isSelected = true
+            }
+            is BodyMovieReportEffect.CancelLike -> {
+                binding.btnLike.isSelected = false
+            }
+            is BodyMovieReportEffect.BlockSuccess -> {
+                // 메인 화면으로 이동
+                navController.navigate(R.id.allMovieReportFragment)
+            }
             // todo : 왜 여기에 UI 처리를 하면 안뜰까?
             is BodyMovieReportEffect.ComplaintSuccess -> {
                 // 감상문 신고
-                lifecycleScope.launch {
-                    viewModel.registComplaintResponse.collect {
-                        Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
-                        navController.navigate(R.id.allMovieReportFragment)
-                    }
-                }
+                Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.allMovieReportFragment)
             }
             is BodyMovieReportEffect.CancelFollow -> {
                 // 팔로우 취소

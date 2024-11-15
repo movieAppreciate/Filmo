@@ -80,9 +80,10 @@
             app:layout_constraintTop_toBottomOf="@id/movie_image" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btn_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/ic_like"
             app:layout_constraintStart_toStartOf="@+id/image_user"
@@ -94,19 +95,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="21"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-            app:layout_constraintStart_toEndOf="@+id/imageButton"
-            app:layout_constraintTop_toTopOf="@+id/imageButton" />
+            app:layout_constraintBottom_toBottomOf="@+id/btn_like"
+            app:layout_constraintStart_toEndOf="@+id/btn_like"
+            app:layout_constraintTop_toTopOf="@+id/btn_like" />
 
         <ImageButton
+            android:padding="10dp"
             android:id="@+id/btn_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:background="@drawable/ic_reply"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_like"
             app:layout_constraintStart_toEndOf="@+id/tv_like_count"
-            app:layout_constraintTop_toTopOf="@+id/imageButton" />
+            app:layout_constraintTop_toTopOf="@+id/btn_like" />
 
         <TextView
             android:id="@+id/tv_reply_count"
@@ -130,7 +132,7 @@
             android:src="@drawable/ic_duck"
             app:layout_constraintBottom_toTopOf="@id/movie_detail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton"
+            app:layout_constraintTop_toBottomOf="@+id/btn_like"
             app:layout_constraintVertical_bias="0.019"
             app:shapeAppearance="@style/Circle50" />
 
@@ -164,6 +166,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_user_follow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txt_user_name" />
+
 
         <include
             android:id="@+id/movie_detail"

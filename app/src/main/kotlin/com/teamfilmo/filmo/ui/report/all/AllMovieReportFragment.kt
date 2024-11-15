@@ -150,9 +150,7 @@ class AllMovieReportFragment :
                 }
 
                 override fun onLikeClick(report: ReportItem) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewModel.handleEvent(AllMovieReportEvent.ClickLike(report.reportId))
-                    }
+                    viewModel.handleEvent(AllMovieReportEvent.ClickLike(report.reportId))
                 }
             }
     }

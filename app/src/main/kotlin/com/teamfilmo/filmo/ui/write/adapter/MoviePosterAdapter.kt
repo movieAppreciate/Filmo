@@ -7,7 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.teamfilmo.filmo.databinding.MoviePosterItemBinding
+import com.teamfilmo.filmo.databinding.ItemMoviePosterBinding
 import com.teamfilmo.filmo.ui.write.select.paging.MovieContentResultWithIndex
 import timber.log.Timber
 
@@ -53,7 +53,7 @@ class MoviePosterAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): MoviePosterViewHolder {
-        val binding = MoviePosterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMoviePosterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MoviePosterViewHolder(binding)
     }
 
@@ -70,7 +70,7 @@ class MoviePosterAdapter(
     }
 
     inner class MoviePosterViewHolder(
-        private val binding: MoviePosterItemBinding,
+        private val binding: ItemMoviePosterBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.ivMoviePoster.setOnClickListener {

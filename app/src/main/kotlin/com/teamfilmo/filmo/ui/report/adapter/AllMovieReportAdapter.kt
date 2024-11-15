@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
-import com.teamfilmo.filmo.databinding.ReportItemBinding
+import com.teamfilmo.filmo.databinding.ItemReportBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -84,7 +84,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         parent: ViewGroup,
         viewType: Int,
     ): AllMovieReportViewHolder {
-        val binding = ReportItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AllMovieReportViewHolder(binding)
     }
 
@@ -125,7 +125,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
     }
 
     inner class AllMovieReportViewHolder(
-        private val binding: ReportItemBinding,
+        private val binding: ItemReportBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.movieImage.setOnClickListener {
@@ -235,7 +235,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             if (isLiked) {
                 binding.likeButton.setImageResource(R.drawable.ic_like_selected)
             } else {
-                binding.likeButton.setImageResource(R.drawable.ic_like_unselected)
+                binding.likeButton.setImageResource(R.drawable.ic_like)
             }
         }
     }

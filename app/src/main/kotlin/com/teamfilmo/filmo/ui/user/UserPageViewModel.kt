@@ -100,6 +100,7 @@ class UserPageViewModel
                     imageUrl = null,
                     createDate = "",
                     lastModifiedDate = "",
+                    nickname = "",
                 ),
             )
 

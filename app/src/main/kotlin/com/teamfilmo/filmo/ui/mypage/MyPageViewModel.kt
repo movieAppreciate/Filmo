@@ -25,7 +25,6 @@ class MyPageViewModel
 
         private val _followInfo = MutableStateFlow(FollowCountResponse())
         val followInfo: StateFlow<FollowCountResponse> = _followInfo
-        //  todo : 여기서 asStateFlow를 해주는 역할은???
 
         init {
             viewModelScope.launch {

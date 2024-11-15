@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponseWithRole
-import com.teamfilmo.filmo.databinding.SubReplyItemBinding
+import com.teamfilmo.filmo.databinding.ItemSubReplyBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -75,7 +75,7 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyViewHolder>() {
         parent: ViewGroup,
         viewType: Int,
     ): SubReplyViewHolder {
-        val binding = SubReplyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemSubReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SubReplyViewHolder(binding, subReplyItemClick)
     }
 

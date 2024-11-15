@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.get.SubReplyResponseWithRole
-import com.teamfilmo.filmo.databinding.ReplyItemBinding
+import com.teamfilmo.filmo.databinding.ItemReplyBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -14,7 +14,7 @@ import kotlin.math.abs
 
 class ReplyViewHolder(
     private val currenUserId: String,
-    private val binding: ReplyItemBinding,
+    private val binding: ItemReplyBinding,
     private val itemClick: ReplyItemClick?,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val subReplyAdapter = SubReplyRVAdapter()

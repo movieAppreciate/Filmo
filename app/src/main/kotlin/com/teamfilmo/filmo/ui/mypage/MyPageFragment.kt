@@ -3,7 +3,6 @@ package com.teamfilmo.filmo.ui.mypage
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMyPageBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +34,8 @@ class MyPageFragment :
         }
         with(binding) {
             btnSetting.setOnClickListener {
-                navController.navigate(R.id.settingFragment)
+                val action = MyPageFragmentDirections.navigateToSettingFromMyPage(viewModel.userInfo.value.nickname)
+                navController.navigate(action)
             }
 
             btnBack.setOnClickListener {

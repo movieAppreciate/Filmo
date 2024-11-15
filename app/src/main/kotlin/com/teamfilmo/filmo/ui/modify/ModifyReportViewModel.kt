@@ -44,6 +44,7 @@ class ModifyReportViewModel
                     imageUrl = "",
                     createDate = "",
                     lastModifiedDate = "",
+                    nickname = "",
                 ),
             )
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()

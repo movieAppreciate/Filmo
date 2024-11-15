@@ -8,6 +8,8 @@ import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
@@ -16,6 +18,10 @@ import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.SaveFollowUseCase
+import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
+import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
+import com.teamfilmo.filmo.domain.like.CountLikeUseCase
+import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.DeleteReportUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
@@ -32,6 +38,10 @@ import timber.log.Timber
 class BodyMovieReportViewModel
     @Inject
     constructor(
+        private val countLikeUseCase: CountLikeUseCase,
+        private val checkLikeStateUseCase: CheckLikeStateUseCase,
+        private val registerLikeUseCase: SaveLikeUseCase,
+        private val cancelLikeUseCase: CancelLikeUseCase,
         private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
         private val checkIsFollowUseCase: CheckIsFollowUseCase,
@@ -52,6 +62,76 @@ class BodyMovieReportViewModel
                 }
             }
         }
+
+    /*
+    좋아요
+     */
+
+        // 좋아요 등록
+        private fun saveLike(reportId: String) {
+            viewModelScope.launch {
+                registerLikeUseCase(
+                    SaveLikeRequest(
+                        targetId = reportId,
+                        type = "report",
+                    ),
+                ).collect {
+                    _saveLikeResponse.value = it
+                    updateLikeCount(reportId)
+                }
+                sendEffect(BodyMovieReportEffect.RegistLike)
+            }
+        }
+
+    /*
+좋아요 취소
+     */
+        private fun cancelLike() {
+            viewModelScope.launch {
+                cancelLikeUseCase(_saveLikeResponse.value.likeId)
+                updateLikeCount(reportId = _saveLikeResponse.value.targetId)
+                sendEffect(BodyMovieReportEffect.CancelLike)
+            }
+        }
+
+        // 좋아요 토글
+        private fun toggleLike(
+            targetId: String,
+            type: String = "report",
+        ) {
+            viewModelScope.launch {
+                checkLikeStateUseCase(targetId, type).collect {
+                    if (it) {
+                        cancelLike()
+                    } else {
+                        saveLike(targetId)
+                    }
+                }
+            }
+        }
+
+        // 좋아요 수 업데이트
+        private fun updateLikeCount(
+            reportId: String,
+        ) {
+            viewModelScope.launch {
+                countLikeUseCase(reportId).collect {
+                    _likeCount.value = it
+                }
+            }
+        }
+
+    /*
+        좋아요 수 변수
+     */
+        private val _likeCount = MutableStateFlow<Int>(0)
+        val likeCount: StateFlow<Int> = _likeCount
+
+    /*
+    좋아요 저장 변수
+     */
+        private val _saveLikeResponse = MutableStateFlow(SaveLikeResponse())
+        val saveLikeResponse: StateFlow<SaveLikeResponse> = _saveLikeResponse
 
     /*
     차단 등록
@@ -124,16 +204,17 @@ class BodyMovieReportViewModel
                     imageUrl = "",
                     createDate = "",
                     lastModifiedDate = "",
+                    nickname = "",
                 ),
             )
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
     /*
-    감상문 차단
+    계정 차단
      */
         private fun saveBlock() {
             viewModelScope.launch {
-                saveBlockUseCase(SaveBlockRequest(targetId = _getReportResponse.value.reportId)).collect {
+                saveBlockUseCase(SaveBlockRequest(targetId = _getReportResponse.value.userId)).collect {
                     _saveBlockResponse.value = it
                     sendEffect(BodyMovieReportEffect.BlockSuccess)
                 }
@@ -293,6 +374,9 @@ class BodyMovieReportViewModel
 
         override fun handleEvent(event: BodyMovieReportEvent) {
             when (event) {
+                is BodyMovieReportEvent.ClickLikeButton -> {
+                    toggleLike(_getReportResponse.value.reportId, "report")
+                }
                 is BodyMovieReportEvent.SaveBlock -> {
                     saveBlock()
                 }

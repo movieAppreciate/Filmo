@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
-import com.teamfilmo.filmo.databinding.ReplyItemBinding
+import com.teamfilmo.filmo.databinding.ItemReplyBinding
 import com.teamfilmo.filmo.ui.reply.diffutil.ReplyDiffCallBack
 
 interface ReplyItemClick {
@@ -70,7 +70,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
         parent: ViewGroup,
         viewType: Int,
     ): ReplyViewHolder {
-        val binding = ReplyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReplyViewHolder(currentUserId, binding, itemClick)
     }
 

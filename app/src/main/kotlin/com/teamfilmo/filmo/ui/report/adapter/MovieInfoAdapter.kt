@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
-import com.teamfilmo.filmo.databinding.UpcomingMovieItemBinding
+import com.teamfilmo.filmo.databinding.ItemUpcomingMovieBinding
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter.ItemClick
 import timber.log.Timber
 
@@ -31,7 +31,7 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
     }
 
     inner class MovieInfoViewHolder(
-        val binding: UpcomingMovieItemBinding,
+        val binding: ItemUpcomingMovieBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindMovieItem(item: MovieInfo) {
             val title = item.movieName
@@ -61,7 +61,7 @@ class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHold
         parent: ViewGroup,
         viewType: Int,
     ): MovieInfoViewHolder {
-        val binding = UpcomingMovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemUpcomingMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MovieInfoViewHolder(binding)
     }
 

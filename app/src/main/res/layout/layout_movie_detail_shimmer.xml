@@ -3,25 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
-    android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/movie_detail_shimmer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include
-            layout="@layout/layout_movie_detail_shimmer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <ImageButton
         android:id="@+id/btn_back"
@@ -131,106 +114,92 @@
         app:layout_constraintStart_toStartOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-    <TextView
-        android:id="@+id/txt_movie_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
+    <View
+        android:id="@+id/view9"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/gray04"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/textView6" />
 
-    <TextView
-        android:id="@+id/txt_movie_eng_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/txt_movie_title"
-        app:layout_constraintTop_toBottomOf="@+id/txt_movie_title" />
-
-    <TextView
-        android:id="@+id/txt_release_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/txt_movie_eng_title"
+    <View
+        android:id="@+id/view6"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/gray04"
+        app:layout_constraintBottom_toBottomOf="@+id/textView7"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toTopOf="@+id/textView7" />
 
-    <TextView
-        android:id="@+id/txt_rank"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/txt_release_date"
+    <View
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="1dp"
+        android:background="@color/gray04"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toTopOf="@+id/textView8" />
 
-    <TextView
-        android:id="@+id/txt_genre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/txt_rank"
+    <View
+        android:id="@+id/view7"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/gray04"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintTop_toTopOf="@+id/textView9" />
 
-    <TextView
-        android:id="@+id/txt_nation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/txt_genre"
+    <View
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/gray04"
+        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+        app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toTopOf="@+id/textView11" />
 
-    <TextView
-        android:id="@+id/txt_running_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
+    <View
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/gray04"
         app:layout_constraintBottom_toBottomOf="@+id/textView12"
-        app:layout_constraintStart_toStartOf="@+id/txt_nation"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
-    <TextView
-        android:id="@+id/txt_rationing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
+    <View
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/gray04"
         app:layout_constraintBottom_toBottomOf="@+id/textView10"
-        app:layout_constraintStart_toStartOf="@+id/txt_running_time"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="@+id/textView10" />
 
-    <TextView
-        android:id="@+id/txt_summary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView21"
-        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+    <View
+        android:id="@+id/view8"
+        android:layout_width="240dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/gray04"
+        app:layout_constraintBottom_toBottomOf="@+id/textView21"
+        app:layout_constraintStart_toEndOf="@+id/textView21"
+        app:layout_constraintTop_toTopOf="@+id/textView21" />
 
-    <TextView
-        android:id="@+id/read_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="더보기"
-        android:textColor="@color/primary"
-        app:layout_constraintStart_toStartOf="@+id/txt_summary"
-        app:layout_constraintTop_toBottomOf="@+id/txt_summary" />
 
-    <ImageView
-        android:id="@+id/movie_image"
+    <View
         android:layout_width="150dp"
         android:layout_height="200dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_rationing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:background="@color/gray04"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/view9" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

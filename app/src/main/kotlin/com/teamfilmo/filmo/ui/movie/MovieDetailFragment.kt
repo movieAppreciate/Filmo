@@ -37,12 +37,15 @@ class MovieDetailFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.movieDetailShimmer.startShimmer()
+
         val args: MovieDetailFragmentArgs by navArgs()
         lifecycleScope.launch {
             viewModel.searchMovieDetail(args.movieId)
         }
 
-        requireActivity().onBackPressedDispatcher
+        requireActivity()
+            .onBackPressedDispatcher
             .addCallback(
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(true) {
@@ -75,6 +78,8 @@ class MovieDetailFragment :
                 lifecycleScope.launch {
                     repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.movieDetailInfo.value.apply {
+                            binding.movieDetailShimmer.stopShimmer()
+                            binding.movieDetailShimmer.visibility = View.GONE
                             binding.txtRank.text = getMovieRankInfo(this.certification)
                             binding.txtMovieTitle.text = this.title
                             binding.txtMovieEngTitle.text = this.original_title
@@ -87,7 +92,8 @@ class MovieDetailFragment :
                             binding.txtNation.text = this.production_companies?.first()?.origin_country
                             binding.txtRationing.text = this.production_companies?.joinToString(", ") { it.name.toString() }
                             binding.txtRunningTime.text = this.runtime.toString()
-                            Glide.with(binding.root.context)
+                            Glide
+                                .with(binding.root.context)
                                 .asBitmap()
                                 .load("https://image.tmdb.org/t/p/original" + this.poster_path)
                                 .into(binding.movieImage)
