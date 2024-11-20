@@ -216,17 +216,19 @@ class ReplyViewModel
                     countLikeUseCase(targetId),
                 ) { isLiked, likeCount ->
                     Pair(isLiked, likeCount)
-                }.collect { (isLiked, likeCount) ->
-                    if (isLiked) {
-                        // todo : likeId 수정 필요
-                        cancelReplyLike(targetId = targetId, likeId = _saveReplyLikeResponse.value.likeId)
-                        // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
-                        updateLikeState(targetId, false, likeCount - 1)
-                        sendEffect(ReplyEffect.CancelLike(replyId = targetId))
-                    } else {
-                        saveReplyLike(targetId, type)
-                        updateLikeState(targetId, true, likeCount + 1)
-                        sendEffect(ReplyEffect.SaveLike(targetId))
+                }.collect { (checkLike, likeCount) ->
+                    if (checkLike != null) {
+                        if (checkLike.isLike) {
+                            // todo : likeId 수정 필요
+                            cancelReplyLike(targetId = targetId, likeId = _saveReplyLikeResponse.value.likeId)
+                            // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
+                            updateLikeState(targetId, false, likeCount - 1)
+                            sendEffect(ReplyEffect.CancelLike(replyId = targetId))
+                        } else {
+                            saveReplyLike(targetId, type)
+                            updateLikeState(targetId, true, likeCount + 1)
+                            sendEffect(ReplyEffect.SaveLike(targetId))
+                        }
                     }
                 }
             }

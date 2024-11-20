@@ -8,6 +8,7 @@ import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
+import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
@@ -88,7 +89,7 @@ class BodyMovieReportViewModel
      */
         private fun cancelLike() {
             viewModelScope.launch {
-                cancelLikeUseCase(_saveLikeResponse.value.likeId)
+                _checkLikeResponse.value.likeId?.let { cancelLikeUseCase(it) }
                 updateLikeCount(reportId = _saveLikeResponse.value.targetId)
                 sendEffect(BodyMovieReportEffect.CancelLike)
             }
@@ -101,10 +102,16 @@ class BodyMovieReportViewModel
         ) {
             viewModelScope.launch {
                 checkLikeStateUseCase(targetId, type).collect {
-                    if (it) {
-                        cancelLike()
-                    } else {
-                        saveLike(targetId)
+                    if (it != null) {
+                        _checkLikeResponse.value = it
+                        if (it.isLike) {
+                            cancelLike()
+                        } else {
+                            saveLike(targetId)
+                        }
+                        updateLikeCount(targetId)
+                        val updatedLikeState = _checkLikeResponse.value.copy(isLike = !it.isLike)
+                        _checkLikeResponse.value = updatedLikeState
                     }
                 }
             }
@@ -120,6 +127,12 @@ class BodyMovieReportViewModel
                 }
             }
         }
+
+    /*
+    좋아요 여부 변수
+     */
+        private val _checkLikeResponse = MutableStateFlow(CheckLikeResponse())
+        val checkLikeResponse: StateFlow<CheckLikeResponse> = _checkLikeResponse
 
     /*
         좋아요 수 변수

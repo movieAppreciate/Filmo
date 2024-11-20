@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
@@ -62,6 +63,12 @@ class AllMovieReportViewModel
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
+        /*
+        좋아요 체크
+         */
+        private val _checkLikeResponse = MutableStateFlow(CheckLikeResponse())
+        val checkLikeResponse: StateFlow<CheckLikeResponse> = _checkLikeResponse
+
         /*
          좋아요 수 변수
          */
@@ -216,7 +223,7 @@ class AllMovieReportViewModel
  */
         private fun cancelLike() {
             viewModelScope.launch {
-                cancelLikeUseCase(_saveLikeResponse.value.likeId)
+                _checkLikeResponse.value.likeId?.let { cancelLikeUseCase(it) }
                 updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
                 sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
             }
@@ -229,10 +236,13 @@ class AllMovieReportViewModel
         ) {
             viewModelScope.launch {
                 checkLikeStateUseCase(targetId, type).collect {
-                    if (it) {
-                        cancelLike()
-                    } else {
-                        saveLike(targetId)
+                    if (it != null) {
+                        _checkLikeResponse.value = it
+                        if (it.isLike) {
+                            cancelLike()
+                        } else {
+                            saveLike(targetId)
+                        }
                     }
                 }
             }

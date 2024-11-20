@@ -63,7 +63,8 @@ class ReportPagingSource(
                             replyCount = reportItem.replyCount,
                             bookmarkCount = reportItem.bookmarkCount,
                             isBookmark = bookmarkList.any { it.reportId == reportItem.reportId },
-                            isLiked = checkLikeStateUseCase(reportItem.reportId, "report").first(),
+                            isLiked = checkLikeStateUseCase(reportItem.reportId, "report").first()!!.isLike,
+                            likeId = checkLikeStateUseCase(reportItem.reportId, "report").first()?.likeId,
                             movieName = getName(reportItem.reportId),
                         )
                     } to hasNext

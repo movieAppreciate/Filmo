@@ -21,6 +21,7 @@ import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BodyMovieReportFragment :
@@ -80,6 +81,12 @@ class BodyMovieReportFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                viewModel.checkLikeResponse.collect {
+                    Timber.d("it.isLike : ${it.isLike}")
+                    binding.btnLike.isSelected = it.isLike
+                }
+            }
             launch {
                 viewModel.likeCount.collect {
                     binding.tvLikeCount.text = it.toString()
@@ -220,10 +227,10 @@ class BodyMovieReportFragment :
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
             is BodyMovieReportEffect.RegistLike -> {
-                binding.btnLike.isSelected = true
+                binding.btnLike.setImageResource(R.drawable.ic_like_selected)
             }
             is BodyMovieReportEffect.CancelLike -> {
-                binding.btnLike.isSelected = false
+                binding.btnLike.setImageResource(R.drawable.ic_like)
             }
             is BodyMovieReportEffect.BlockSuccess -> {
                 // 메인 화면으로 이동

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import retrofit2.http.Body
@@ -47,5 +48,5 @@ interface LikeService {
         targetId: String,
         @Query("type")
         type: String,
-    ): Result<Boolean>
+    ): Result<CheckLikeResponse>
 }
