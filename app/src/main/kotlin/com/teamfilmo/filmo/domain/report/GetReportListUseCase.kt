@@ -1,10 +1,12 @@
 package com.teamfilmo.filmo.domain.report
 
 import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
+import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 /*
@@ -16,19 +18,35 @@ class GetReportListUseCase
     constructor(
         private val reportRepository: ReportRepository,
     ) {
-        operator fun invoke(lastReportId: String?) =
+        operator fun invoke(lastReportId: String?): Flow<SearchReportResponse?> =
             flow {
                 // 1. 레포지토리 호출 시 예외 발생
-                val result = reportRepository.searchReport(SearchReportRequest(lastReportId = lastReportId))
-                // 2. 예외가 발생하면 onFailure 블럭에서 throw
-                result.onFailure {
-                    // 예외를 던진다.
-                    throw it
+                try {
+                    val result = reportRepository.searchReport(SearchReportRequest(lastReportId = lastReportId))
+                    result
+                        .onSuccess { searchResult ->
+                            emit(searchResult)
+                        }.onFailure { exception ->
+                            when (exception) {
+                                // todo : 이후 UiState를 통해 HttpError 발생 시 에러 메시지 보이기
+                                is HttpException -> Timber.e("Network error: ${exception.message}")
+                                else -> Timber.e("Unknown error: ${exception.message}")
+                            }
+                            // 실패임을 확인할 수 잇도록 null 반환
+                            emit(SearchReportResponse())
+                        }
+                } catch (e: Exception) {
+                    // result.onFailure에서 처리되지 않은 모든 예외를 최종적으로 잡아낸다.
+                    // 예상치 못한 예외 발생 가능성
+                    // 1. JSON 파싱 오류
+                    // 2. 라이브러리 내부 버그로 인한 예외
+                    Timber.e(e, "Unexpected error in GetReportListUseCase")
+                    emit(SearchReportResponse())
                 }
-                // 3. 성공 시 결과를 emit 한다.
-                emit(result.getOrNull())
-            }.catch {
-                // 4. throw 된 예외를 여기서 잡는다.
-                Timber.e(it.localizedMessage)
             }
     }
+
+// operator fun invoke(targetId: String): Flow<Result<List<SearchReportItem>>> =
+//    reportRepository.searchUserReport(
+//        SearchUserReportListRequest(targetId),
+//    )
