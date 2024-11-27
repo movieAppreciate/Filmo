@@ -18,14 +18,17 @@ class GetReportListUseCase
     ) {
         operator fun invoke(lastReportId: String?) =
             flow {
-                // todo : 그냥 "" 로 넣어줘도 됨 수정할 것
+                // 1. 레포지토리 호출 시 예외 발생
                 val result = reportRepository.searchReport(SearchReportRequest(lastReportId = lastReportId))
+                // 2. 예외가 발생하면 onFailure 블럭에서 throw
                 result.onFailure {
+                    // 예외를 던진다.
                     throw it
                 }
-//                emit(result.getOrNull()?.searchReport ?: emptyList())
+                // 3. 성공 시 결과를 emit 한다.
                 emit(result.getOrNull())
             }.catch {
+                // 4. throw 된 예외를 여기서 잡는다.
                 Timber.e(it.localizedMessage)
             }
     }
