@@ -4,8 +4,8 @@ import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 /*
@@ -20,10 +20,14 @@ class GetReportUseCase
             flow {
                 val result = reportRepository.getReport(reportId)
                 result.onFailure {
-                    throw it
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(null)
                 }
-                emit(result.getOrNull())
-            }.catch {
-                Timber.d(it.message)
+                result.onSuccess {
+                    emit(it)
+                }
             }
     }

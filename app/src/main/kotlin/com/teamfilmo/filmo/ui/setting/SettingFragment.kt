@@ -17,6 +17,10 @@ class SettingFragment :
     private val args: SettingFragmentArgs by navArgs()
 
     override fun onBindLayout() {
+        // 사용자 탈퇴
+        binding.btnUserQuit.setOnClickListener {
+            viewModel.handleEvent(SettingEvent.QuitUser)
+        }
         binding.txtUserName.text = args.nickName
         binding.btnBack.setOnClickListener {
             navController.popBackStack()

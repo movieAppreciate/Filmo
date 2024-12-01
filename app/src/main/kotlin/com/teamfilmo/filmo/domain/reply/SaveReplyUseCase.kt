@@ -5,8 +5,8 @@ import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class SaveReplyUseCase
@@ -16,14 +16,16 @@ class SaveReplyUseCase
     ) {
         operator fun invoke(reply: SaveReplyRequest): Flow<SaveReplyResponse?> =
             flow {
-                val result =
-                    replyRepository.saveReply(reply)
-                        .onFailure {
-                            throw it
+                replyRepository
+                    .saveReply(reply)
+                    .onSuccess {
+                        emit(it)
+                    }.onFailure {
+                        when (it) {
+                            is HttpException -> Timber.e("Network error: ${it.message}")
+                            else -> Timber.e("Unknown error: ${it.message}")
                         }
-                emit(result.getOrNull())
+                        emit(null)
+                    }
             }
-                .catch {
-                    Timber.e("failed to save reply : ${it.message}")
-                }
     }

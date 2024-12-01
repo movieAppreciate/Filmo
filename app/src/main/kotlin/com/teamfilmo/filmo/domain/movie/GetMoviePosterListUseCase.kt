@@ -4,8 +4,8 @@ import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class GetMoviePosterListUseCase
@@ -17,9 +17,12 @@ class GetMoviePosterListUseCase
             flow {
                 val result =
                     movieRepository.getPoster(ThumbnailRequest(movieId))
-                        .onFailure {
-                            throw it
-                        }
+                result.onFailure {
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                }
 
                 val imageBaseUrl = "https://image.tmdb.org/t/p/original"
                 val posters = result.getOrNull()?.images?.posters
@@ -33,7 +36,5 @@ class GetMoviePosterListUseCase
                 } else {
                     Timber.e("${result.getOrNull()?.images} poster list is empty or null")
                 }
-            }.catch {
-                Timber.e(it)
             }
     }

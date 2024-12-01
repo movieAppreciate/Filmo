@@ -5,8 +5,8 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class SearchMovieListUseCase
@@ -22,20 +22,24 @@ class SearchMovieListUseCase
             flow {
                 val result =
                     query?.let {
-                        movieRepository.searchList(query)
+                        movieRepository
+                            .searchList(query)
                             .onFailure {
-                                throw it
+                                when (it) {
+                                    is HttpException -> Timber.e("Network error: ${it.message}")
+                                    else -> Timber.e("Unknown error: ${it.message}")
+                                }
+                                emit(emptyList())
+                            }.onSuccess {
+                                list.clear()
+                                it.results.forEach {
+                                    if (it.posterPath != null) {
+                                        list.add(it)
+                                        Timber.d("방출하는 Result : ${it.title}")
+                                    }
+                                }
+                                emit(list)
                             }
                     }
-                list.clear()
-                result?.getOrNull()?.results?.forEach {
-                    if (it.posterPath != null) {
-                        list.add(it)
-                        Timber.d("방출하는 Result : ${it.title}")
-                    }
-                }
-                emit(list)
-            }.catch {
-                Timber.e(it.localizedMessage)
             }
     }

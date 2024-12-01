@@ -2,6 +2,9 @@ package com.teamfilmo.filmo.domain.like
 
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class CancelLikeUseCase
@@ -9,12 +12,18 @@ class CancelLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        suspend operator fun invoke(reportId: String): Result<String?> =
-            likeRepository
-                .cancelLike(reportId)
-                .onSuccess {
-                    Timber.d("success to cancel like")
-                }.onFailure {
-                    Timber.d("failed to cancel like : ${it.message}")
+        operator fun invoke(reportId: String): Flow<String?> =
+            flow {
+                val result = likeRepository.cancelLike(reportId)
+                result.onSuccess {
+                    emit(it)
                 }
+                result.onFailure {
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(null)
+                }
+            }
     }

@@ -3,11 +3,9 @@ package com.teamfilmo.filmo.domain.movie
 import com.teamfilmo.filmo.data.remote.model.movie.MovieResult
 import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
 import timber.log.Timber
 
 class GetUpcomingMovieUseCase
@@ -23,12 +21,15 @@ class GetUpcomingMovieUseCase
             flow {
                 val result =
                     movieApiRepository.getUpcomingMovieList(SERVICE_KEY, 1)
-                        .onFailure {
-                            throw it
-                        }
-                emit(result.getOrNull()?.results ?: emptyList())
-            }.catch {
-                Timber.e(it.localizedMessage)
+                result.onSuccess {
+                    emit(it.results)
+                }
+                result.onFailure {
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(emptyList())
+                }
             }
-                .flowOn(Dispatchers.IO)
     }

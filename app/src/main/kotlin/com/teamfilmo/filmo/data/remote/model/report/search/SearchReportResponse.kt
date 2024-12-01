@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class SearchReportResponse(
     val searchReportCount: Int = 0,
     val searchReport: List<SearchReportItem> = emptyList(),
-    val hasNext: Boolean = true,
+    val hasNext: Boolean = false,
 )
 
 @Serializable

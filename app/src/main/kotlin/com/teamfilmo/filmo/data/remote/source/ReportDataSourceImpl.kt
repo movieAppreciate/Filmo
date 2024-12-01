@@ -17,7 +17,8 @@ class ReportDataSourceImpl
     constructor(
         private val reportService: ReportService,
     ) : ReportDataSource {
-        override suspend fun deleteReport(reportId: String): Result<String> = reportService.deleteReport(reportId)
+        override suspend fun deleteReport(reportId: String): Result<String> =
+            reportService.deleteReport(reportId)
 
         override suspend fun updateReport(request: UpdateReportRequest): Result<String> = reportService.updateReport(request)
 
