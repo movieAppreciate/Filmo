@@ -4,8 +4,8 @@ import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class GetReplyUseCase
@@ -15,14 +15,16 @@ class GetReplyUseCase
     ) {
         operator fun invoke(reportId: String): Flow<List<GetReplyResponseItem>?> =
             flow {
-                val result =
-                    replyRepository.getReply(reportId = reportId)
-                        .onFailure {
-                            throw it
+                replyRepository
+                    .getReply(reportId = reportId)
+                    .onFailure {
+                        when (it) {
+                            is HttpException -> Timber.e("Network error: ${it.message}")
+                            else -> Timber.e("Unknown error: ${it.message}")
                         }
-                emit(result.getOrNull())
+                        emit(emptyList())
+                    }.onSuccess {
+                        emit(it)
+                    }
             }
-                .catch {
-                    Timber.e("failed to get reply : ${it.message}")
-                }
     }

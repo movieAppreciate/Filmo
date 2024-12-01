@@ -1,6 +1,9 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.user.UserQuitRequest
+import com.teamfilmo.filmo.data.remote.model.user.UserQuitResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -29,4 +32,13 @@ interface UserService {
         @Query("userId")
         userId: String?,
     ): Result<UserResponse>
+
+    /*
+    유저 탈퇴
+     */
+    @POST("/user/quit")
+    suspend fun quitUser(
+        @Body
+        userId: UserQuitRequest,
+    ): Result<UserQuitResponse>
 }

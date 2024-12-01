@@ -70,6 +70,20 @@ class AllMovieReportFragment :
     override fun onBindLayout() {
         binding.layoutShimmer.startShimmer()
 
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.checkLikeResponse.collect {
+//                    if (it.isLike) {
+//                        // 좋아요 등록
+//                        allMovieReportAdapter.updateLikeState(it.reportId, true)
+//                    } else {
+//                        // 좋아요 취소
+//                        allMovieReportAdapter.updateLikeState(it.reportId, true)
+//                    }
+//                }
+//            }
+//        }
+
         // todo : 뒤로 가기 시 앱 종료 확인 로직 추가
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingData.collectLatest {

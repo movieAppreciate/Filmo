@@ -3,20 +3,27 @@ package com.teamfilmo.filmo.domain.report
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class DeleteReportUseCase
     @Inject
-    constructor
-    (private val reportRepository: ReportRepository) {
-        operator fun invoke(reportId: String): Flow<String> =
+    constructor(
+        private val reportRepository: ReportRepository,
+    ) {
+        operator fun invoke(reportId: String): Flow<String?> =
             flow {
                 val result = reportRepository.deleteReport(reportId)
                 result.onFailure {
-                    throw it
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(null)
                 }
-                emit(result.getOrNull() ?: "error")
-            }.catch { Timber.e("failed to delete report, ${it.localizedMessage}") }
+                result.onSuccess {
+                    emit(it)
+                }
+            }
     }

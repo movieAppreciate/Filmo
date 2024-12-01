@@ -5,8 +5,8 @@ import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class UpdateReplyUseCase
@@ -16,13 +16,16 @@ class UpdateReplyUseCase
     ) {
         operator fun invoke(request: UpdateReplyRequest): Flow<UpdateReplyResponse?> =
             flow {
-                val result =
-                    replyRepository.updateReply(request)
-                        .onFailure {
-                            throw it
+                replyRepository
+                    .updateReply(request)
+                    .onFailure {
+                        when (it) {
+                            is HttpException -> Timber.e("Network error: ${it.message}")
+                            else -> Timber.e("Unknown error: ${it.message}")
                         }
-                emit(result.getOrNull())
-            }.catch {
-                Timber.d("failed to update reply : ${it.message}")
+                        emit(null)
+                    }.onSuccess {
+                        emit(it)
+                    }
             }
     }

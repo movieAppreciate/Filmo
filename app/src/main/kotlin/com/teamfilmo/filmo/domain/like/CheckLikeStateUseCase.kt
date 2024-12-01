@@ -4,8 +4,8 @@ import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class CheckLikeStateUseCase
@@ -20,8 +20,13 @@ class CheckLikeStateUseCase
             flow {
                 val result = likeRepository.checkLike(targetId, type)
                 result.onFailure {
-                    throw it
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
                 }
-                emit(result.getOrNull())
-            }.catch { Timber.d("failed to check reply like state : ${it.localizedMessage}") }
+                result.onSuccess {
+                    emit(it)
+                }
+            }
     }

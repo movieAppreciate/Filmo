@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class AllReportLikeState(
     val reportId: String = "",
@@ -213,19 +212,34 @@ class AllMovieReportViewModel
                 ).collect {
                     _saveLikeResponse.value = it
                     updateLikeCount(reportId, true)
+                    val updatedLikeState =
+                        _checkLikeResponse.value.copy(
+                            isLike = true,
+                        )
+
+                    _checkLikeResponse.value = updatedLikeState
+                    sendEffect(AllMovieReportEffect.RegistLike(reportId))
                 }
-                sendEffect(AllMovieReportEffect.RegistLike(reportId))
             }
         }
 
 /*
 좋아요 취소
  */
-        private fun cancelLike() {
+        private fun cancelLike(likeId: String) {
             viewModelScope.launch {
-                _checkLikeResponse.value.likeId?.let { cancelLikeUseCase(it) }
-                updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
-                sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
+                if (_checkLikeResponse.value.likeId == null) return@launch
+                cancelLikeUseCase(likeId).collect {
+                    if (it != null) {
+                        val updatedLikeState =
+                            _checkLikeResponse.value.copy(
+                                isLike = false,
+                            )
+                        _checkLikeResponse.value = updatedLikeState
+                        updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
+                        sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
+                    }
+                }
             }
         }
 
@@ -239,7 +253,7 @@ class AllMovieReportViewModel
                     if (it != null) {
                         _checkLikeResponse.value = it
                         if (it.isLike) {
-                            cancelLike()
+                            if (it.likeId != null) cancelLike(it.likeId)
                         } else {
                             saveLike(targetId)
                         }
@@ -257,7 +271,6 @@ class AllMovieReportViewModel
                 countLikeUseCase(reportId).collect {
                     _likeCount.value = it
                 }
-                Timber.d("업데이트 like count : ${_likeCount.value}")
                 sendEffect(AllMovieReportEffect.CountLike(reportId, _likeCount.value))
             }
 

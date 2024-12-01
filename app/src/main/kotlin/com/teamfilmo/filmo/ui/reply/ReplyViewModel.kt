@@ -192,16 +192,14 @@ class ReplyViewModel
         }
 
         private fun cancelReplyLike(
-            targetId: String,
             likeId: String,
         ) {
             viewModelScope.launch {
-                cancelLikeUseCase(likeId)
-                    .onSuccess {
-                        Timber.d("좋아요 취소 성공")
-                    }.onFailure {
-                        Timber.d("좋아요 취소 실패")
+                cancelLikeUseCase(likeId).collect {
+                    if (it != null) {
+                        _isLiked.value = false
                     }
+                }
             }
         }
 
@@ -220,7 +218,7 @@ class ReplyViewModel
                     if (checkLike != null) {
                         if (checkLike.isLike) {
                             // todo : likeId 수정 필요
-                            cancelReplyLike(targetId = targetId, likeId = _saveReplyLikeResponse.value.likeId)
+                            cancelReplyLike(likeId = _saveReplyLikeResponse.value.likeId)
                             // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
                             updateLikeState(targetId, false, likeCount - 1)
                             sendEffect(ReplyEffect.CancelLike(replyId = targetId))
