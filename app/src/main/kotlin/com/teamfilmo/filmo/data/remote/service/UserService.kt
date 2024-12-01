@@ -4,6 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.user.UserQuitRequest
 import com.teamfilmo.filmo.data.remote.model.user.UserQuitResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -36,7 +37,7 @@ interface UserService {
     /*
     유저 탈퇴
      */
-    @POST("/user/quit")
+    @DELETE("/user/delete")
     suspend fun quitUser(
         @Body
         userId: UserQuitRequest,
