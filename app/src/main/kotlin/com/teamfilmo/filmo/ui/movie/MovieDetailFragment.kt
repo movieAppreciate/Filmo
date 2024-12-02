@@ -2,8 +2,6 @@ package com.teamfilmo.filmo.ui.movie
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -43,17 +41,6 @@ class MovieDetailFragment :
         lifecycleScope.launch {
             viewModel.searchMovieDetail(args.movieId)
         }
-
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        navController.popBackStack()
-                    }
-                },
-            )
     }
 
     private fun getMovieRankInfo(certification: String): String {

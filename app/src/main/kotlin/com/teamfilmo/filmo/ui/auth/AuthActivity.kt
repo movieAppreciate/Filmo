@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.ui.auth
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.method.LinkMovementMethod
@@ -11,6 +12,7 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.kakao.sdk.auth.model.OAuthToken
@@ -35,6 +37,13 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
+
+    @Suppress("ktlint:standard:property-naming")
+    private val USER_PREFERENCES_NAME = "user_preferences"
+
+    private val Context.dataStore by preferencesDataStore(
+        name = USER_PREFERENCES_NAME,
+    )
 
     override fun onBindLayout() {
         // 상태바 색깔 처리해주기
@@ -94,8 +103,14 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
+            AuthEffect.SignUpFailed -> {
+                Timber.d("회원가입 실패!")
+            }
+            AuthEffect.SignUpSuccess -> {
+                Timber.d("회원가입 성공!")
+            }
             AuthEffect.NavigateToSignUp -> {
-                Timber.d("회원가입")
+                Timber.d("회원가입 필요")
             }
             AuthEffect.LoginSuccess -> {
                 lifecycleScope.launch {
@@ -108,6 +123,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
             AuthEffect.LoginFailed -> {
                 showToast("로그인 실패")
+                //
             }
         }
     }

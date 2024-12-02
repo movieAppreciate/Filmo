@@ -11,7 +11,7 @@ data class SignUpResponse(
     val profileUrl: String? = null,
     val lastLoginDate: String? = null,
     val introduction: String? = null,
-    val roles: List<String> = emptyList(),
+    val roles: String,
     val createDate: String,
     val lastModifiedDate: String,
 )

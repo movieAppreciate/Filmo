@@ -10,6 +10,7 @@ import com.teamfilmo.filmo.data.repository.LikeRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieApiRepositoryImpl
 import com.teamfilmo.filmo.data.repository.MovieRepositoryImpl
 import com.teamfilmo.filmo.data.repository.ReplyRepositoryImpl
+import com.teamfilmo.filmo.data.repository.UserPreferencesRepositoryImpl
 import com.teamfilmo.filmo.data.repository.UserRepositoryImpl
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import com.teamfilmo.filmo.domain.repository.BlockRepository
@@ -21,6 +22,7 @@ import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import com.teamfilmo.filmo.domain.repository.ReportRepository
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -84,4 +86,9 @@ abstract class RepositoryModule {
     abstract fun bindBlockRepository(
         blockRepository: BlockRepositoryImpl,
     ): BlockRepository
+
+    @Binds
+    abstract fun bindUserPreferencesRepository(
+        userPreferencesRepository: UserPreferencesRepositoryImpl,
+    ): UserPreferencesRepository
 }
