@@ -16,7 +16,7 @@ data class SearchReportItem(
     val content: String,
     val createDate: String,
     val imageUrl: String? = null,
-    val nickname: String,
+    val nickname: String?,
     val likeCount: Int,
     val replyCount: Int,
     val bookmarkCount: Int,

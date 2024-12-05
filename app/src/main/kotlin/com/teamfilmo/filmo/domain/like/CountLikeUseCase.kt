@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.like
 
+import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ class CountLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        operator fun invoke(targetId: String): Flow<Int> =
+        operator fun invoke(targetId: String): Flow<CountLikeResponse?> =
             flow {
                 val result = likeRepository.countLike(targetId)
                 result.onSuccess {
@@ -24,7 +25,10 @@ class CountLikeUseCase
                         is HttpException -> Timber.e("Network error: ${it.message}")
                         else -> Timber.e("Unknown error: ${it.message}")
                     }
-                    emit(0)
+                    emit(null)
+                }
+                result.onSuccess {
+                    emit(it)
                 }
             }
     }

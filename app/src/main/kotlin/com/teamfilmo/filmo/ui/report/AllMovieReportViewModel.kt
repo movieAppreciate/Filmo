@@ -1,4 +1,4 @@
-package com.teamfilmo.filmo.ui.report.all
+package com.teamfilmo.filmo.ui.report
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -22,9 +22,10 @@ import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.ui.report.all.paging.ReportPagingSource
+import com.teamfilmo.filmo.ui.report.paging.ReportPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,6 +63,11 @@ class AllMovieReportViewModel
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
+        init {
+            getMovieReports()
+            getUpcomingMovieList()
+        }
+
         /*
         좋아요 체크
          */
@@ -71,7 +77,7 @@ class AllMovieReportViewModel
         /*
          좋아요 수 변수
          */
-        private val _likeCount = MutableStateFlow<Int>(0)
+        private val _likeCount = MutableStateFlow(0)
         val likeCount: StateFlow<Int> = _likeCount
 
         /*
@@ -79,10 +85,10 @@ class AllMovieReportViewModel
          */
         private val _saveLikeResponse = MutableStateFlow(SaveLikeResponse())
         val saveLikeResponse: StateFlow<SaveLikeResponse> = _saveLikeResponse
+
         /*
         감상문 페이징
          */
-
         private val _pagingData = MutableStateFlow<PagingData<ReportItem>>(PagingData.empty())
         val pagingData = _pagingData.asStateFlow()
 
@@ -99,8 +105,6 @@ class AllMovieReportViewModel
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
                 is AllMovieReportEvent.LoadReport -> {
-                    getMovieReports()
-                    getUpcomingMovieList()
                 }
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
@@ -115,7 +119,7 @@ class AllMovieReportViewModel
      */
 
         private fun getMovieReports() {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 Pager(
                     config =
                         PagingConfig(
@@ -141,7 +145,7 @@ class AllMovieReportViewModel
         // 영화 api : 최신 영화 정보 리스트 가져오기
 
         private fun getUpcomingMovieList() {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 val list = mutableListOf<MovieInfo>()
                 getUpcomingMovieUseCase()
                     .take(3)
@@ -210,15 +214,21 @@ class AllMovieReportViewModel
                         type = "report",
                     ),
                 ).collect {
-                    _saveLikeResponse.value = it
-                    updateLikeCount(reportId, true)
-                    val updatedLikeState =
-                        _checkLikeResponse.value.copy(
-                            isLike = true,
-                        )
+                    if (it == null) {
+                        // todo : 좋아요 처리 실패
+                    } else {
+                        _saveLikeResponse.value = it
+                        updateLikeCount(reportId, true)
 
-                    _checkLikeResponse.value = updatedLikeState
-                    sendEffect(AllMovieReportEffect.RegistLike(reportId))
+                        val updatedLikeState =
+                            _checkLikeResponse.value.copy(
+                                likeId = it.likeId,
+                                isLike = true,
+                            )
+
+                        _checkLikeResponse.value = updatedLikeState
+                        sendEffect(AllMovieReportEffect.RegistLike(reportId))
+                    }
                 }
             }
         }
@@ -269,22 +279,12 @@ class AllMovieReportViewModel
         ) {
             viewModelScope.launch {
                 countLikeUseCase(reportId).collect {
-                    _likeCount.value = it
+                    if (it != null) {
+                        _likeCount.value = it.countLike
+                        sendEffect(AllMovieReportEffect.CountLike(reportId, _likeCount.value))
+                    }
                 }
-                sendEffect(AllMovieReportEffect.CountLike(reportId, _likeCount.value))
             }
-
-//            var updatedLikeCount = 0
-//            _likeState.update { uiStateList ->
-//                uiStateList.map { uiState ->
-//                    if (uiState.reportId == reportId) {
-//                        updatedLikeCount = if (isLiked) uiState.likeCount + 1 else uiState.likeCount - 1
-//                        uiState.copy(likeCount = updatedLikeCount)
-//                    } else {
-//                        uiState
-//                    }
-//                }
-//            }
         }
 
     /*

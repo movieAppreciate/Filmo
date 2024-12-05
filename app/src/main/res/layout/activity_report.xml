@@ -7,7 +7,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/report_activity_fragment_container_view"
-        android:name="com.teamfilmo.filmo.ui.report.all.AllMovieReportFragment"
+        android:name="com.teamfilmo.filmo.ui.report.AllMovieReportFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

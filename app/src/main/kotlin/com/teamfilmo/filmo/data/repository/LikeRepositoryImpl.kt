@@ -1,6 +1,8 @@
 package com.teamfilmo.filmo.data.repository
 
+import com.teamfilmo.filmo.data.remote.model.like.CancelLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.source.LikeDataSource
@@ -19,7 +21,7 @@ class LikeRepositoryImpl
             type: String,
         ): Result<CheckLikeResponse> = likeDataSource.checkLike(targetId, type)
 
-        override suspend fun cancelLike(likeId: String): Result<String> = likeDataSource.cancelLike(likeId)
+        override suspend fun cancelLike(likeId: String): Result<CancelLikeResponse> = likeDataSource.cancelLike(likeId)
 
-        override suspend fun countLike(targetId: String): Result<Int> = likeDataSource.countLike(targetId)
+        override suspend fun countLike(targetId: String): Result<CountLikeResponse> = likeDataSource.countLike(targetId)
     }

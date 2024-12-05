@@ -1,6 +1,8 @@
 package com.teamfilmo.filmo.domain.repository
 
+import com.teamfilmo.filmo.data.remote.model.like.CancelLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 
@@ -12,7 +14,7 @@ interface LikeRepository {
         type: String,
     ): Result<CheckLikeResponse>
 
-    suspend fun cancelLike(likeId: String): Result<String>
+    suspend fun cancelLike(likeId: String): Result<CancelLikeResponse>
 
-    suspend fun countLike(targetId: String): Result<Int>
+    suspend fun countLike(targetId: String): Result<CountLikeResponse>
 }

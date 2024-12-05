@@ -1,6 +1,8 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.like.CancelLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import retrofit2.http.Body
@@ -25,7 +27,7 @@ interface LikeService {
     suspend fun cancel(
         @Query("likeId")
         likeId: String,
-    ): Result<String>
+    ): Result<CancelLikeResponse>
 
     /**
      * 좋아요 수 확인
@@ -37,7 +39,7 @@ interface LikeService {
          */
         @Query("targetId")
         targetId: String,
-    ): Result<Int>
+    ): Result<CountLikeResponse>
 
     /**
      * 좋아요 확인

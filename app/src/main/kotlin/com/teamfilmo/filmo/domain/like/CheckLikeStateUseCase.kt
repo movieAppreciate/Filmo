@@ -24,6 +24,7 @@ class CheckLikeStateUseCase
                         is HttpException -> Timber.e("Network error: ${it.message}")
                         else -> Timber.e("Unknown error: ${it.message}")
                     }
+                    emit(null)
                 }
                 result.onSuccess {
                     emit(it)

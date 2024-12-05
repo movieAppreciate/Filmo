@@ -1,9 +1,7 @@
-package com.teamfilmo.filmo.ui.report.all
+package com.teamfilmo.filmo.ui.report
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -32,17 +30,6 @@ class AllMovieReportFragment :
     }
     val movieInfoAdapter by lazy {
         MovieInfoAdapter()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        lifecycleScope.launch {
-            viewModel.handleEvent(AllMovieReportEvent.LoadReport)
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun handleEffect(effect: AllMovieReportEffect) {
@@ -124,11 +111,9 @@ class AllMovieReportFragment :
             }
 
             lifecycleScope.launch {
-                launch {
-                    viewModel.upcomingMovieList.collect { movieInfoList ->
-                        binding.movieRecyclerview.apply {
-                            movieInfoAdapter.setMovieInfoList(movieInfoList)
-                        }
+                viewModel.upcomingMovieList.collect { movieInfoList ->
+                    binding.movieRecyclerview.apply {
+                        movieInfoAdapter.setMovieInfoList(movieInfoList)
                     }
                 }
             }

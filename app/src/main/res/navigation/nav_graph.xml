@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/allMovieReportFragment"
-        android:name="com.teamfilmo.filmo.ui.report.all.AllMovieReportFragment"
+        android:name="com.teamfilmo.filmo.ui.report.AllMovieReportFragment"
         android:label="AllMovieReportFragment" >
 
         <action

@@ -137,7 +137,6 @@
                     android:layout_marginStart="100dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/ic_like"
-                    android:src="@drawable/ic_like"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btn_reply"
                     app:layout_constraintStart_toEndOf="@+id/tv_create_date"

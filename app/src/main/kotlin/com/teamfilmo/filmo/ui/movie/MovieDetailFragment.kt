@@ -24,22 +24,16 @@ class MovieDetailFragment :
 
     override fun onBindLayout() {
         super.onBindLayout()
-        binding.btnBack.setOnClickListener {
-            navController.popBackStack()
-        }
-    }
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.movieDetailShimmer.startShimmer()
 
         val args: MovieDetailFragmentArgs by navArgs()
         lifecycleScope.launch {
             viewModel.searchMovieDetail(args.movieId)
+        }
+
+        binding.btnBack.setOnClickListener {
+            navController.popBackStack()
         }
     }
 
@@ -51,10 +45,10 @@ class MovieDetailFragment :
                 "15" -> "15세이상 관람가"
                 "18" -> "18세이상 관람가"
                 "PG" -> "10세 이상 관람 불가"
-                "19" -> "청소년 관람불가"
+                "19" -> "청소년 관람 불가"
                 "PG-13" -> "14세 이상 관람가"
-                "R" -> "17세 미만 청소년은 보호자와 함께 관람"
-                else -> "정보없음"
+                "R" -> "17세 미만은 보호자와 관람"
+                else -> "정보 없음"
             }
         return rank
     }

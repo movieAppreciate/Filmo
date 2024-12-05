@@ -14,7 +14,7 @@ class SaveLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        operator fun invoke(saveLikeRequest: SaveLikeRequest): Flow<SaveLikeResponse> =
+        operator fun invoke(saveLikeRequest: SaveLikeRequest): Flow<SaveLikeResponse?> =
             flow {
                 val result = likeRepository.saveLike(saveLikeRequest)
                 result.onSuccess {
@@ -26,7 +26,7 @@ class SaveLikeUseCase
                         is HttpException -> Timber.e("Network error: ${it.message}")
                         else -> Timber.e("Unknown error: ${it.message}")
                     }
-                    emit(SaveLikeResponse())
+                    emit(null)
                 }
             }
     }
