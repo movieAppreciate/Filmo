@@ -2,9 +2,9 @@ package com.teamfilmo.filmo.ui.setting
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.DeleteUserUseCase
-import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,16 +15,16 @@ import kotlinx.coroutines.launch
 class SettingViewModel
     @Inject
     constructor(
-        private val getUserInfoUseCase: GetUserInfoUseCase,
+        private val userPreferencesRepository: UserPreferencesRepository,
         private val deleteUserUseCase: DeleteUserUseCase,
     ) : BaseViewModel<SettingEffect, SettingEvent>() {
         // 내 정보
-        private val _userInfo = MutableStateFlow(UserResponse())
-        val userInfo: StateFlow<UserResponse> = _userInfo
+        private val _userInfo = MutableStateFlow(UserInfo())
+        val userInfo: StateFlow<UserInfo> = _userInfo
 
         init {
             viewModelScope.launch {
-                getUserInfoUseCase(null).collect {
+                userPreferencesRepository.getUserInfo().collect {
                     if (it != null) {
                         _userInfo.value = it
                     }

@@ -28,13 +28,13 @@ class MyPageFragment :
             }
             launch {
                 viewModel.userInfo.collect {
-                    binding.txtUserName.text = it.nickname
+                    binding.txtUserName.text = it.nickName
                 }
             }
         }
         with(binding) {
             btnSetting.setOnClickListener {
-                val action = MyPageFragmentDirections.navigateToSettingFromMyPage(viewModel.userInfo.value.nickname)
+                val action = MyPageFragmentDirections.navigateToSettingFromMyPage(viewModel.userInfo.value.nickName)
                 navController.navigate(action)
             }
 

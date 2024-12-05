@@ -10,7 +10,7 @@ import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
@@ -20,7 +20,7 @@ import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.reply.SaveReplyUseCase
-import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,22 +33,21 @@ import timber.log.Timber
 class ReplyViewModel
     @Inject
     constructor(
+        private val userPreferencesRepository: UserPreferencesRepository,
         private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val checkLikeUseCase: CheckLikeStateUseCase,
         private val saveLikeUseCase: SaveLikeUseCase,
         private val cancelLikeUseCase: CancelLikeUseCase,
-        private val getUserInfoUseCase: GetUserInfoUseCase,
         private val getReplyUseCase: GetReplyUseCase,
         private val saveReplyUseCase: SaveReplyUseCase,
-        private val updateReplyUseCase: SaveReplyUseCase,
         private val deleteReplyUseCase: DeleteReplyUseCase,
     ) : BaseViewModel<ReplyEffect, ReplyEvent>() {
         init {
-            // 현재 유저 정보
+            // 현재 유저 정보를 Db에서 가져오기
             viewModelScope.launch {
-                getUserInfoUseCase().collect {
+                userPreferencesRepository.getUserInfo().collect {
                     if (it != null) {
                         _userInfo.value = it
                     }
@@ -96,8 +95,8 @@ class ReplyViewModel
     /*
     유저 정보
      */
-        private val _userInfo = MutableStateFlow(UserResponse("", "", "", "", "", "", "", "", ""))
-        val userInfo: StateFlow<UserResponse> = _userInfo
+        private val _userInfo = MutableStateFlow(UserInfo())
+        val userInfo: StateFlow<UserInfo> = _userInfo
 
         /*
         답글 아이템
@@ -185,8 +184,10 @@ class ReplyViewModel
         ) {
             viewModelScope.launch {
                 saveLikeUseCase(SaveLikeRequest(targetId, type)).collect {
-                    _saveReplyLikeResponse.value = it
-                    _isLiked.value = true
+                    if (it != null) {
+                        _saveReplyLikeResponse.value = it
+                        _isLiked.value = true
+                    }
                 }
             }
         }
@@ -215,16 +216,16 @@ class ReplyViewModel
                 ) { isLiked, likeCount ->
                     Pair(isLiked, likeCount)
                 }.collect { (checkLike, likeCount) ->
-                    if (checkLike != null) {
+                    if (checkLike != null && likeCount != null) {
                         if (checkLike.isLike) {
                             // todo : likeId 수정 필요
                             cancelReplyLike(likeId = _saveReplyLikeResponse.value.likeId)
                             // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
-                            updateLikeState(targetId, false, likeCount - 1)
+                            updateLikeState(targetId, false, likeCount.countLike - 1)
                             sendEffect(ReplyEffect.CancelLike(replyId = targetId))
                         } else {
                             saveReplyLike(targetId, type)
-                            updateLikeState(targetId, true, likeCount + 1)
+                            updateLikeState(targetId, true, likeCount.countLike + 1)
                             sendEffect(ReplyEffect.SaveLike(targetId))
                         }
                     }

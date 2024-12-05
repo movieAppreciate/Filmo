@@ -3,37 +3,58 @@ package com.teamfilmo.filmo.ui.mypage
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.domain.follow.CountFollowUseCase
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MyPageViewModel
     @Inject
     constructor(
+        private val userPreferencesRepository: UserPreferencesRepository,
         private val getUserInfoUseCase: GetUserInfoUseCase,
         private val countFollowUseCase: CountFollowUseCase,
     ) : BaseViewModel<MyPageEffect, MyPageEvent>() {
-        // 내 정보
-        private val _userInfo = MutableStateFlow(UserResponse())
-        val userInfo: StateFlow<UserResponse> = _userInfo
+        // 회원가입 시 저장된 내 정보
+        private val _userInfo =
+            MutableStateFlow(
+                UserInfo(
+                    userId = "",
+                    nickName = "",
+                    roles = "",
+                ),
+            )
+        val userInfo = _userInfo.asStateFlow()
+
+//        // 내 정보
+//        private val _userInfo = MutableStateFlow(UserResponse())
+//        val userInfo: StateFlow<UserResponse> = _userInfo
 
         private val _followInfo = MutableStateFlow(FollowCountResponse())
         val followInfo: StateFlow<FollowCountResponse> = _followInfo
 
         init {
+
             viewModelScope.launch {
-                getUserInfoUseCase(null).collect {
-                    if (it != null) {
-                        _userInfo.value = it
-                    }
+                userPreferencesRepository.getUserInfo().collect {
+                    if (it != null) _userInfo.value = it
                 }
             }
+
+//            viewModelScope.launch {
+//                getUserInfoUseCase(null).collect {
+//                    if (it != null) {
+//                        _userInfo.value = it
+//                    }
+//                }
+//            }
             viewModelScope.launch {
                 countFollowUseCase(null).collect {
                     if (it != null) {
