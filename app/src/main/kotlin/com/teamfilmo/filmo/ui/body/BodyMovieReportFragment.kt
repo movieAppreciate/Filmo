@@ -21,7 +21,6 @@ import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class BodyMovieReportFragment :
@@ -41,11 +40,11 @@ class BodyMovieReportFragment :
 
         with(binding) {
             btnLike.setOnClickListener {
-                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton)
+                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton(reportId = args.reportId))
             }
 
             movieDetail.movieDetailShimmer.visibility = View.GONE
-            movieDetail.btnBack.visibility = View.INVISIBLE
+            movieDetail.btnBack.visibility = View.GONE
 
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener { navController.popBackStack() }
@@ -55,8 +54,13 @@ class BodyMovieReportFragment :
              */
             txtUserName.setOnClickListener {
                 val userId = viewModel.getReportResponse.value.userId
-                val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
-                navController.navigate(action)
+                if (userId != null) {
+                    // 탈퇴한 유저가 아니라면 유저 페이지로 이동
+                    val action = BodyMovieReportFragmentDirections.navigatToUserPageFromBody(userId)
+                    navController.navigate(action)
+                } else {
+                    //
+                }
             }
             /*
       팔로잉 버튼 클릭 시
@@ -83,7 +87,6 @@ class BodyMovieReportFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.checkLikeResponse.collect {
-                    Timber.d("it.isLike : ${it.isLike}")
                     binding.btnLike.isSelected = it.isLike
                 }
             }
@@ -104,7 +107,7 @@ class BodyMovieReportFragment :
                 viewModel.getReportResponse.collect {
                     viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     binding.apply {
-                        txtUserName.text = it.nickname
+                        txtUserName.text = it.nickname ?: "익명의 리뷰어"
                         tvMovieTitle.text = movieName
                         tvReportTitle.text = it.title
                         reportListView.text = it.content
@@ -227,10 +230,8 @@ class BodyMovieReportFragment :
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
             is BodyMovieReportEffect.RegistLike -> {
-                binding.btnLike.setImageResource(R.drawable.ic_like_selected)
             }
             is BodyMovieReportEffect.CancelLike -> {
-                binding.btnLike.setImageResource(R.drawable.ic_like)
             }
             is BodyMovieReportEffect.BlockSuccess -> {
                 // 메인 화면으로 이동

@@ -207,7 +207,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             title.text = item.title
             content.text = item.content
             replyCount.text = item.replyCount.toString()
-            nickName.text = item.nickname
+            nickName.text = item.nickname ?: "익명의 리뷰어"
             likeCount.text = item.likeCount.toString()
             binding.tvCreateDate.text = formatTimeDifference(item.createDate)
             binding.tvMovie.text = item.movieName

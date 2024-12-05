@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
@@ -24,7 +25,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -60,7 +60,7 @@ class AuthViewModel
             viewModelScope.launch {
                 signUpUseCase(SignUpRequest(email = email, type = type)).collect {
                     if (it != null) {
-                        _signUpResponse.value = UserInfo(it.userId, it.nickname, it.roles)
+                        _signUpResponse.value = UserInfo(type = type, it.userId, it.nickname, it.roles)
                         // 회원 가입 성공 시 유저 정보 저장하기
                         saveUserInfoUseCase(_signUpResponse.value!!)
                         sendEffect(AuthEffect.SignUpSuccess)
@@ -187,7 +187,8 @@ class AuthViewModel
                             // 유저 정보가 없는 경우 회원 가입으로 진행하기
                             val id = credential.data.getString("idToken")
                             requestSignUp(
-                                email = "tjdgustjdan@gmail.com",
+                                // todo : 유저의 이메일 가져오기
+                                email = "heosunghyeon08@gmail.com",
                                 type = "google",
                             )
                         } else {
@@ -202,7 +203,7 @@ class AuthViewModel
                                 }
                         }
                     }
-                } catch (e: Exception) {
+                } catch (e: GetCredentialCancellationException) {
                     Timber.e(e)
                     sendEffect(AuthEffect.LoginFailed)
                 }

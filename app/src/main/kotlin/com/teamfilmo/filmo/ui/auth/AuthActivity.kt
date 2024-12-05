@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
@@ -12,6 +13,7 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -84,7 +86,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                     append("계정 생성 시 ")
                     click(
                         onClick = {
-                            val uri = Uri.parse("https://axiomatic-tie-306.notion.site/7b56ec5868664b36b8a9f7e599c288e5?pvs=4")
+                            val uri = Uri.parse("https://enzfot.notion.site/a693da52f07e432ea365a30abee4e30c")
                             val intent = Intent(Intent.ACTION_VIEW, uri)
                             startActivity(intent)
                         },
@@ -151,11 +153,17 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                         request = credentialRequest,
                         context = this@AuthActivity,
                     )
-                }.getOrThrow()
-
-            val credential = response.credential
-
-            viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
+                }.onSuccess {
+                    val credential = it.credential
+                    viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
+                }.onFailure {
+                    when (it) {
+                        is GetCredentialCancellationException -> {
+                            Log.d("Auth", "로그인이 취소되었습니다")
+                        }
+                        else -> {}
+                    }
+                }
         }
     }
 
