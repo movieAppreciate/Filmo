@@ -175,7 +175,6 @@ class BodyMovieReportViewModel
                         updateLikeCount(reportId)
                     }
                 }
-                sendEffect(BodyMovieReportEffect.RegistLike)
             }
         }
 
@@ -184,10 +183,10 @@ class BodyMovieReportViewModel
      */
         private fun cancelLike() {
             viewModelScope.launch {
-                cancelLikeUseCase(_checkLikeResponse.value.likeId!!).collect {
+                val likeId = _checkLikeResponse.value.likeId
+                cancelLikeUseCase(likeId!!).collect {
                     if (it != null) {
-                        updateLikeCount(reportId = _saveLikeResponse.value.targetId)
-                        sendEffect(BodyMovieReportEffect.CancelLike)
+                        updateLikeCount(reportId = _getReportResponse.value.reportId)
                     }
                 }
             }
@@ -207,7 +206,6 @@ class BodyMovieReportViewModel
                         } else {
                             saveLike(targetId)
                         }
-                        updateLikeCount(targetId)
                         val updatedLikeState = _checkLikeResponse.value.copy(isLike = !it.isLike)
                         _checkLikeResponse.value = updatedLikeState
                     }
@@ -383,6 +381,7 @@ class BodyMovieReportViewModel
                 getReportUseCase(reportId).collect {
                     if (it != null) {
                         _getReportResponse.value = it
+                        _likeCount.value = it.likeCount
                         checkIsFollow()
                         if (_userInfo.value.userId == _getReportResponse.value.userId) {
                             _isMyPost.value = true
@@ -392,6 +391,19 @@ class BodyMovieReportViewModel
                         }
                         _getReportResponse.value.userId?.let { it1 -> getUserNickName(userId = it1) }
                         sendEffect(BodyMovieReportEffect.ShowReport)
+                    }
+                }
+            }
+        }
+
+        private fun checkLikeState(
+            targetId: String,
+            type: String = "report",
+        ) {
+            viewModelScope.launch {
+                checkLikeStateUseCase(targetId, type).collect {
+                    if (it != null) {
+                        _checkLikeResponse.value = it
                     }
                 }
             }
@@ -416,6 +428,7 @@ class BodyMovieReportViewModel
                 }
                 is BodyMovieReportEvent.ShowReport -> {
                     getReport(event.reportId)
+                    checkLikeState(event.reportId)
                 }
                 is BodyMovieReportEvent.ShowMovieInfo -> {
                     searchMovieDetail(event.movieId)

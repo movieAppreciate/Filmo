@@ -27,6 +27,7 @@ class BodyMovieReportFragment :
     BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
         FragmentBodyMovieReportBinding::inflate,
     ) {
+    private var reportId: String = ""
     private var isMyPost: Boolean = false
     private var movieName: String = ""
     override val viewModel: BodyMovieReportViewModel by viewModels()
@@ -36,11 +37,13 @@ class BodyMovieReportFragment :
     override fun onBindLayout() {
         super.onBindLayout()
 
-        viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
+        reportId = args.reportId
+
+        viewModel.handleEvent(BodyMovieReportEvent.ShowReport(reportId))
 
         with(binding) {
             btnLike.setOnClickListener {
-                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton(reportId = args.reportId))
+                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton(reportId = reportId))
             }
 
             movieDetail.movieDetailShimmer.visibility = View.GONE
@@ -229,10 +232,6 @@ class BodyMovieReportFragment :
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
-            is BodyMovieReportEffect.RegistLike -> {
-            }
-            is BodyMovieReportEffect.CancelLike -> {
-            }
             is BodyMovieReportEffect.BlockSuccess -> {
                 // 메인 화면으로 이동
                 navController.navigate(R.id.allMovieReportFragment)
