@@ -2,6 +2,7 @@
 # Version
 compileSdk = "34"
 datastorePreferences = "1.0.0"
+gson = "2.10.1"
 lottieVersion = "6.5.2"
 minSdk = "24"
 navigationFragmentKtx = "2.5.1"
@@ -185,6 +186,7 @@ runtimeSavedInstanceState = "1.0.0-alpha11"
 androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-navigation-fragment-ktx-v251 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx-v251 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }

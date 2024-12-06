@@ -215,7 +215,7 @@ class AllMovieReportViewModel
                     ),
                 ).collect {
                     if (it == null) {
-                        // todo : 좋아요 처리 실패
+                        return@collect
                     } else {
                         _saveLikeResponse.value = it
                         updateLikeCount(reportId, true)
@@ -240,15 +240,15 @@ class AllMovieReportViewModel
             viewModelScope.launch {
                 if (_checkLikeResponse.value.likeId == null) return@launch
                 cancelLikeUseCase(likeId).collect {
-                    if (it != null) {
-                        val updatedLikeState =
-                            _checkLikeResponse.value.copy(
-                                isLike = false,
-                            )
-                        _checkLikeResponse.value = updatedLikeState
-                        updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
-                        sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
-                    }
+                    if (it == null) return@collect
+                    val updatedLikeState =
+                        _checkLikeResponse.value.copy(
+                            likeId = null,
+                            isLike = false,
+                        )
+                    _checkLikeResponse.value = updatedLikeState
+                    updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
+                    sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
                 }
             }
         }

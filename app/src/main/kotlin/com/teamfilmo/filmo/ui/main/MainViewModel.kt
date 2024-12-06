@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel
@@ -18,27 +19,33 @@ class MainViewModel
             checkUserToken()
         }
 
+        private fun clear() {
+            viewModelScope.launch {
+                userTokenSource.clearUserToken()
+            }
+        }
+
         // Token 유무 검사
         private fun checkUserToken() {
-            userTokenSource.getUserToken()
+            userTokenSource
+                .getUserToken()
                 .onEach {
                     if (it.isEmpty()) {
                         sendEffect(MainEffect.NavigateToLogin)
                     } else {
                         isValidateUserToken()
                     }
-                }
-                .launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
         }
 
         // 토큰 유효성 검사
         private fun isValidateUserToken() {
-            userTokenSource.getUserToken()
+            userTokenSource
+                .getUserToken()
                 .onEach {
                     if (it.isEmpty()) {
                         sendEffect(MainEffect.NavigateToLogin)
                     }
-                }
-                .launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
         }
     }

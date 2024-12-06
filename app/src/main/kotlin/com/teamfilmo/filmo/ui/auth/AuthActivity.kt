@@ -6,6 +6,7 @@ import android.net.Uri
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -105,6 +106,9 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
+            AuthEffect.Existing -> {
+                Toast.makeText(this@AuthActivity, "다른 계정으로 시도해주세요", Toast.LENGTH_SHORT).show()
+            }
             AuthEffect.SignUpFailed -> {
                 Timber.d("회원가입 실패!")
             }

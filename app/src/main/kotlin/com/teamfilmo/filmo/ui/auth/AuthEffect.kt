@@ -3,6 +3,8 @@ package com.teamfilmo.filmo.ui.auth
 import com.teamfilmo.filmo.base.effect.BaseEffect
 
 sealed interface AuthEffect : BaseEffect {
+    data object Existing : AuthEffect
+
     data object SignUpSuccess : AuthEffect
 
     data object SignUpFailed : AuthEffect

@@ -1,8 +1,8 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
-import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.viewModelScope
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
@@ -11,13 +11,13 @@ import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
+import com.teamfilmo.filmo.data.remote.model.user.SignUpState
 import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.KakaoLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.NaverLoginRequestUseCase
 import com.teamfilmo.filmo.domain.auth.SignUpUseCase
-import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.SaveUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,7 +33,6 @@ import timber.log.Timber
 class AuthViewModel
     @Inject
     constructor(
-        private val userPreferencesRepository: UserPreferencesRepository,
         private val saveUserInfoUseCase: SaveUserInfoUseCase,
         private val signUpUseCase: SignUpUseCase,
         private val userTokenSource: UserTokenSource,
@@ -60,11 +59,30 @@ class AuthViewModel
             viewModelScope.launch {
                 signUpUseCase(SignUpRequest(email = email, type = type)).collect {
                     if (it != null) {
-                        _signUpResponse.value = UserInfo(type = type, it.userId, it.nickname, it.roles)
-                        // 회원 가입 성공 시 유저 정보 저장하기
-                        saveUserInfoUseCase(_signUpResponse.value!!)
-                        sendEffect(AuthEffect.SignUpSuccess)
+                        Timber.d("회원가입 UseCase 형태 : $it")
+                        when (it) {
+                            is SignUpState.Success -> {
+                                _signUpResponse.value = UserInfo(type = type, it.data.userId, it.data.nickname, it.data.roles)
+                                // 회원 가입 성공 시 유저 정보 저장하기
+                                saveUserInfoUseCase(
+                                    UserInfo(
+                                        userId = email,
+                                        nickName = _signUpResponse.value!!.nickName,
+                                        type = type,
+                                    ),
+                                )
+
+                                // 해당 계정으로 로그인 하기
+                                sendEffect(AuthEffect.SignUpSuccess)
+                            }
+                            is SignUpState.Existing -> {
+                                // 이미 다른 로그인으로 등록된 경우
+                                Timber.d("이미 등록된 경우 : ${it.data}")
+                                sendEffect(AuthEffect.Existing)
+                            }
+                        }
                     } else {
+                        Timber.d("회원가입 UseCase 형태 null? : $it")
                         sendEffect(AuthEffect.SignUpFailed)
                     }
                 }
@@ -86,30 +104,17 @@ class AuthViewModel
                         }
                     }
 
-                try {
-                    userPreferencesRepository.getUserInfo().collect {
-                        if (it == null) {
-                            // 유저 정보가 없는 경우 회원 가입으로 진행하기
-                            requestSignUp(
-                                email = email,
-                                type = "kakao",
-                            )
-                        } else {
-                            kakaoLoginRequestUseCase(email)
-                                .onSuccess {
-                                    Timber.d("kakao login success")
-                                    userTokenSource.setUserToken(it.accessToken)
-                                    sendEffect(AuthEffect.LoginSuccess)
-                                }.onFailure {
-                                    Timber.e("로그인 실패")
-                                    requestSignUp(email, "kakao")
-                                }
-                        }
+                kakaoLoginRequestUseCase(email)
+                    .onSuccess {
+                        Timber.d("kakao login success")
+                        // 로그인 성공 시 access token 저장하기
+                        userTokenSource.setUserToken(it.accessToken)
+                        // 카카오로 로그인한 경우 카카오 로그인 유저 정보 저장하기
+                        sendEffect(AuthEffect.LoginSuccess)
+                    }.onFailure {
+                        Timber.e("로그인 실패")
+                        requestSignUp(email, "kakao")
                     }
-                } catch (e: Exception) {
-                    Timber.e(e)
-                    sendEffect(AuthEffect.LoginFailed)
-                }
             }
         }
 
@@ -153,60 +158,35 @@ class AuthViewModel
                         }
                     }.getOrThrow()
 
-                try {
-                    userPreferencesRepository.getUserInfo().collect {
-                        if (it == null) {
-                            // 유저 정보가 없는 경우 회원 가입으로 진행하기
-                            requestSignUp(
-                                email = email,
-                                type = "naver",
-                            )
-                        } else {
-                            naverLoginRequestUseCase(email)
-                                .onSuccess {
-                                    Timber.d("naver login success : $it")
-                                    userTokenSource.setUserToken(it.accessToken)
-                                    sendEffect(AuthEffect.LoginSuccess)
-                                }.onFailure {
-                                    Timber.e("naver login failed: ${it.message}")
-                                    sendEffect(AuthEffect.LoginFailed)
-                                }
-                        }
+                naverLoginRequestUseCase(email)
+                    .onSuccess {
+                        Timber.d("naver login success : $it")
+                        userTokenSource.setUserToken(it.accessToken)
+                        sendEffect(AuthEffect.LoginSuccess)
+                    }.onFailure {
+                        Timber.e("naver login failed: ${it.message}")
+                        sendEffect(AuthEffect.LoginFailed)
+                        requestSignUp(email, "naver")
                     }
-                } catch (e: Exception) {
-                    sendEffect(AuthEffect.LoginFailed)
-                }
             }
         }
 
         private fun requestGoogleLogin(credential: Credential) {
             launch {
-                try {
-                    userPreferencesRepository.getUserInfo().collect {
-                        if (it == null) {
-                            // 유저 정보가 없는 경우 회원 가입으로 진행하기
-                            val id = credential.data.getString("idToken")
-                            requestSignUp(
-                                // todo : 유저의 이메일 가져오기
-                                email = "heosunghyeon08@gmail.com",
-                                type = "google",
+                googleLoginRequestUseCase(credential)
+                    .onSuccess {
+                        Timber.d("google login success")
+                        userTokenSource.setUserToken(it.accessToken)
+                        sendEffect(AuthEffect.LoginSuccess)
+                    }.onFailure {
+                        Timber.e("google login failed: ${it.message}")
+                        val googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(
+                                credential.data,
                             )
-                        } else {
-                            googleLoginRequestUseCase(credential)
-                                .onSuccess {
-                                    Timber.d("google login success")
-                                    userTokenSource.setUserToken(it.accessToken)
-                                    sendEffect(AuthEffect.LoginSuccess)
-                                }.onFailure {
-                                    Timber.e("google login failed: ${it.message}")
-                                    sendEffect(AuthEffect.LoginFailed)
-                                }
-                        }
+                        requestSignUp(email = googleIdTokenCredential.id, type = "google")
+                        sendEffect(AuthEffect.LoginFailed)
                     }
-                } catch (e: GetCredentialCancellationException) {
-                    Timber.e(e)
-                    sendEffect(AuthEffect.LoginFailed)
-                }
             }
         }
     }

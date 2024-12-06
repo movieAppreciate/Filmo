@@ -7,12 +7,14 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.domain.repository.AuthRepository
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import javax.inject.Inject
 
 class GoogleLoginRequestUseCase
     @Inject
     constructor(
         private val authRepository: AuthRepository,
+        private val userPreferencesRepository: UserPreferencesRepository,
     ) {
         suspend operator fun invoke(credential: Credential): Result<LoginResponse> {
             val userId = getUserIdFromCredential(credential)
@@ -29,6 +31,7 @@ class GoogleLoginRequestUseCase
                         try {
                             val googleIdTokenCredential =
                                 GoogleIdTokenCredential.createFrom(credential.data)
+
                             return googleIdTokenCredential.id
                         } catch (e: GoogleIdTokenParsingException) {
                             throw IllegalStateException("Failed to get Google ID Token Credential", e)

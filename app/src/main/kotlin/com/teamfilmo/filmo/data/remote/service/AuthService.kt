@@ -4,7 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
-import com.teamfilmo.filmo.data.remote.model.user.SignUpResponse
+import com.teamfilmo.filmo.data.remote.model.user.SignUpResult
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -18,7 +18,7 @@ interface AuthService {
     @Headers("NO-AUTH: true")
     suspend fun signUp(
         @Body request: SignUpRequest,
-    ): Result<SignUpResponse>
+    ): Result<SignUpResult>
 
     /**
      * 로그인

@@ -96,6 +96,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.gson)
+
     implementation(libs.androidx.datastore.preferences.v100)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.paging.common.android)
