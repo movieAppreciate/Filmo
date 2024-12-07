@@ -22,6 +22,7 @@ class AuthRemoteDataSourceImpl
             try {
                 val response = authService.signUp(request)
                 when (response.code()) {
+                    // 회원 가입 성공한 경우 : 200
                     200 -> {
                         val successResponse =
                             Json.decodeFromString<SignUpResponse>(
@@ -29,14 +30,15 @@ class AuthRemoteDataSourceImpl
                             )
                         Result.success(SignUpResult.Success(successResponse))
                     }
-                    202 -> {
+
+                    // 이미 등록된 계정인 경우 -  202
+                    else -> {
                         val existingResponse =
                             Json.decodeFromString<ExistingUserResponse>(
                                 response.body().toString(),
                             )
                         Result.success(SignUpResult.Existing(existingResponse))
                     }
-                    else -> Result.failure(Exception("Unknown error"))
                 }
             } catch (e: Exception) {
                 Result.failure(e)

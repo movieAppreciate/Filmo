@@ -107,10 +107,10 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
             AuthEffect.Existing -> {
-                Toast.makeText(this@AuthActivity, "다른 계정으로 시도해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AuthActivity, "이미 등록된 계정입니다!", Toast.LENGTH_SHORT).show()
             }
             AuthEffect.SignUpFailed -> {
-                Timber.d("회원가입 실패!")
+                Timber.d("회원가입 실패")
             }
             AuthEffect.SignUpSuccess -> {
                 Timber.d("회원가입 성공!")

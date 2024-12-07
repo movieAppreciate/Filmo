@@ -59,7 +59,6 @@ class AuthViewModel
             viewModelScope.launch {
                 signUpUseCase(SignUpRequest(email = email, type = type)).collect {
                     if (it != null) {
-                        Timber.d("회원가입 UseCase 형태 : $it")
                         when (it) {
                             is SignUpResult.Success -> {
                                 // 회원 가입 성공 시 유저 정보 저장하기
@@ -79,7 +78,10 @@ class AuthViewModel
                                 Timber.d("이미 등록된 경우 : ${it.response}")
                                 sendEffect(AuthEffect.Existing)
                             }
-                            else -> {}
+                            is SignUpResult.Error -> {
+                                Timber.d("회원 가입 실패")
+                                sendEffect(AuthEffect.SignUpFailed)
+                            }
                         }
                     } else {
                         Timber.d("회원가입 UseCase 형태 null? : $it")
