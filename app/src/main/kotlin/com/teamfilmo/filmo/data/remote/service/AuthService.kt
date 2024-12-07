@@ -4,6 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
 import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
+import kotlinx.serialization.json.JsonElement
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -18,7 +19,7 @@ interface AuthService {
     @Headers("NO-AUTH: true")
     suspend fun signUp(
         @Body request: SignUpRequest,
-    ): Response<Any>
+    ): Response<JsonElement>
 
     /**
      * 로그인
