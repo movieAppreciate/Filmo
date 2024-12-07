@@ -277,29 +277,22 @@ class ReplyFragment :
         }
 
         lifecycleScope.launch {
-            /*
-            댓글 차단
-             */
             launch {
-                viewModel.saveReplyBlockResponse.collect {
-                    Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
-                    // todo : 차단 시 UI 반영 사항은 ?
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.replyListStateFlow.collect {
+                        adapter.setReplyList(it)
+                    }
                 }
             }
-            /*
-            댓글 신고
-             */
             launch {
-                viewModel.saveReplyComplaintResponse.collect {
-                    Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
-                    // todo : 차단 시 UI 반영 사항은 ?
+                viewModel.likeCount.collect {
+                    adapter.updateLikeState(viewModel.replyListStateFlow.value)
                 }
             }
             /*
          전체 댓글 가져오기
              */
             viewModel.getReply(args.reportId)
-
             launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.userInfo.collect {
@@ -326,18 +319,17 @@ class ReplyFragment :
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
+            is ReplyEffect.SaveComplaint -> {
+                Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+            }
+            is ReplyEffect.SaveBlock -> {
+                Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
+            }
             is ReplyEffect.SaveLike -> {
                 adapter.updateLikeState(viewModel.replyListStateFlow.value)
             }
             is ReplyEffect.CancelLike -> {
                 adapter.updateLikeState(viewModel.replyListStateFlow.value)
-            }
-            is ReplyEffect.ToggleLike -> {
-                lifecycleScope.launch {
-                    viewModel.likeCount.collect {
-                        adapter.updateLikeState(viewModel.replyListStateFlow.value)
-                    }
-                }
             }
 
             is ReplyEffect.ScrollToTop -> {
@@ -345,15 +337,6 @@ class ReplyFragment :
             }
             is ReplyEffect.DeleteReply -> {
                 adapter.removeReplyItem(effect.position)
-            }
-            is ReplyEffect.DeleteSubReply -> {
-                lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.replyListStateFlow.collect {
-                            adapter.setReplyList(it)
-                        }
-                    }
-                }
             }
         }
     }

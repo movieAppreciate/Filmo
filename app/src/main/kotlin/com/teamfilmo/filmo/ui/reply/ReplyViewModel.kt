@@ -3,8 +3,9 @@ package com.teamfilmo.filmo.ui.reply
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
@@ -21,6 +22,7 @@ import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.reply.SaveReplyUseCase
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
+import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +35,7 @@ import timber.log.Timber
 class ReplyViewModel
     @Inject
     constructor(
+        private val getUserInfoUseCase: GetUserInfoUseCase,
         private val userPreferencesRepository: UserPreferencesRepository,
         private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
@@ -47,31 +50,26 @@ class ReplyViewModel
         init {
             // 현재 유저 정보를 Db에서 가져오기
             viewModelScope.launch {
-                userPreferencesRepository.getUserInfo().collect {
+                getUserInfoUseCase().collect {
                     if (it != null) {
-                        _userInfo.value = it
+                        _userInfo.value =
+                            UserInfo(
+                                type = it.type,
+                                userId = it.userId,
+                                nickName = it.nickname,
+                                roles = it.roles,
+                            )
                     }
                 }
             }
         }
 
     /*
-    댓글 차단
-     */
-        private val _saveReplyBlockResponse = MutableStateFlow(SaveBlockResponse())
-        val saveReplyBlockResponse: StateFlow<SaveBlockResponse> = _saveReplyBlockResponse
-
-    /*
-    댓글 신고
-     */
-        private val _saveReplyComplaintResponse = MutableStateFlow<String>("")
-        val saveReplyComplaintResponse: StateFlow<String> = _saveReplyComplaintResponse
-
-    /*
     좋아요 상태
      */
         private val _isLiked = MutableStateFlow(false)
         val isLiked: StateFlow<Boolean> = _isLiked
+
     /*
     좋아요 저장
      */
@@ -157,7 +155,8 @@ class ReplyViewModel
         private fun saveReplyBlock(targetId: String) {
             viewModelScope.launch {
                 saveBlockUseCase(SaveBlockRequest(targetId)).collect {
-                    _saveReplyBlockResponse.value = it
+                    // _saveReplyBlockResponse.value = it
+                    sendEffect(ReplyEffect.SaveBlock)
                 }
             }
         }
@@ -169,7 +168,8 @@ class ReplyViewModel
             viewModelScope.launch {
                 saveComplaintUseCase(SaveComplaintRequest(targetId, "reply")).collect {
                     if (it != null) {
-                        _saveReplyComplaintResponse.value = it
+//                        _saveReplyComplaintResponse.value = it
+                        sendEffect(ReplyEffect.SaveComplaint)
                     }
                 }
             }
@@ -259,7 +259,7 @@ class ReplyViewModel
                     currentList[position].copy(likeCount = likeCount)
                 currentList[position] = updatedReply
                 _replyListStateFlow.value = currentList
-                sendEffect(ReplyEffect.ToggleLike)
+                // sendEffect(ReplyEffect.ToggleLike)
             }
         }
 
@@ -305,7 +305,7 @@ class ReplyViewModel
                 deleteReplyUseCase(replyId).collect {
                     Timber.d("success to delete sub reply")
                 }
-                sendEffect(ReplyEffect.DeleteSubReply(replyId))
+//                sendEffect(ReplyEffect.DeleteSubReply(replyId))
                 getReply(reportId)
             }
         }
@@ -361,8 +361,8 @@ class ReplyViewModel
                                     userId = reply.userId,
                                     isMyReply = reply.userId == _userInfo.value.userId,
                                     subReply = reply.subReply,
-                                    isLiked = likeStates[index] as Boolean,
-                                    likeCount = likeCounts[index] as Int,
+                                    isLiked = (likeStates[index] as CheckLikeResponse).isLike,
+                                    likeCount = (likeCounts[index] as CountLikeResponse).countLike,
                                 )
                             }
                         }.collect {

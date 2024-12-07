@@ -114,6 +114,11 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             }
             AuthEffect.SignUpSuccess -> {
                 Timber.d("회원가입 성공!")
+                when (viewModel.signUpResponse.value!!.type) {
+                    "google" -> onGoogleLogin()
+                    "naver" -> onNaverLogin()
+                    "kakao" -> onKakaoLogin()
+                }
             }
             AuthEffect.NavigateToSignUp -> {
                 Timber.d("회원가입 필요")

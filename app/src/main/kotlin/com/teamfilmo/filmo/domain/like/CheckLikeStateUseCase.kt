@@ -19,15 +19,15 @@ class CheckLikeStateUseCase
         ): Flow<CheckLikeResponse?> =
             flow {
                 val result = likeRepository.checkLike(targetId, type)
+                result.onSuccess {
+                    emit(it)
+                }
                 result.onFailure {
                     when (it) {
                         is HttpException -> Timber.e("Network error: ${it.message}")
                         else -> Timber.e("Unknown error: ${it.message}")
                     }
                     emit(null)
-                }
-                result.onSuccess {
-                    emit(it)
                 }
             }
     }

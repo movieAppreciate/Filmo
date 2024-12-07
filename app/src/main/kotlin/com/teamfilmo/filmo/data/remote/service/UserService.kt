@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.user.DeleteUserRequest
 import com.teamfilmo.filmo.data.remote.model.user.DeleteUserResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
 import retrofit2.http.DELETE
@@ -39,6 +38,6 @@ interface UserService {
      */
     @DELETE("/user/delete/{userId}")
     suspend fun deleteUser(
-        @Path(value = "userId") userId: DeleteUserRequest,
+        @Path(value = "userId") userId: String,
     ): Result<DeleteUserResponse>
 }
