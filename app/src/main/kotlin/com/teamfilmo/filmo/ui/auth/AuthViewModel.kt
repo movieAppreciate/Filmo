@@ -11,7 +11,7 @@ import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
-import com.teamfilmo.filmo.data.remote.model.user.SignUpState
+import com.teamfilmo.filmo.data.remote.model.user.SignUpResult
 import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.data.source.UserTokenSource
 import com.teamfilmo.filmo.domain.auth.GoogleLoginRequestUseCase
@@ -61,25 +61,25 @@ class AuthViewModel
                     if (it != null) {
                         Timber.d("회원가입 UseCase 형태 : $it")
                         when (it) {
-                            is SignUpState.Success -> {
-                                _signUpResponse.value = UserInfo(type = type, it.data.userId, it.data.nickname, it.data.roles)
+                            is SignUpResult.Success -> {
                                 // 회원 가입 성공 시 유저 정보 저장하기
                                 saveUserInfoUseCase(
                                     UserInfo(
-                                        userId = email,
-                                        nickName = _signUpResponse.value!!.nickName,
-                                        type = type,
+                                        userId = it.response.userId,
+                                        type = it.response.type,
+                                        roles = it.response.roles,
+                                        nickName = it.response.nickname,
                                     ),
                                 )
-
                                 // 해당 계정으로 로그인 하기
                                 sendEffect(AuthEffect.SignUpSuccess)
                             }
-                            is SignUpState.Existing -> {
+                            is SignUpResult.Existing -> {
                                 // 이미 다른 로그인으로 등록된 경우
-                                Timber.d("이미 등록된 경우 : ${it.data}")
+                                Timber.d("이미 등록된 경우 : ${it.response}")
                                 sendEffect(AuthEffect.Existing)
                             }
+                            else -> {}
                         }
                     } else {
                         Timber.d("회원가입 UseCase 형태 null? : $it")
@@ -109,7 +109,6 @@ class AuthViewModel
                         Timber.d("kakao login success")
                         // 로그인 성공 시 access token 저장하기
                         userTokenSource.setUserToken(it.accessToken)
-                        // 카카오로 로그인한 경우 카카오 로그인 유저 정보 저장하기
                         sendEffect(AuthEffect.LoginSuccess)
                     }.onFailure {
                         Timber.e("로그인 실패")

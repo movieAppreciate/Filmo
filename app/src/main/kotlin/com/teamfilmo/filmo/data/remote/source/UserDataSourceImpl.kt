@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.remote.source
 
-import com.teamfilmo.filmo.data.remote.model.user.UserQuitRequest
-import com.teamfilmo.filmo.data.remote.model.user.UserQuitResponse
+import com.teamfilmo.filmo.data.remote.model.user.DeleteUserRequest
+import com.teamfilmo.filmo.data.remote.model.user.DeleteUserResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
 import com.teamfilmo.filmo.data.remote.service.UserService
 import com.teamfilmo.filmo.data.source.UserDataSource
@@ -14,5 +14,5 @@ class UserDataSourceImpl
     ) : UserDataSource {
         override suspend fun getUserInfo(userId: String?): Result<UserResponse> = userService.getUserInfo(userId)
 
-        override suspend fun quitUser(userId: UserQuitRequest): Result<UserQuitResponse> = userService.quitUser(userId)
+        override suspend fun quitUser(userId: DeleteUserRequest): Result<DeleteUserResponse> = userService.deleteUser(userId)
     }

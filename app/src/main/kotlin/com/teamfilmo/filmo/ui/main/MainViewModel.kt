@@ -8,6 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 class MainViewModel
@@ -30,6 +31,7 @@ class MainViewModel
             userTokenSource
                 .getUserToken()
                 .onEach {
+                    Timber.d("토큰 유무 검사 :$it")
                     if (it.isEmpty()) {
                         sendEffect(MainEffect.NavigateToLogin)
                     } else {

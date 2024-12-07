@@ -22,6 +22,8 @@ import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
+import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
+import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import com.teamfilmo.filmo.ui.report.paging.ReportPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -51,6 +53,8 @@ data class AllReportBookmarkState(
 class AllMovieReportViewModel
     @Inject
     constructor(
+        private val userPreferencesRepository: UserPreferencesRepository,
+        private val getUserInfoUserCase: GetUserInfoUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val getMovieNameUseCase: GetMovieNameUseCase,

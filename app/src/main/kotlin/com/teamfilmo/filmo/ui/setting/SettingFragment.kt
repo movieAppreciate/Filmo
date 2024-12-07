@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentMyPageSettingBinding
-import com.teamfilmo.filmo.ui.auth.AuthActivity
+import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.widget.CustomDialog
 import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,8 +23,8 @@ class SettingFragment :
     override fun handleEffect(effect: SettingEffect) {
         when (effect) {
             is SettingEffect.DeleteUser -> {
-                // // todo 탈퇴 성공 UI 처리 : 로그인 화면으로 이동?
-                val intent = Intent(context, AuthActivity::class.java)
+                // // todo 탈퇴 성공 UI 처리 : 메인 화면으로 이동 -> 알아서 로그인 화면으로 이동할 것임
+                val intent = Intent(context, MainActivity::class.java)
                 startActivity(intent)
             }
         }

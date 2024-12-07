@@ -13,9 +13,9 @@
             <meta-data
                 android:name="com.teamfilmo.filmo.app.initializer.FlipperInitializer"
                 android:value="androidx.startup" />
-            <meta-data
-                android:name="com.teamfilmo.filmo.app.initializer.TokenInitializer"
-                android:value="androidx.startup" />
+<!--            <meta-data-->
+<!--                android:name="com.teamfilmo.filmo.app.initializer.TokenInitializer"-->
+<!--                android:value="androidx.startup" />-->
         </provider>
 
     </application>

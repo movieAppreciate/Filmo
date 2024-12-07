@@ -1,12 +1,12 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.user.UserQuitRequest
-import com.teamfilmo.filmo.data.remote.model.user.UserQuitResponse
+import com.teamfilmo.filmo.data.remote.model.user.DeleteUserRequest
+import com.teamfilmo.filmo.data.remote.model.user.DeleteUserResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserResponse
-import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserService {
@@ -37,9 +37,8 @@ interface UserService {
     /*
     유저 탈퇴
      */
-    @DELETE("/user/delete")
-    suspend fun quitUser(
-        @Body
-        userId: UserQuitRequest,
-    ): Result<UserQuitResponse>
+    @DELETE("/user/delete/{userId}")
+    suspend fun deleteUser(
+        @Path(value = "userId") userId: DeleteUserRequest,
+    ): Result<DeleteUserResponse>
 }

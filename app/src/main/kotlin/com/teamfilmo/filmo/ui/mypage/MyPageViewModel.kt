@@ -6,6 +6,7 @@ import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.domain.follow.CountFollowUseCase
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
+import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class MyPageViewModel
     @Inject
     constructor(
+        private val getUserInfoUserCase: GetUserInfoUseCase,
         private val userPreferencesRepository: UserPreferencesRepository,
         private val countFollowUseCase: CountFollowUseCase,
     ) : BaseViewModel<MyPageEffect, MyPageEvent>() {
@@ -35,9 +37,25 @@ class MyPageViewModel
         val followInfo: StateFlow<FollowCountResponse> = _followInfo
 
         init {
+            // 유저 정보 저장해두기
             viewModelScope.launch {
-                userPreferencesRepository.getUserInfo().collect {
-                    if (it != null) _userInfo.value = it
+                getUserInfoUserCase().collect {
+                    if (it != null) {
+                        _userInfo.value =
+                            UserInfo(
+                                userId = it.userId,
+                                nickName = it.nickname,
+                                roles = it.roles,
+                            )
+                        userPreferencesRepository.saveUserInfo(
+                            UserInfo(
+                                type = it.type,
+                                userId = it.userId,
+                                nickName = it.nickname,
+                                roles = it.roles,
+                            ),
+                        )
+                    }
                 }
             }
 
