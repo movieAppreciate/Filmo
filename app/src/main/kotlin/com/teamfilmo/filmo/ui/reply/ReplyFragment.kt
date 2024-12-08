@@ -179,7 +179,7 @@ class ReplyFragment :
                         isReplyingToComment = true
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
                             viewModel.replyListStateFlow.collect {
-                                val item = it.reversed()[position]
+                                val item = it[position]
                                 upReplyId = item.replyId
                                 binding.editReply.requestFocus()
                                 inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)

@@ -379,7 +379,7 @@ class ReplyViewModel
                                 )
                             }
                         }.collect {
-                            _replyListStateFlow.value = it
+                            _replyListStateFlow.value = it.reversed()
                             Timber.d("리스트 업뎃 :$it")
                             sendEffect(ReplyEffect.ScrollToTop)
                         }
