@@ -27,6 +27,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -63,6 +64,10 @@ class ReplyViewModel
                 }
             }
         }
+
+        // 좋아요 여부
+        private val _checkLikeResponse = MutableStateFlow(CheckLikeResponse())
+        val checkLikeResponse = _checkLikeResponse.asStateFlow()
 
     /*
     좋아요 상태
@@ -168,7 +173,6 @@ class ReplyViewModel
             viewModelScope.launch {
                 saveComplaintUseCase(SaveComplaintRequest(targetId, "reply")).collect {
                     if (it != null) {
-//                        _saveReplyComplaintResponse.value = it
                         sendEffect(ReplyEffect.SaveComplaint)
                     }
                 }
@@ -204,6 +208,14 @@ class ReplyViewModel
             }
         }
 
+        private fun checkLikeState(replyId: String) {
+            viewModelScope.launch {
+                checkLikeUseCase(targetId = replyId).collect {
+                    if (it != null) _checkLikeResponse.value = it
+                }
+            }
+        }
+
         // 좋아요 토글 , 좋아요 여부가 true인 경우 취소, 좋아요 여부가 False인 경우 좋아요 등록
         private fun toggleLike(
             targetId: String,
@@ -219,7 +231,7 @@ class ReplyViewModel
                     if (checkLike != null && likeCount != null) {
                         if (checkLike.isLike) {
                             // todo : likeId 수정 필요
-                            cancelReplyLike(likeId = _saveReplyLikeResponse.value.likeId)
+                            cancelReplyLike(likeId = checkLike.likeId!!)
                             // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
                             updateLikeState(targetId, false, likeCount.countLike - 1)
                             sendEffect(ReplyEffect.CancelLike(replyId = targetId))
@@ -278,6 +290,7 @@ class ReplyViewModel
                 ).collect {
                     if (it != null) {
                         _subReplyStateFlow.value = it
+                        getReply(reportId)
                     }
                 }
             }
@@ -367,6 +380,7 @@ class ReplyViewModel
                             }
                         }.collect {
                             _replyListStateFlow.value = it
+                            Timber.d("리스트 업뎃 :$it")
                             sendEffect(ReplyEffect.ScrollToTop)
                         }
                     }

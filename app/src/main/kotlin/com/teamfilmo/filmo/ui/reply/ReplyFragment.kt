@@ -136,6 +136,9 @@ class ReplyFragment :
     }
 
     override fun onBindLayout() {
+        // 전체 댓글 가져오기
+        viewModel.getReply(args.reportId)
+
         // 댓글, 답글 전환
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -176,7 +179,7 @@ class ReplyFragment :
                         isReplyingToComment = true
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
                             viewModel.replyListStateFlow.collect {
-                                val item = it[position]
+                                val item = it.reversed()[position]
                                 upReplyId = item.replyId
                                 binding.editReply.requestFocus()
                                 inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
@@ -276,7 +279,7 @@ class ReplyFragment :
             binding.editReply.text.clear()
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.replyListStateFlow.collect {
@@ -289,10 +292,6 @@ class ReplyFragment :
                     adapter.updateLikeState(viewModel.replyListStateFlow.value)
                 }
             }
-            /*
-         전체 댓글 가져오기
-             */
-            viewModel.getReply(args.reportId)
             launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.userInfo.collect {
@@ -304,7 +303,7 @@ class ReplyFragment :
             }
 
             launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
                     // 처음에 댓글 불러올 때 & 댓글 삭제 시에도 호출된다.
                     viewModel.replyListStateFlow.collect {
                         if (it.isNotEmpty()) {
@@ -319,6 +318,12 @@ class ReplyFragment :
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
+            is ReplyEffect.SaveSubReply -> {
+                // 다시 댓글 아이콘 가져오기
+                isReplyingToComment = false
+                binding.editReply.hint = "댓글 달기"
+                adapter.setReplyList(viewModel.replyListStateFlow.value)
+            }
             is ReplyEffect.SaveComplaint -> {
                 Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
             }

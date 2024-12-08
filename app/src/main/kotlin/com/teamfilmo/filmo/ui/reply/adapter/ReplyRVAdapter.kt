@@ -62,7 +62,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyViewHolder>() {
         val diffCallBack = ReplyDiffCallBack(this.replyList, replyList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
         this.replyList.clear()
-        this.replyList.addAll(replyList)
+        this.replyList.addAll(replyList.reversed())
         diffResult.dispatchUpdatesTo(this)
     }
 
