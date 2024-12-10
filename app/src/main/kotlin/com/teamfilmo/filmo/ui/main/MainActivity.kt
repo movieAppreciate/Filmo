@@ -80,9 +80,7 @@ class MainActivity :
             when (it.itemId) {
                 R.id.allMovieReportFragment -> {
                     Timber.d("홈 클릭 ")
-                    if (navController.currentDestination?.id != R.id.allMovieReportFragment) {
-                        navController.navigate(R.id.allMovieReportFragment)
-                    }
+                    navController.navigate(R.id.allMovieReportFragment)
                     return@setOnItemSelectedListener true
                 }
                 R.id.myPageFragment -> {

@@ -48,10 +48,6 @@ class ModifyReportFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         lifecycleScope.launch {
-            viewModel.getReport(args.reportId)
-        }
-
-        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.getReportResponse.collect {
                     binding.editReportTitle.setText(it.title)
@@ -90,14 +86,23 @@ class ModifyReportFragment :
     }
 
     override fun onBindLayout() {
+        lifecycleScope.launch {
+            viewModel.getReport(args.reportId)
+        }
         // 받은 args
         Timber.d("args : $args")
         // 만약 썸네일을 변경한다면 ? ReportThumbnailFragment에서 보낸 데이터 받기
+        // todo : 변경하지 않는다면?
         setFragmentResultListener("requestKey") { key, bundle ->
             uri = bundle.getString("uri")
-            Timber.d("수정할 이미지 uri : $uri")
             getImage(uri.toString(), binding.ivThumbnail)
             binding.btnSelectPoster.text = "이미지 변경"
+        }
+
+        lifecycleScope.launch {
+            viewModel.getReportResponse.collect {
+                uri = it.imageUrl
+            }
         }
 
         with(binding) {
@@ -115,13 +120,6 @@ class ModifyReportFragment :
 
             btnReportModify.setOnClickListener {
                 lifecycleScope.launch {
-                    // 현재 수정된 내용 확인하기
-                    Timber.d("reportId : ${args.reportId}")
-                    Timber.d("제목 : ${editReportTitle.text}")
-                    Timber.d("내용 : ${editReportBody.text}")
-                    Timber.d("태그 : ${tagString?.replace(" ", "")}")
-                    Timber.d("이미지 : $uri")
-                    Timber.d("영화 이이디 : ${args.movieId}")
                     viewModel.updateReport(
                         UpdateReportRequest(
                             reportId = args.reportId,
@@ -130,7 +128,7 @@ class ModifyReportFragment :
                             // todo : 이미지를  변경한 경우 uri로 변경해주기
                             imageUrl = uri.toString(),
                             tagString = tagString?.replace(" ", "").toString(),
-                            movieId = args.movieId.toString(),
+                            movieId = args.movieId,
                         ),
                     )
                     // 바디로 다시 이동하기
@@ -139,6 +137,8 @@ class ModifyReportFragment :
                 }
                 // 감상문 수정하기
             }
+
+            binding.txtSelectedMovie.text = args.movieName
 
             btnBack.setOnClickListener {
                 // todo : 다이얼로그 띄우기
@@ -190,8 +190,6 @@ class ModifyReportFragment :
                     },
                 )
             }
-
-            binding.txtSelectedMovie.text = args.movieName
         }
     }
 }

@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:stackFromBottom="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/edit_reply"
@@ -59,18 +60,20 @@
         tools:listitem="@layout/item_reply" />
 
     <EditText
-            android:id="@+id/edit_reply"
-            android:layout_width="310dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/outlined_edit_text"
-            android:hint="댓글달기"
-            android:padding="5dp"
-            android:textColorHint="@color/gray03"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_regist_reply"
-            app:layout_constraintHorizontal_bias="0.581"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/edit_reply"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/outlined_edit_text"
+        android:hint="댓글달기"
+        android:padding="5dp"
+        android:textColorHint="@color/gray03"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_regist_reply"
+        app:layout_constraintHorizontal_bias="0.581"
+        app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/btn_regist_reply"

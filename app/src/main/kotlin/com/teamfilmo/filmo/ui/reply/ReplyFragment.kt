@@ -23,7 +23,6 @@ import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment :
@@ -257,7 +256,6 @@ class ReplyFragment :
                     parentReplyId: String,
                     subReplyId: String,
                 ) {
-                    Timber.d("답글 좋아요 뚜웅 ")
                     viewModel.handleEvent(ReplyEvent.ClickSubReplyLike(subReplyId))
                 }
 
@@ -346,6 +344,7 @@ class ReplyFragment :
                 viewModel.handleEvent(ReplyEvent.SaveReply(null, args.reportId, binding.editReply.text.toString()))
                 Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             }
+            setupKeyboardDismiss()
             binding.editReply.clearAnimation()
             binding.editReply.text.clear()
         }

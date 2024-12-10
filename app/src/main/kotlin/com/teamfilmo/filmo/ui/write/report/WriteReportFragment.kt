@@ -32,6 +32,7 @@ class WriteReportFragment :
     private var tagString: String? = null
     private val navController by lazy { findNavController() }
     private var uri: String? = null
+    val args: WriteReportFragmentArgs by navArgs()
 
     companion object {
         fun newInstance(): WriteReportFragment {
@@ -43,8 +44,6 @@ class WriteReportFragment :
     }
 
     override fun onBindLayout() {
-        val args: WriteReportFragmentArgs by navArgs()
-
         fun EditText.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(windowToken, 0)
@@ -97,8 +96,6 @@ class WriteReportFragment :
             )
         }
 
-        binding.txtSelectedMovie.text = args.movieName
-
         // ReportThumbnailFragment에서 보낸 데이터 받기
         setFragmentResultListener("requestKey") { key, bundle ->
             uri = bundle.getString("uri")
@@ -110,6 +107,8 @@ class WriteReportFragment :
             binding.btnReportRegister.setTextColor(requireContext().getColor(R.color.primary))
         }
 
+        Timber.d("영화 이름:${args.movieName}")
+        binding.txtSelectedMovie.text = args.movieName
         binding.btnReportRegister.setOnClickListener {
             if (binding.editReportTitle.text != null && binding.editReportBody.text != null && uri != null) {
                 val request =

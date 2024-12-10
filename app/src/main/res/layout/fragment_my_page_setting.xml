@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/shapeableImageView3" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_info"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view10" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btn_question"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_info" />
 
     <Button
         android:id="@+id/btn_user_quit"
@@ -109,7 +109,7 @@
         android:text="탈퇴"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/btn_question"
         tools:layout_editor_absoluteX="10dp" />
 
 

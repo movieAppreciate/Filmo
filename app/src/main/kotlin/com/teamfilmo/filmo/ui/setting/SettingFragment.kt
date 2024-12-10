@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.setting
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -51,6 +52,12 @@ class SettingFragment :
     }
 
     override fun onBindLayout() {
+        binding.btnInfo.setOnClickListener {
+            Toast.makeText(context, "서비스를 준비하고 있어요! 조금만 기다려주세요 :)", Toast.LENGTH_SHORT).show()
+        }
+        binding.btnQuestion.setOnClickListener {
+            Toast.makeText(context, "서비스를 준비하고 있어요! 조금만 기다려주세요 :)", Toast.LENGTH_SHORT).show()
+        }
         // 사용자 탈퇴
         binding.btnUserQuit.setOnClickListener {
             showUserDeleteConfirmDialog()

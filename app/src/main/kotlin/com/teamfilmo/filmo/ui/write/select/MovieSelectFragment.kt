@@ -18,6 +18,7 @@ import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieSelectFragment :
@@ -131,6 +132,7 @@ class MovieSelectFragment :
                     movieName: String,
                     uri: String,
                 ) {
+                    Timber.d("movieName :$movieName")
                     navigateWriteReportFragment(movieName, movieId)
                 }
             },
