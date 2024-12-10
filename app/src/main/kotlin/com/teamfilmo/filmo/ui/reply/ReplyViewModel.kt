@@ -10,7 +10,6 @@ import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
 import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
@@ -21,23 +20,38 @@ import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.reply.SaveReplyUseCase
-import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
+data class ReplyLikeState(
+    val likeId: String? = null,
+    val likeCount: Int = 0,
+    val isLiked: Boolean = false,
+)
+
+data class SubReplyLikeState(
+    val subReplyId: String? = null,
+    val likeId: String? = null,
+    val likeCount: Int = 0,
+    val isLiked: Boolean = false,
+)
 
 @HiltViewModel
 class ReplyViewModel
     @Inject
     constructor(
         private val getUserInfoUseCase: GetUserInfoUseCase,
-        private val userPreferencesRepository: UserPreferencesRepository,
         private val saveBlockUseCase: SaveBlockUseCase,
         private val saveComplaintUseCase: SaveComplaintUseCase,
         private val countLikeUseCase: CountLikeUseCase,
@@ -48,6 +62,8 @@ class ReplyViewModel
         private val saveReplyUseCase: SaveReplyUseCase,
         private val deleteReplyUseCase: DeleteReplyUseCase,
     ) : BaseViewModel<ReplyEffect, ReplyEvent>() {
+        val list = mutableListOf<SubReplyWithLikeInfo>()
+
         init {
             // 현재 유저 정보를 Db에서 가져오기
             viewModelScope.launch {
@@ -65,71 +81,51 @@ class ReplyViewModel
             }
         }
 
-        // 좋아요 여부
-        private val _checkLikeResponse = MutableStateFlow(CheckLikeResponse())
-        val checkLikeResponse = _checkLikeResponse.asStateFlow()
+        //  답글 좋아요 UiState
+        private val _subReplyLikeUiState = MutableStateFlow(SubReplyLikeState())
+        val subReplyLikeUiState = _subReplyLikeUiState.asStateFlow()
 
-    /*
-    좋아요 상태
-     */
-        private val _isLiked = MutableStateFlow(false)
-        val isLiked: StateFlow<Boolean> = _isLiked
+        //  답글 좋아요
+        private val _saveSubReplyResponse = MutableStateFlow(SaveLikeResponse())
+        val saveSubReplyResponse = _saveSubReplyResponse.asStateFlow()
 
-    /*
-    좋아요 저장
-     */
+        // 댓글 좋아요 UI State
+        private val _replyLikeState = MutableStateFlow(ReplyLikeState())
+        val replyLikeState = _replyLikeState.asStateFlow()
 
+        // 좋아요 정보
         private val _saveReplyLikeResponse = MutableStateFlow(SaveLikeResponse())
-        val saveReplyLikeResponse: StateFlow<SaveLikeResponse> = _saveReplyLikeResponse
+        val saveReplyLikeResponse = _saveReplyLikeResponse.asStateFlow()
 
-    /*
-    좋아요 수
+        // 답글의 좋아요 여부
+        private val _subReplyLikeState = MutableStateFlow(CheckLikeResponse())
+        val subReplyLikeState = _subReplyLikeState.asStateFlow()
 
-     */
+        // 답글의 좋아요 수
+        private val _subReplyLikeCount = MutableStateFlow(0)
+        val subReplyLikeCount = _subReplyLikeCount.asStateFlow()
+
+        // 좋아요 수
         private val _likeCount = MutableStateFlow(0)
         val likeCount: StateFlow<Int> = _likeCount
 
-    /*
-     본인의 게시글인기?
-     */
-        private val _isMyReply = MutableStateFlow(false)
-        val isMyReply: StateFlow<Boolean> = _isMyReply
-
-    /*
-    유저 정보
-     */
+        // 유저 정보
         private val _userInfo = MutableStateFlow(UserInfo())
         val userInfo: StateFlow<UserInfo> = _userInfo
 
-        /*
-        답글 아이템
-         */
-        private val _subReplyStateFlow = MutableStateFlow(SaveReplyResponse("", "", "", "", ""))
-        val subReplyStateFlow: StateFlow<SaveReplyResponse> = _subReplyStateFlow
-
-        /*
-        댓글 아이템
-         */
-        private val _replyItemStateFlow =
-            MutableStateFlow(
-                SaveReplyResponse(
-                    replyId = "",
-                    reportId = "",
-                    content = "",
-                    userId = "",
-                ),
-            )
-
-        val replyItemStateFlow: StateFlow<SaveReplyResponse> = _replyItemStateFlow
-
-        /*
-        댓글 전체 리스트
-         */
+        // 댓글 전체 리스트
         private val _replyListStateFlow = MutableStateFlow(emptyList<GetReplyResponseItemWithRole>())
         val replyListStateFlow: StateFlow<List<GetReplyResponseItemWithRole>> = _replyListStateFlow
 
+        // 답글 전체 리스트
+        private val _subReplyList = MutableStateFlow(emptyList<SubReplyWithLikeInfo>())
+        val subReplyList = _subReplyList.asStateFlow()
+
         override fun handleEvent(event: ReplyEvent) {
             when (event) {
+                is ReplyEvent.ClickSubReplyLike -> {
+                    toggleSubReplyLike(event.replyId)
+                }
                 is ReplyEvent.SaveBlock -> {
                     saveReplyBlock(event.targetId)
                 }
@@ -154,13 +150,10 @@ class ReplyViewModel
             }
         }
 
-    /*
-    댓글 차단
-     */
+        // 댓글 차단
         private fun saveReplyBlock(targetId: String) {
             viewModelScope.launch {
                 saveBlockUseCase(SaveBlockRequest(targetId)).collect {
-                    // _saveReplyBlockResponse.value = it
                     sendEffect(ReplyEffect.SaveBlock)
                 }
             }
@@ -178,10 +171,8 @@ class ReplyViewModel
                 }
             }
         }
-    /*
-    댓글 좋아요
-     */
 
+        // 댓글 종하요
         private fun saveReplyLike(
             targetId: String,
             type: String = "reply",
@@ -190,7 +181,34 @@ class ReplyViewModel
                 saveLikeUseCase(SaveLikeRequest(targetId, type)).collect {
                     if (it != null) {
                         _saveReplyLikeResponse.value = it
-                        _isLiked.value = true
+                        sendEffect(ReplyEffect.SaveLike(targetId))
+                    }
+                }
+            }
+        }
+
+        // 답글 종하요
+        private fun saveSubReplyLike(
+            targetId: String,
+            type: String = "reply",
+        ) {
+            viewModelScope.launch {
+                saveLikeUseCase(
+                    SaveLikeRequest(
+                        targetId,
+                        type,
+                    ),
+                ).collect {
+                    if (it != null) _saveSubReplyResponse.value = it
+                    val subReply = _subReplyList.value.find { it.replyId == targetId }
+                    if (subReply != null) {
+                        sendEffect(
+                            ReplyEffect.SaveLikeSubReply(
+                                subReply.upReplyId,
+                                subReply.replyId,
+                                true,
+                            ),
+                        )
                     }
                 }
             }
@@ -202,21 +220,51 @@ class ReplyViewModel
             viewModelScope.launch {
                 cancelLikeUseCase(likeId).collect {
                     if (it != null) {
-                        _isLiked.value = false
+                        sendEffect(ReplyEffect.CancelLike(_saveReplyLikeResponse.value.targetId))
                     }
                 }
             }
         }
 
-        private fun checkLikeState(replyId: String) {
+        // 답글 좋아요 취소
+        private fun cancelSubReplyLike(
+            likeId: String,
+            targetId: String,
+        ) {
             viewModelScope.launch {
-                checkLikeUseCase(targetId = replyId).collect {
-                    if (it != null) _checkLikeResponse.value = it
+                cancelLikeUseCase(likeId).collect {
+                    if (it != null) {
+                        val subReply = _subReplyList.value.find { it.replyId == _saveSubReplyResponse.value.targetId }
+                        if (subReply != null) {
+                            sendEffect(
+                                ReplyEffect.CancelLikeSubReply(
+                                    subReply.upReplyId,
+                                    subReply.replyId,
+                                    false,
+                                ),
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        // 좋아요 토글 , 좋아요 여부가 true인 경우 취소, 좋아요 여부가 False인 경우 좋아요 등록
+        // 답글 좋아요 토큰
+        private fun toggleSubReplyLike(targetId: String) {
+            viewModelScope.launch {
+                checkLikeUseCase(targetId).collect {
+                    if (it != null) {
+                        if (it.isLike && it.likeId != null) {
+                            cancelSubReplyLike(it.likeId, targetId)
+                        } else {
+                            saveSubReplyLike(targetId)
+                        }
+                    }
+                }
+            }
+        }
+
+        // 댓글 좋아요 토글 , 좋아요 여부가 true인 경우 취소, 좋아요 여부가 False인 경우 좋아요 등록
         private fun toggleLike(
             targetId: String,
             type: String = "reply",
@@ -230,7 +278,6 @@ class ReplyViewModel
                 }.collect { (checkLike, likeCount) ->
                     if (checkLike != null && likeCount != null) {
                         if (checkLike.isLike) {
-                            // todo : likeId 수정 필요
                             cancelReplyLike(likeId = checkLike.likeId!!)
                             // 여기서 isLiked를 그대로 넣어줘서 정상적으로 작동하지 않은 거였다!!!
                             updateLikeState(targetId, false, likeCount.countLike - 1)
@@ -260,21 +307,6 @@ class ReplyViewModel
             }
         }
 
-        private fun updateLikeCountState(
-            targetId: String,
-            likeCount: Int,
-        ) {
-            viewModelScope.launch {
-                val currentList = _replyListStateFlow.value.toMutableList()
-                val position = currentList.indexOfFirst { it.replyId == targetId }
-                val updatedReply =
-                    currentList[position].copy(likeCount = likeCount)
-                currentList[position] = updatedReply
-                _replyListStateFlow.value = currentList
-                // sendEffect(ReplyEffect.ToggleLike)
-            }
-        }
-
         private fun saveSubReply(
             upReplyId: String,
             reportId: String,
@@ -289,7 +321,6 @@ class ReplyViewModel
                     ),
                 ).collect {
                     if (it != null) {
-                        _subReplyStateFlow.value = it
                         getReply(reportId)
                     }
                 }
@@ -316,10 +347,10 @@ class ReplyViewModel
         ) {
             viewModelScope.launch {
                 deleteReplyUseCase(replyId).collect {
-                    Timber.d("success to delete sub reply")
+                    if (it != null) {
+                        getReply(reportId)
+                    }
                 }
-//                sendEffect(ReplyEffect.DeleteSubReply(replyId))
-                getReply(reportId)
             }
         }
 
@@ -337,13 +368,52 @@ class ReplyViewModel
                     ),
                 ).collect {
                     if (it != null) {
-                        _replyItemStateFlow.value = it
                         sendEffect(ReplyEffect.ScrollToTop)
                         getReply(reportId)
                     }
                 }
             }
         }
+
+        private fun subReplyCountLike(targetId: String) {
+            viewModelScope.launch {
+                countLikeUseCase(targetId = targetId).collect {
+                    if (it != null) {
+                        _subReplyLikeCount.value = it.countLike
+                        Timber.d("subreply like count $targetId : $it")
+                    }
+                }
+            }
+        }
+
+        private fun checkSubReplyLikeState(targetId: String): CheckLikeResponse {
+            viewModelScope.launch {
+                checkLikeUseCase(targetId).collect {
+                    if (it != null) {
+                        _subReplyLikeState.value = it
+                        Timber.d("sub reply like State $targetId : $it")
+                    }
+                }
+            }
+            return _subReplyLikeState.value
+        }
+
+        private suspend fun getSubReplyLikeInfo(targetId: String): Pair<Int, Boolean> =
+            coroutineScope {
+                val likeCountDeferred =
+                    async {
+                        countLikeUseCase(targetId = targetId).first()
+                    }
+
+                val likeStateDeferred =
+                    async {
+                        checkLikeUseCase(targetId).first()
+                    }
+                Pair(
+                    likeCountDeferred.await()?.countLike ?: 0,
+                    likeStateDeferred.await()?.isLike ?: false,
+                )
+            }
 
         fun getReply(reportId: String) {
             viewModelScope.launch {
@@ -358,33 +428,77 @@ class ReplyViewModel
                                 countLikeUseCase(it.replyId)
                             }
                         combine(likeStateFlows + countStateFlows) { combinedStates ->
-                            // combinedStates 배열에서 좋아요 상태와 좋아요 수를 분리
-                            val likeStates = combinedStates.take(replyList.size)
-                            val likeCounts = combinedStates.drop(replyList.size)
+                            coroutineScope {
+                                // combinedStates 배열에서 좋아요 상태와 좋아요 수를 분리
+                                val likeStates = combinedStates.take(replyList.size)
+                                val likeCounts = combinedStates.drop(replyList.size)
 
-                            // map 함수의 역할
-                            replyList.mapIndexed { index, reply ->
-                                GetReplyResponseItemWithRole(
-                                    replyId = reply.replyId,
-                                    reportId = reply.reportId,
-                                    content = reply.content,
-                                    createDate = reply.createDate,
-                                    lastModifiedDate = reply.lastModifiedDate,
-                                    nickname = reply.nickname,
-                                    userId = reply.userId,
-                                    isMyReply = reply.userId == _userInfo.value.userId,
-                                    subReply = reply.subReply,
-                                    isLiked = (likeStates[index] as CheckLikeResponse).isLike,
-                                    likeCount = (likeCounts[index] as CountLikeResponse).countLike,
-                                )
+                                // map 함수의 역할
+                                replyList.mapIndexed { index, reply ->
+                                    val subReplyList =
+                                        reply.subReply
+                                            ?.map {
+                                                Timber.d("최초 답글 :${it.replyId}")
+                                                async {
+                                                    val (likeCount, isLiked) = getSubReplyLikeInfo(targetId = it.replyId)
+
+                                                    SubReplyWithLikeInfo(
+                                                        replyId = it.replyId,
+                                                        content = it.content,
+                                                        createDate = it.createDate,
+                                                        lastModifiedDate = it.lastModifiedDate,
+                                                        nickname = it.nickname,
+                                                        reportId = it.reportId,
+                                                        upReplyId = it.upReplyId,
+                                                        userId = it.userId,
+                                                        likeCount = likeCount,
+                                                        isLiked = isLiked,
+                                                        isMySubReply = false,
+                                                    )
+                                                }
+                                            }?.awaitAll()
+                                    if (subReplyList != null) {
+                                        list.addAll(subReplyList)
+                                        _subReplyList.value = list
+                                    }
+                                    GetReplyResponseItemWithRole(
+                                        replyId = reply.replyId,
+                                        reportId = reply.reportId,
+                                        content = reply.content,
+                                        createDate = reply.createDate,
+                                        lastModifiedDate = reply.lastModifiedDate,
+                                        nickname = reply.nickname,
+                                        userId = reply.userId,
+                                        isMyReply = reply.userId == _userInfo.value.userId,
+                                        // todo : 매핑해주기
+                                        subReply = subReplyList,
+                                        isLiked = (likeStates[index] as CheckLikeResponse).isLike,
+                                        likeCount = (likeCounts[index] as CountLikeResponse).countLike,
+                                    )
+                                }
                             }
                         }.collect {
                             _replyListStateFlow.value = it.reversed()
-                            Timber.d("리스트 업뎃 :$it")
+                            Timber.d("전체 댓글 리스트 $it")
                             sendEffect(ReplyEffect.ScrollToTop)
+                            Timber.d("댓글 리스트 값 방출")
                         }
                     }
                 }
             }
         }
     }
+
+data class SubReplyWithLikeInfo(
+    val content: String,
+    val createDate: String,
+    val lastModifiedDate: String,
+    val nickname: String,
+    val replyId: String,
+    val reportId: String,
+    val upReplyId: String,
+    val userId: String,
+    val likeCount: Int,
+    val isLiked: Boolean,
+    val isMySubReply: Boolean,
+)

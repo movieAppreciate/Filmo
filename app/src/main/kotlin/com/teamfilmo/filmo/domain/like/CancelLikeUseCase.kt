@@ -13,9 +13,9 @@ class CancelLikeUseCase
     constructor(
         private val likeRepository: LikeRepository,
     ) {
-        operator fun invoke(reportId: String): Flow<CancelLikeResponse?> =
+        operator fun invoke(likeId: String): Flow<CancelLikeResponse?> =
             flow {
-                val result = likeRepository.cancelLike(reportId)
+                val result = likeRepository.cancelLike(likeId)
                 result.onSuccess {
                     emit(it)
                 }

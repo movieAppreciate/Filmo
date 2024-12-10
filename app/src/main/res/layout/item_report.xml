@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="20dp"
     android:orientation="vertical">
 
-<com.google.android.material.card.MaterialCardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
-    app:cardCornerRadius="15dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:strokeColor="@color/gray03"
-    app:strokeWidth="0.4dp">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/gray03"
+        app:strokeWidth="0.4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
 
             <FrameLayout
@@ -51,7 +49,7 @@
             </FrameLayout>
 
 
-        <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_movie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,13 +62,13 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:maxLength="20"
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:gravity="start"
                 android:layout_marginStart="10dp"
+                android:gravity="start"
+                android:maxLength="20"
                 android:text="홍홍"
                 android:textColor="@color/white"
                 android:textSize="22sp"
@@ -90,92 +88,89 @@
                 android:text="애매하다. 영화관을 나서면서 나도 모르게 혼잣말을 중얼거렸다. 의심하는데 밑바탕이 없으니 집요한 추..."
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/frameLayout4"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/frameLayout4" />
+                app:layout_constraintStart_toEndOf="@+id/frameLayout4"
+                app:layout_constraintTop_toBottomOf="@id/frameLayout4" />
 
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/image_user"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/profile_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_content"
-            app:shapeAppearance="@style/Circle50" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/image_user"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/profile_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_content"
+                app:shapeAppearance="@style/Circle50" />
 
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_nick_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text=""
-                    app:layout_constraintBottom_toTopOf="@+id/tv_create_date"
-                    app:layout_constraintStart_toEndOf="@+id/image_user"
-                    app:layout_constraintTop_toTopOf="@+id/image_user" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_nick_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                app:layout_constraintBottom_toTopOf="@+id/tv_create_date"
+                app:layout_constraintStart_toEndOf="@+id/image_user"
+                app:layout_constraintTop_toTopOf="@+id/image_user" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_create_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="1시간 전"
-                    android:textColor="@color/grey"
-                    app:layout_constraintBottom_toBottomOf="@+id/image_user"
-                    app:layout_constraintStart_toEndOf="@+id/image_user" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="1시간 전"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toBottomOf="@+id/image_user"
+                app:layout_constraintStart_toEndOf="@+id/image_user" />
 
 
-                <ImageButton
-                    android:padding="10dp"
-                    android:id="@+id/likeButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/ic_like"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_reply"
-                    app:layout_constraintStart_toEndOf="@+id/tv_create_date"
-                    app:layout_constraintTop_toTopOf="@+id/tv_create_date"
-                    app:layout_constraintVertical_bias="1.0" />
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/ic_like"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_create_date"
+                app:layout_constraintEnd_toStartOf="@id/tv_like_count"
+                app:layout_constraintTop_toTopOf="@+id/tv_create_date" />
 
-                <TextView
-                    android:id="@+id/tv_like_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_reply"
-                    app:layout_constraintStart_toEndOf="@+id/likeButton"
-                    app:layout_constraintTop_toTopOf="@+id/likeButton" />
+            <TextView
+                android:id="@+id/tv_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="9"
+                app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+                app:layout_constraintEnd_toStartOf="@+id/btn_reply"
+                app:layout_constraintTop_toTopOf="@+id/likeButton" />
 
-                <ImageButton
-                    android:id="@+id/btn_reply"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_reply_unselected"
-                    app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_reply_count"
-                    app:layout_constraintStart_toEndOf="@+id/likeButton"
-                    app:layout_constraintTop_toTopOf="@+id/likeButton"
-                    app:layout_constraintVertical_bias="0.4" />
+            <ImageButton
+                android:id="@+id/btn_reply"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="4dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_reply_unselected"
+                app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+                app:layout_constraintEnd_toStartOf="@+id/tv_reply_count"
+                app:layout_constraintTop_toTopOf="@+id/likeButton"
+                app:layout_constraintVertical_bias="0.4" />
 
-                <TextView
-                    android:id="@+id/tv_reply_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_reply"
-                    app:layout_constraintTop_toTopOf="@+id/tv_like_count" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_reply_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="@+id/tv_like_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_like_count" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

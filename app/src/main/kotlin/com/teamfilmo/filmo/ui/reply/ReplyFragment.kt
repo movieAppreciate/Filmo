@@ -1,7 +1,9 @@
 package com.teamfilmo.filmo.ui.reply
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -14,15 +16,14 @@ import androidx.navigation.fragment.navArgs
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentReplyBinding
-import com.teamfilmo.filmo.ui.reply.adapter.ReplyItemClick
 import com.teamfilmo.filmo.ui.reply.adapter.ReplyRVAdapter
 import com.teamfilmo.filmo.ui.widget.CustomDialog
 import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment :
@@ -88,7 +89,6 @@ class ReplyFragment :
     fun showDeleteDialog(
         reportId: String,
         replyId: String,
-        position: Int,
     ) {
         val dialog =
             context?.let {
@@ -101,7 +101,6 @@ class ReplyFragment :
             object : ItemClickListener {
                 override fun onClick() {
                     viewModel.handleEvent(ReplyEvent.DeleteReply(replyId, reportId))
-                    adapter.removeReplyItem(position)
                     Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                 }
             },
@@ -135,9 +134,34 @@ class ReplyFragment :
         dialog?.show(activity?.supportFragmentManager!!, "CustomDialog")
     }
 
+    private fun hideKeyboard() {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(
+            binding.editReply.windowToken,
+            0,
+        )
+    }
+
+    private fun setupKeyboardDismiss() {
+        binding.recyclerView.setOnTouchListener { view, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (binding.editReply.hasFocus()) {
+                    val outRect = Rect()
+                    binding.editReply.getGlobalVisibleRect(outRect)
+                    if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                        binding.editReply.clearFocus()
+                        hideKeyboard()
+                    }
+                }
+            }
+            false
+        }
+    }
+
     override fun onBindLayout() {
         // 전체 댓글 가져오기
         viewModel.getReply(args.reportId)
+        setupKeyboardDismiss()
 
         // 댓글, 답글 전환
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -166,14 +190,7 @@ class ReplyFragment :
         }
 
         adapter.itemClick =
-            object : ReplyItemClick {
-                override fun onLikeClick(position: Int) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val replyId = adapter.replyList[position].replyId
-                        viewModel.handleEvent(ReplyEvent.ClickLike(replyId))
-                    }
-                }
-
+            object : ReplyInteractionListener {
                 override fun onReplyClick(position: Int) {
                     lifecycleScope.launch {
                         isReplyingToComment = true
@@ -189,10 +206,15 @@ class ReplyFragment :
                     }
                 }
 
-                // 본인이 작성한 댓글인지 아닌지에 따라서 미트볼 기능 분류
-                override fun onMeatBallClick(
+                override fun onReplyLikeClick(replyId: String) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.handleEvent(ReplyEvent.ClickLike(replyId))
+                    }
+                }
+
+                override fun onReplyMoreClick(
                     isMyReply: Boolean,
-                    position: Int,
+                    replyId: String,
                 ) {
                     val bottomSheet =
                         if (isMyReply) {
@@ -208,7 +230,6 @@ class ReplyFragment :
                     bottomSheet.setListener(
                         object : OnButtonSelectedListener {
                             override fun onButtonSelected(text: String) {
-                                val replyId = adapter.replyList[position].replyId
                                 when (text) {
                                     "신고" -> {
                                         showComplaintDialog(replyId)
@@ -219,7 +240,57 @@ class ReplyFragment :
                                         bottomSheet.dismiss()
                                     }
                                     "삭제하기" -> {
-                                        showDeleteDialog(args.reportId, replyId, position)
+                                        showDeleteDialog(args.reportId, replyId)
+                                        bottomSheet.dismiss()
+                                    }
+
+                                    "취소" -> {
+                                        bottomSheet.dismiss()
+                                    }
+                                }
+                            }
+                        },
+                    )
+                }
+
+                override fun onSubReplyLikeClick(
+                    parentReplyId: String,
+                    subReplyId: String,
+                ) {
+                    Timber.d("답글 좋아요 뚜웅 ")
+                    viewModel.handleEvent(ReplyEvent.ClickSubReplyLike(subReplyId))
+                }
+
+                override fun onSubReplyMoreClick(
+                    isMyReply: Boolean,
+                    parentReplyId: String,
+                    subReplyId: String,
+                ) {
+                    val bottomSheet =
+                        if (isMyReply) {
+                            ModalBottomSheet.newInstance(
+                                listOf("삭제하기", "취소"),
+                            )
+                        } else {
+                            ModalBottomSheet.newInstance(
+                                listOf("신고", "차단", "취소"),
+                            )
+                        }
+                    bottomSheet.show(parentFragmentManager, ModalBottomSheet.TAG)
+                    bottomSheet.setListener(
+                        object : OnButtonSelectedListener {
+                            override fun onButtonSelected(text: String) {
+                                when (text) {
+                                    "신고" -> {
+                                        showComplaintDialog(subReplyId)
+                                        bottomSheet.dismiss()
+                                    }
+                                    "차단" -> {
+                                        showBlockDialog(subReplyId)
+                                        bottomSheet.dismiss()
+                                    }
+                                    "삭제하기" -> {
+                                        showDeleteDialog(args.reportId, subReplyId)
                                         bottomSheet.dismiss()
                                     }
 
@@ -318,6 +389,28 @@ class ReplyFragment :
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
+            is ReplyEffect.CancelLikeSubReply -> {
+//                viewModel.getReply(args.reportId)
+                adapter.replyList.find { it.replyId == effect.upReplyId }?.let {
+                    val position = adapter.replyList.indexOf(it)
+                    val holder =
+                        binding.recyclerView
+                            .findViewHolderForAdapterPosition(position) as? ReplyRVAdapter.ReplyViewHolder
+                    holder?.updateSubReplyLikeState(effect.subReplyId, false)
+                }
+            }
+            is ReplyEffect.SaveLikeSubReply -> {
+//                viewModel.getReply(args.reportId)
+                // 어댑터에서 좋아요 업데이트
+                adapter.replyList.find { it.replyId == effect.upReplyId }?.let {
+                    val position = adapter.replyList.indexOf(it)
+                    val holder =
+                        binding.recyclerView
+                            .findViewHolderForAdapterPosition(position) as? ReplyRVAdapter.ReplyViewHolder
+                    holder?.updateSubReplyLikeState(effect.subReplyId, true)
+                }
+            }
+
             is ReplyEffect.SaveSubReply -> {
                 // 다시 댓글 아이콘 가져오기
                 isReplyingToComment = false
