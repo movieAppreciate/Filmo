@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.data.remote.service
 
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -13,7 +14,7 @@ interface ComplaintService {
     @POST("/complaint/save")
     suspend fun saveComplaint(
         @Body saveComplaintRequest: SaveComplaintRequest,
-    ): Result<String>
+    ): Result<SaveComplaintResponse>
 
     /**
      * 감상문 신고 취소

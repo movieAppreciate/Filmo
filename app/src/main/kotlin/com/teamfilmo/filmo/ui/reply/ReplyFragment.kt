@@ -354,6 +354,7 @@ class ReplyFragment :
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.replyListStateFlow.collect {
                         adapter.setReplyList(it)
+                        binding.txtReplyCount.text = it.size.toString()
                     }
                 }
             }
@@ -367,18 +368,6 @@ class ReplyFragment :
                     viewModel.userInfo.collect {
                         it.let {
                             adapter.setUserId(it.userId)
-                        }
-                    }
-                }
-            }
-
-            launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    // 처음에 댓글 불러올 때 & 댓글 삭제 시에도 호출된다.
-                    viewModel.replyListStateFlow.collect {
-                        if (it.isNotEmpty()) {
-                            adapter.setReplyList(it)
-                            binding.txtReplyCount.text = it.size.toString()
                         }
                     }
                 }
@@ -434,6 +423,7 @@ class ReplyFragment :
             }
             is ReplyEffect.DeleteReply -> {
                 adapter.removeReplyItem(effect.position)
+                binding.txtReplyCount.text = (viewModel.replyListStateFlow.value.size - 1).toString()
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.reply
 
+import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ class DeleteReplyUseCase
     constructor(
         private val replyRepository: ReplyRepository,
     ) {
-        operator fun invoke(replyId: String): Flow<String?> =
+        operator fun invoke(replyId: String): Flow<DeleteReplyResponse?> =
             flow {
                 replyRepository
                     .deleteReply(replyId)

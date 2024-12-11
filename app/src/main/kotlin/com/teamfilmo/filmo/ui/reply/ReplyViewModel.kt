@@ -332,11 +332,13 @@ class ReplyViewModel
         ) {
             viewModelScope.launch {
                 deleteReplyUseCase(replyId).collect {
-                    val position =
-                        _replyListStateFlow.value.indexOfFirst {
-                            it.replyId == replyId
-                        }
-                    sendEffect(ReplyEffect.DeleteReply(position))
+                    if (it != null && it.success) {
+                        val position =
+                            _replyListStateFlow.value.indexOfFirst {
+                                it.replyId == replyId
+                            }
+                        sendEffect(ReplyEffect.DeleteReply(position))
+                    }
                 }
             }
         }

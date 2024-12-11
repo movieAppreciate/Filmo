@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.repository
 
+import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
@@ -14,19 +15,11 @@ class ReplyRepositoryImpl
     constructor(
         private val replyDataSource: ReplyDataSource,
     ) : ReplyRepository {
-        override suspend fun saveReply(request: SaveReplyRequest): Result<SaveReplyResponse> {
-            return replyDataSource.saveReply(request)
-        }
+        override suspend fun saveReply(request: SaveReplyRequest): Result<SaveReplyResponse> = replyDataSource.saveReply(request)
 
-        override suspend fun updateReply(request: UpdateReplyRequest): Result<UpdateReplyResponse> {
-            return replyDataSource.updateReply(request)
-        }
+        override suspend fun updateReply(request: UpdateReplyRequest): Result<UpdateReplyResponse> = replyDataSource.updateReply(request)
 
-        override suspend fun getReply(reportId: String): Result<List<GetReplyResponseItem>> {
-            return replyDataSource.getReply(reportId)
-        }
+        override suspend fun getReply(reportId: String): Result<List<GetReplyResponseItem>> = replyDataSource.getReply(reportId)
 
-        override suspend fun deleteReply(replyId: String): Result<String> {
-            return replyDataSource.deleteReply(replyId)
-        }
+        override suspend fun deleteReply(replyId: String): Result<DeleteReplyResponse> = replyDataSource.deleteReply(replyId)
     }

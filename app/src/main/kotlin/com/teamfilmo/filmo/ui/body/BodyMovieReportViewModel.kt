@@ -5,6 +5,7 @@ import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
 import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintResponse
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
@@ -94,8 +95,8 @@ class BodyMovieReportViewModel
     /*
     신고 등록
      */
-        private val _registComplaintResponse = MutableStateFlow("")
-        val registComplaintResponse: StateFlow<String> = _registComplaintResponse
+        private val _registComplaintResponse = MutableStateFlow(SaveComplaintResponse())
+        val registComplaintResponse: StateFlow<SaveComplaintResponse> = _registComplaintResponse
 
     /*
      본문 닉네임

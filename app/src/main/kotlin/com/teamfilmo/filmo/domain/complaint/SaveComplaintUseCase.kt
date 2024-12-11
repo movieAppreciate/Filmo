@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.domain.complaint
 
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintResponse
 import com.teamfilmo.filmo.domain.repository.ComplaintRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,7 @@ class SaveComplaintUseCase
     constructor(
         private val complaintRepository: ComplaintRepository,
     ) {
-        operator fun invoke(saveComplaintRequest: SaveComplaintRequest): Flow<String?> =
+        operator fun invoke(saveComplaintRequest: SaveComplaintRequest): Flow<SaveComplaintResponse?> =
             flow {
                 val result = complaintRepository.saveComplaint(saveComplaintRequest)
                 result.onFailure {

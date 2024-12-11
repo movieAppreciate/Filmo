@@ -5,7 +5,9 @@ import com.teamfilmo.filmo.base.effect.BaseEffect
 sealed interface AuthEffect : BaseEffect {
     data object Existing : AuthEffect
 
-    data object SignUpSuccess : AuthEffect
+    data class SignUpSuccess(
+        val type: String,
+    ) : AuthEffect
 
     data object SignUpFailed : AuthEffect
 

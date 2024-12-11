@@ -1,7 +1,6 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
-import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
@@ -23,6 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -42,7 +42,9 @@ class AuthViewModel
     ) : BaseViewModel<AuthEffect, AuthEvent>() {
         override fun handleEvent(event: AuthEvent) {
             when (event) {
-                is AuthEvent.RequestGoogleLogin -> requestGoogleLogin(event.credential)
+                is AuthEvent.RequestGoogleLogin -> {
+                    requestGoogleLogin(event.credential)
+                }
                 is AuthEvent.RequestNaverLogin -> requestNaverLogin(event.token)
                 is AuthEvent.RequestKakaoLogin -> requestKakaoLogin(event.token)
             }
@@ -51,12 +53,15 @@ class AuthViewModel
         private val _signUpResponse = MutableStateFlow<UserInfo?>(null)
         val signUpResponse = _signUpResponse.asStateFlow()
 
+        // 토큰이 없기 때문에 로그인 화면이 뜬 것이다! 따라서 로그인 요청이 들어오면 회원가입 후 로그인이 실행되도록 한다.
+        // 다음부터는 저장된 토큰을 통해 자동으로 로그인이 구현된다.
+
         // 회원 가입
-        private fun requestSignUp(
+        private suspend fun requestSignUp(
             email: String,
             type: String,
         ) {
-            viewModelScope.launch {
+            coroutineScope {
                 signUpUseCase(SignUpRequest(email = email, type = type)).collect {
                     if (it != null) {
                         when (it) {
@@ -71,7 +76,7 @@ class AuthViewModel
                                     ),
                                 )
                                 // 해당 계정으로 로그인 하기
-                                sendEffect(AuthEffect.SignUpSuccess)
+                                sendEffect(AuthEffect.SignUpSuccess(type))
                             }
                             is SignUpResult.Existing -> {
                                 // 이미 다른 로그인으로 등록된 경우
@@ -106,16 +111,21 @@ class AuthViewModel
                         }
                     }
 
-                kakaoLoginRequestUseCase(email)
-                    .onSuccess {
-                        Timber.d("kakao login success")
-                        // 로그인 성공 시 access token 저장하기
-                        userTokenSource.setUserToken(it.accessToken)
-                        sendEffect(AuthEffect.LoginSuccess)
-                    }.onFailure {
-                        Timber.e("로그인 실패")
-                        requestSignUp(email, "kakao")
-                    }
+                try {
+                    requestSignUp(email, "kakao")
+                    kakaoLoginRequestUseCase(email)
+                        .onSuccess {
+                            Timber.d("kakao login success")
+                            // 로그인 성공 시 access token 저장하기
+                            userTokenSource.setUserToken(it.accessToken)
+                            sendEffect(AuthEffect.LoginSuccess)
+                        }.onFailure {
+                            Timber.e("로그인 실패")
+                            sendEffect(AuthEffect.LoginFailed)
+                        }
+                } catch (e: Exception) {
+                    sendEffect(AuthEffect.SignUpFailed)
+                }
             }
         }
 
@@ -159,35 +169,45 @@ class AuthViewModel
                         }
                     }.getOrThrow()
 
-                naverLoginRequestUseCase(email)
-                    .onSuccess {
-                        Timber.d("naver login success : $it")
-                        userTokenSource.setUserToken(it.accessToken)
-                        sendEffect(AuthEffect.LoginSuccess)
-                    }.onFailure {
-                        Timber.e("naver login failed: ${it.message}")
-                        sendEffect(AuthEffect.LoginFailed)
-                        requestSignUp(email, "naver")
-                    }
+                try {
+                    requestSignUp(email, "naver")
+                    naverLoginRequestUseCase(email)
+                        .onSuccess {
+                            Timber.d("naver login success : $it")
+                            userTokenSource.setUserToken(it.accessToken)
+                            sendEffect(AuthEffect.LoginSuccess)
+                        }.onFailure {
+                            Timber.e("naver login failed: ${it.message}")
+                            sendEffect(AuthEffect.LoginFailed)
+                        }
+                } catch (e: Exception) {
+                    Timber.e("Google sign-in process failed: ${e.message}")
+                    sendEffect(AuthEffect.SignUpFailed)
+                }
             }
         }
 
         private fun requestGoogleLogin(credential: Credential) {
             launch {
-                googleLoginRequestUseCase(credential)
-                    .onSuccess {
-                        Timber.d("google login success")
-                        userTokenSource.setUserToken(it.accessToken)
-                        sendEffect(AuthEffect.LoginSuccess)
-                    }.onFailure {
-                        Timber.e("google login failed: ${it.message}")
-                        val googleIdTokenCredential =
-                            GoogleIdTokenCredential.createFrom(
-                                credential.data,
-                            )
-                        requestSignUp(email = googleIdTokenCredential.id, type = "google")
-                        sendEffect(AuthEffect.LoginFailed)
-                    }
+                try {
+                    val googleIdTokenCredential =
+                        GoogleIdTokenCredential.createFrom(
+                            credential.data,
+                        )
+                    requestSignUp(googleIdTokenCredential.id, "google")
+                    googleLoginRequestUseCase(credential)
+                        .onSuccess {
+                            Timber.d("google login success")
+                            userTokenSource.setUserToken(it.accessToken)
+                            sendEffect(AuthEffect.LoginSuccess)
+                        }.onFailure {
+                            Timber.e("google login failed: ${it.message}")
+                            sendEffect(AuthEffect.LoginFailed)
+                        }
+                } catch (e: Exception) {
+                    Timber.e("Google sign-in process failed: ${e.message}")
+                    sendEffect(AuthEffect.SignUpFailed)
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.source
 
+import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
@@ -13,5 +14,5 @@ interface ReplyDataSource {
 
     suspend fun getReply(reportId: String): Result<List<GetReplyResponseItem>>
 
-    suspend fun deleteReply(replyId: String): Result<String>
+    suspend fun deleteReply(replyId: String): Result<DeleteReplyResponse>
 }

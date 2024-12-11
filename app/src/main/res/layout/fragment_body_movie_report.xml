@@ -129,7 +129,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_duck"
+            android:src="@drawable/profile_image"
             app:layout_constraintBottom_toTopOf="@id/movie_detail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_like"

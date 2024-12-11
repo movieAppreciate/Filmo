@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
 import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
@@ -50,5 +51,5 @@ interface ReplyService {
          */
         @Path("replyId")
         replyId: String,
-    ): Result<String>
+    ): Result<DeleteReplyResponse>
 }
