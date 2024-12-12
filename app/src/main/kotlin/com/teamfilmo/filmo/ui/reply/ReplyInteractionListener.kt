@@ -1,6 +1,8 @@
 package com.teamfilmo.filmo.ui.reply
 
 interface ReplyInteractionListener {
+    fun onRootViewClick()
+
     // 부모 댓글 관련 이벤트
     fun onReplyClick(position: Int)
 
@@ -9,11 +11,6 @@ interface ReplyInteractionListener {
     fun onReplyMoreClick(
         isMyReply: Boolean,
         replyId: String,
-    )
-
-    fun onShowBottomSheet(
-        replyId: String,
-        position: Int,
     )
 
     fun onSubReplyLikeClick(
@@ -40,10 +37,5 @@ interface SubReplyInteractionListener {
         isMyReply: Boolean,
         parentReplyId: String,
         subReplyId: String,
-    )
-
-    fun onShowBottomSheet(
-        replyId: String,
-        position: Int,
     )
 }

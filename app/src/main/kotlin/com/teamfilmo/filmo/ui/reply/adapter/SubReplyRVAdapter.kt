@@ -34,6 +34,16 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyRVAdapter.SubReplyViewHol
         notifyItemChanged(position)
     }
 
+    fun deleteSubReplyItem(
+        upReplyId: String,
+        subReplyId: String,
+    ) {
+        val position = subReplyList.indexOfFirst { it.replyId == subReplyId }
+        if (position == -1) return
+        subReplyList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     private fun formatTimeDifference(dateString: String): String {
         val possiblePatterns =
             listOf(
@@ -81,8 +91,6 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyRVAdapter.SubReplyViewHol
         this.subReplyList.addAll(subReplyList)
         notifyDataSetChanged()
     }
-
-    private var subReplyItemClick: SubReplyInteractionListener? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -135,7 +143,12 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyRVAdapter.SubReplyViewHol
         init {
             with(binding) {
                 btnMeatBall.setOnClickListener {
-                    subReplyItemClick?.onSubReplyMoreClick(subReplyList[position].isMySubReply, subReplyList[position].upReplyId, subReplyList[position].replyId)
+                    Timber.d("더보기 클릭")
+                    val position = bindingAdapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val subReply = subReplyList[position]
+                        subReplyListener?.onSubReplyMoreClick(subReply.isMySubReply, subReply.upReplyId, subReply.replyId)
+                    }
                 }
                 btnLike.setOnClickListener {
                     Timber.d("답글 좋아요 클릭 ")

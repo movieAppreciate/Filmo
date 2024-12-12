@@ -3,6 +3,10 @@ package com.teamfilmo.filmo.ui.reply
 import com.teamfilmo.filmo.base.effect.BaseEffect
 
 sealed interface ReplyEffect : BaseEffect {
+    data class DeleteSubReply(
+        val upReplyId: String,
+    ) : ReplyEffect
+
     data object SaveSubReply : ReplyEffect
 
     data class SaveLikeSubReply(

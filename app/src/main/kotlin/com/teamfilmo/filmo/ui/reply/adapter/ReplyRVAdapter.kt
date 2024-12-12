@@ -88,6 +88,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
                             parentReplyId: String,
                             subReplyId: String,
                         ) {
+                            Timber.d("답글 좋아요 클릭")
                             itemClick?.onSubReplyLikeClick(parentReplyId, subReplyId)
                         }
 
@@ -98,19 +99,11 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
                         ) {
                             itemClick?.onSubReplyMoreClick(isMyReply, parentReplyId, subReplyId)
                         }
-
-                        override fun onShowBottomSheet(
-                            replyId: String,
-                            position: Int,
-                        ) {
-                            itemClick?.onShowBottomSheet(replyId, position)
-                        }
                     }
             }
 
         init {
-            binding.subReplyRecycerView.adapter = subReplyAdapter
-            with(binding) {
+            binding.apply {
                 subReplyRecycerView.adapter = subReplyAdapter
                 btnLike.setOnClickListener {
                     itemClick?.onReplyLikeClick(replyList[adapterPosition].replyId)
@@ -118,7 +111,19 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
                 btnReply.setOnClickListener {
                     itemClick?.onReplyClick(adapterPosition)
                 }
+
+                // 전체 아이템 영역
+                root.setOnClickListener {
+                    itemClick?.onRootViewClick()
+                }
             }
+        }
+
+        fun deleteSubReplyItem(
+            upReplyId: String,
+            subReplyId: String,
+        ) {
+            subReplyAdapter.deleteSubReplyItem(upReplyId, subReplyId)
         }
 
         fun updateSubReplyLikeState(

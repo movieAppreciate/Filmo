@@ -23,16 +23,17 @@ import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReplyFragment :
     BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
         FragmentReplyBinding::inflate,
     ) {
-    private var isReplyingToComment = false
+    private var isSubReplyMode = false
     private var upReplyId = ""
-
     override val viewModel: ReplyViewModel by viewModels()
+    private var deleteSubReplyId: String? = null
 
     val adapter by lazy {
         ReplyRVAdapter()
@@ -101,6 +102,7 @@ class ReplyFragment :
                 override fun onClick() {
                     viewModel.handleEvent(ReplyEvent.DeleteReply(replyId, reportId))
                     Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                    setupKeyboardDismiss()
                 }
             },
         )
@@ -112,7 +114,6 @@ class ReplyFragment :
     fun showDeleteSubReplyDialog(
         reportId: String,
         replyId: String,
-        position: Int,
     ) {
         val dialog =
             context?.let {
@@ -125,8 +126,8 @@ class ReplyFragment :
             object : ItemClickListener {
                 override fun onClick() {
                     viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
-                    adapter.removeReplyItem(position)
                     Toast.makeText(context, "답글을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                    hideKeyboard()
                 }
             },
         )
@@ -167,8 +168,8 @@ class ReplyFragment :
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (isReplyingToComment) {
-                        isReplyingToComment = false
+                    if (isSubReplyMode) {
+                        isSubReplyMode = false
                         binding.editReply.hint = "댓글 달기"
                     } else {
                         parentFragmentManager.popBackStack()
@@ -180,8 +181,8 @@ class ReplyFragment :
         binding.recyclerView.adapter = adapter
 
         binding.btnBack.setOnClickListener {
-            if (isReplyingToComment) {
-                isReplyingToComment = false
+            if (isSubReplyMode) {
+                isSubReplyMode = false
                 binding.editReply.hint = "댓글 달기"
             } else {
                 navController.popBackStack()
@@ -190,9 +191,14 @@ class ReplyFragment :
 
         adapter.itemClick =
             object : ReplyInteractionListener {
+                override fun onRootViewClick() {
+                    isSubReplyMode = false
+                    binding.editReply.hint = "댓글 달기"
+                }
+
                 override fun onReplyClick(position: Int) {
                     lifecycleScope.launch {
-                        isReplyingToComment = true
+                        isSubReplyMode = true
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
                             viewModel.replyListStateFlow.collect {
                                 val item = it[position]
@@ -264,6 +270,8 @@ class ReplyFragment :
                     parentReplyId: String,
                     subReplyId: String,
                 ) {
+                    deleteSubReplyId = subReplyId
+                    Timber.d("더보기 버튼 클릭 :$isMyReply")
                     val bottomSheet =
                         if (isMyReply) {
                             ModalBottomSheet.newInstance(
@@ -288,35 +296,7 @@ class ReplyFragment :
                                         bottomSheet.dismiss()
                                     }
                                     "삭제하기" -> {
-                                        showDeleteDialog(args.reportId, subReplyId)
-                                        bottomSheet.dismiss()
-                                    }
-
-                                    "취소" -> {
-                                        bottomSheet.dismiss()
-                                    }
-                                }
-                            }
-                        },
-                    )
-                }
-
-                override fun onShowBottomSheet(
-                    replyId: String,
-                    position: Int,
-                ) {
-                    val bottomSheet =
-                        ModalBottomSheet.newInstance(
-                            listOf("삭제하기", "취소"),
-                        )
-
-                    bottomSheet.show(parentFragmentManager, ModalBottomSheet.TAG)
-                    bottomSheet.setListener(
-                        object : OnButtonSelectedListener {
-                            override fun onButtonSelected(text: String) {
-                                when (text) {
-                                    "삭제하기" -> {
-                                        showDeleteSubReplyDialog(args.reportId, replyId, position)
+                                        showDeleteSubReplyDialog(args.reportId, subReplyId)
                                         bottomSheet.dismiss()
                                     }
 
@@ -333,18 +313,19 @@ class ReplyFragment :
         binding.editReply.setOnClickListener {
             binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
         }
-        binding.recyclerView.setOnClickListener {
+        binding.root.setOnClickListener {
             binding.editReply.hint = "댓글달기"
         }
         binding.btnRegistReply.setOnClickListener {
-            if (isReplyingToComment) {
+            if (isSubReplyMode) {
                 viewModel.handleEvent(ReplyEvent.SaveSubReply(upReplyId, args.reportId, binding.editReply.text.toString()))
                 Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.handleEvent(ReplyEvent.SaveReply(null, args.reportId, binding.editReply.text.toString()))
                 Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             }
-            setupKeyboardDismiss()
+            isSubReplyMode = false
+            hideKeyboard()
             binding.editReply.clearAnimation()
             binding.editReply.text.clear()
         }
@@ -377,8 +358,16 @@ class ReplyFragment :
 
     override fun handleEffect(effect: ReplyEffect) {
         when (effect) {
+            is ReplyEffect.DeleteSubReply -> {
+                adapter.replyList.find { it.replyId == effect.upReplyId }?.let {
+                    if (deleteSubReplyId != null) {
+                        val position = adapter.replyList.indexOf(it)
+                        val holder = binding.recyclerView.findViewHolderForAdapterPosition(position) as ReplyRVAdapter.ReplyViewHolder
+                        holder?.deleteSubReplyItem(effect.upReplyId, subReplyId = deleteSubReplyId!!)
+                    }
+                }
+            }
             is ReplyEffect.CancelLikeSubReply -> {
-//                viewModel.getReply(args.reportId)
                 adapter.replyList.find { it.replyId == effect.upReplyId }?.let {
                     val position = adapter.replyList.indexOf(it)
                     val holder =
@@ -388,7 +377,6 @@ class ReplyFragment :
                 }
             }
             is ReplyEffect.SaveLikeSubReply -> {
-//                viewModel.getReply(args.reportId)
                 // 어댑터에서 좋아요 업데이트
                 adapter.replyList.find { it.replyId == effect.upReplyId }?.let {
                     val position = adapter.replyList.indexOf(it)
@@ -401,7 +389,7 @@ class ReplyFragment :
 
             is ReplyEffect.SaveSubReply -> {
                 // 다시 댓글 아이콘 가져오기
-                isReplyingToComment = false
+                isSubReplyMode = false
                 binding.editReply.hint = "댓글 달기"
                 adapter.setReplyList(viewModel.replyListStateFlow.value)
             }

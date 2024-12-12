@@ -351,6 +351,7 @@ class ReplyViewModel
                 deleteReplyUseCase(replyId).collect {
                     if (it != null) {
                         getReply(reportId)
+                        sendEffect(ReplyEffect.DeleteSubReply(replyId))
                     }
                 }
             }
