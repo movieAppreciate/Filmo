@@ -8,7 +8,6 @@
     android:scrollbars="none"
     android:layout_height="match_parent">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
@@ -75,43 +74,43 @@
             android:id="@+id/edit_report_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="1dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
             android:background="@color/transparent"
             android:hint="제목을 입력해주세요."
             android:maxLength="20"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_report_body"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_report_body"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/materialDivider"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="35dp"
-            android:background="@color/transparent"
-            android:hint="영화를 보고 난 후의 생각을 자유롭게 작성해주세요."
-            android:textColorHint="@color/gray02"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@+id/textView5"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
 
-
-        <View
-            android:id="@+id/view3"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/gray02"
+            android:background="@color/transparent"
+            android:gravity="top"
+            android:hint="영화를 보고 난 후 생각을 자유롭게 작성해주세요."
+            android:minHeight="300dp"
+            android:padding="10dp"
+            android:textColorHint="@color/gray02"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHeight_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_report_tag" />
+            app:layout_constraintTop_toBottomOf="@id/edit_report_title" />
+
+
 
         <TextView
             android:id="@+id/textView5"
@@ -124,7 +123,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/view2" />
-
 
         <EditText
             android:id="@+id/edit_report_tag"
@@ -144,7 +142,7 @@
             android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="12dp"
             android:background="@color/gray02"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -159,7 +157,7 @@
             android:text="썸네일 선택"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/view3" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_report_tag" />
 
 
         <androidx.appcompat.widget.AppCompatButton

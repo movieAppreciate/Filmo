@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="27dp"
@@ -23,23 +24,13 @@
         android:id="@+id/txt_reply_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:text="3"
+        android:text="3개의 댓글"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_back"
-        app:layout_constraintStart_toEndOf="@+id/btn_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_back" />
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="개의 댓글"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_reply_count"
-        app:layout_constraintStart_toEndOf="@+id/txt_reply_count"
-        app:layout_constraintTop_toTopOf="@+id/txt_reply_count" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -54,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView14"
+        app:layout_constraintTop_toBottomOf="@id/txt_reply_count"
         app:layout_constraintVertical_bias="0.0"
         app:reverseLayout="true"
         tools:listitem="@layout/item_reply" />

@@ -78,7 +78,7 @@ class WriteReportFragment :
                     }
 
                     override fun afterTextChanged(editable: Editable?) {
-                        binding.editReportTag.removeTextChangedListener(this)
+                        removeTextChangedListener(this)
                         val inputText = editable.toString().trim()
                         val words = inputText.split(" ").filter { it.isNotEmpty() }
                         val formattedText =
@@ -90,7 +90,7 @@ class WriteReportFragment :
                             binding.editReportTag.setText(formattedText)
                             binding.editReportTag.setSelection(formattedText.length)
                         }
-                        binding.editReportTag.addTextChangedListener(this)
+                        addTextChangedListener(this)
                     }
                 },
             )
@@ -114,7 +114,9 @@ class WriteReportFragment :
                 val request =
                     RegistReportRequest(
                         title = binding.editReportTitle.text.toString(),
-                        content = binding.editReportBody.text.toString(),
+                        content =
+                            binding.editReportBody.text
+                                .toString(),
                         imageUrl = uri!!,
                         movieId = args.movieId.toString(),
                         tagString = tagString?.replace(" ", "").toString(),
@@ -124,7 +126,9 @@ class WriteReportFragment :
             } else {
                 if (binding.editReportTitle.text?.length == 0) {
                     Toast.makeText(context, "감상문 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
-                } else if (binding.editReportBody.text?.length == 0) {
+                } else if (binding.editReportBody.text
+                        ?.length == 0
+                ) {
                     Toast.makeText(context, "감상문 내용을 입력해주세요", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "포스터를 선택해주세요", Toast.LENGTH_SHORT).show()

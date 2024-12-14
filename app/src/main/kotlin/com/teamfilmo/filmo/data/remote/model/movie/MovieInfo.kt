@@ -4,6 +4,5 @@ data class MovieInfo(
     val id: Int,
     val movieImage: String,
     val movieName: String,
-//    val movieAge: Int,
     val genres: List<Int>,
 )

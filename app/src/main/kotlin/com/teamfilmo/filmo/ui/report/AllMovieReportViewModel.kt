@@ -10,6 +10,7 @@ import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
 import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
+import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
 import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
@@ -20,6 +21,7 @@ import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
+import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
@@ -66,11 +68,19 @@ class AllMovieReportViewModel
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
+        private val searchMovieDetailUseCase: SearchMovieDetailUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
         init {
             getMovieReports()
             getUpcomingMovieList()
         }
+
+    /*
+    영화 상세 정보
+     */
+
+        private val _movieDetailResponse = MutableStateFlow(DetailMovieResponse())
+        val movieDetailResponse = _movieDetailResponse.asStateFlow()
 
         /*
         좋아요 체크
@@ -118,10 +128,18 @@ class AllMovieReportViewModel
             }
         }
 
-    /*
-    감상문 페이징
-     */
+        // 영화 상세 정보
+        private fun searchMovieDetail(movieId: Int) {
+            viewModelScope.launch {
+                searchMovieDetailUseCase(movieId).collect {
+                    if (it != null) {
+                        _movieDetailResponse.value = it
+                    }
+                }
+            }
+        }
 
+        // 감상문 페이징
         private fun getMovieReports() {
             viewModelScope.launch(Dispatchers.IO) {
                 Pager(
@@ -147,8 +165,8 @@ class AllMovieReportViewModel
         }
 
         // 영화 api : 최신 영화 정보 리스트 가져오기
-
         private fun getUpcomingMovieList() {
+            // todo :각 영화에 대한 영화 정보 가져오기
             viewModelScope.launch(Dispatchers.IO) {
                 val list = mutableListOf<MovieInfo>()
                 getUpcomingMovieUseCase()

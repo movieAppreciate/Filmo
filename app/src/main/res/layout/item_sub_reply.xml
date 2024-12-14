@@ -56,13 +56,10 @@
             android:id="@+id/btn_meat_ball"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_more"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/txt_time"
             app:layout_constraintTop_toTopOf="@+id/user_id" />
 
 

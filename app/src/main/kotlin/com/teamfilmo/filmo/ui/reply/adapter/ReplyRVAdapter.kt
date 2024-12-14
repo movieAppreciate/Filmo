@@ -44,9 +44,10 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
     /*
     댓글 삭제
      */
-    fun removeReplyItem(position: Int) {
-        this.replyList.removeAt(position)
-        notifyItemRemoved(position)
+    fun removeReplyItem(replyId: String) {
+        val index = replyList.indexOfFirst { it.replyId == replyId }
+        this.replyList.removeAt(index)
+        notifyItemRemoved(index)
     }
 
     fun setReplyList(replyList: List<GetReplyResponseItemWithRole>) {

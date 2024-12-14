@@ -2,6 +2,7 @@ package com.teamfilmo.filmo.ui.write.select
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -95,6 +96,14 @@ class MovieSelectFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 moviePosterAdapter?.loadStateFlow?.collectLatest {
+                    // todo: 검색 결과가 없는 경우
+                    val isListEmpty =
+                        it.source.refresh is LoadState.NotLoading &&
+                            moviePosterAdapter?.itemCount == 0
+
+                    if (isListEmpty) {
+                        Toast.makeText(context, "검색 결과가 없어요", Toast.LENGTH_SHORT).show()
+                    }
                     binding.movieProgressBarAppend.isVisible = it.source.append is LoadState.Loading
                 }
             }

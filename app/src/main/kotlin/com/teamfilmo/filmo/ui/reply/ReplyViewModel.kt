@@ -322,6 +322,7 @@ class ReplyViewModel
                 ).collect {
                     if (it != null) {
                         getReply(reportId)
+                        sendEffect(ReplyEffect.SaveSubReply)
                     }
                 }
             }
@@ -333,11 +334,7 @@ class ReplyViewModel
             viewModelScope.launch {
                 deleteReplyUseCase(replyId).collect {
                     if (it != null && it.success) {
-                        val position =
-                            _replyListStateFlow.value.indexOfFirst {
-                                it.replyId == replyId
-                            }
-                        sendEffect(ReplyEffect.DeleteReply(position))
+                        sendEffect(ReplyEffect.DeleteReply(replyId))
                     }
                 }
             }
@@ -371,34 +368,10 @@ class ReplyViewModel
                     ),
                 ).collect {
                     if (it != null) {
-                        sendEffect(ReplyEffect.ScrollToTop)
                         getReply(reportId)
                     }
                 }
             }
-        }
-
-        private fun subReplyCountLike(targetId: String) {
-            viewModelScope.launch {
-                countLikeUseCase(targetId = targetId).collect {
-                    if (it != null) {
-                        _subReplyLikeCount.value = it.countLike
-                        Timber.d("subreply like count $targetId : $it")
-                    }
-                }
-            }
-        }
-
-        private fun checkSubReplyLikeState(targetId: String): CheckLikeResponse {
-            viewModelScope.launch {
-                checkLikeUseCase(targetId).collect {
-                    if (it != null) {
-                        _subReplyLikeState.value = it
-                        Timber.d("sub reply like State $targetId : $it")
-                    }
-                }
-            }
-            return _subReplyLikeState.value
         }
 
         private suspend fun getSubReplyLikeInfo(targetId: String): Pair<Int, Boolean> =
@@ -482,9 +455,6 @@ class ReplyViewModel
                             }
                         }.collect {
                             _replyListStateFlow.value = it.reversed()
-                            Timber.d("전체 댓글 리스트 $it")
-                            sendEffect(ReplyEffect.ScrollToTop)
-                            Timber.d("댓글 리스트 값 방출")
                         }
                     }
                 }

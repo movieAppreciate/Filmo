@@ -33,9 +33,7 @@ sealed interface ReplyEffect : BaseEffect {
         val replyId: String,
     ) : ReplyEffect
 
-    data object ScrollToTop : ReplyEffect
-
     data class DeleteReply(
-        val position: Int,
+        val replyId: String,
     ) : ReplyEffect
 }

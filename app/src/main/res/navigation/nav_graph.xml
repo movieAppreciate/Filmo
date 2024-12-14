@@ -102,6 +102,9 @@
         <action
             android:id="@+id/navigateToFollowFragment"
             app:destination="@id/followFragment" />
+        <action
+            android:id="@+id/action_userPageFragment_to_bodyMovieReportFragment"
+            app:destination="@id/bodyMovieReportFragment" />
 
     </fragment>
     <fragment

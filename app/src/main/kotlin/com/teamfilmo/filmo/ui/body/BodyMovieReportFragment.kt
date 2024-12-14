@@ -288,7 +288,7 @@ class BodyMovieReportFragment :
                             binding.tvMovieTitle.text = it.title
                             movieName = it.title.toString()
                             binding.movieDetail.apply {
-                                txtRank.text = getMovieRankInfo(it.certification)
+                                txtRank.text = getMovieRankInfo(it.certification.toString())
                                 txtMovieTitle.text = it.title
                                 txtMovieEngTitle.text = it.original_title
                                 txtReleaseDate.text = it.release_date

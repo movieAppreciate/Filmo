@@ -9,6 +9,15 @@ import com.teamfilmo.filmo.databinding.ItemUserReportBinding
 class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>() {
     private var myReportList: List<MyPageReportItem> = emptyList()
 
+    interface UserPageListener {
+        fun onClick(
+            position: Int,
+            reportId: String,
+        )
+    }
+
+    var userPageListener: UserPageListener? = null
+
     // DiffUtil 적용하기
     fun setMyReportList(reportList: List<MyPageReportItem>) {
         this.myReportList = reportList
@@ -18,6 +27,12 @@ class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>()
     inner class MyPageViewHolder(
         private val binding: ItemUserReportBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.userReportCardView.setOnClickListener {
+                userPageListener?.onClick(position = position, myReportList[position].reportId)
+            }
+        }
+
         fun bind(position: Int) {
             binding.txtMovieName.text = myReportList[position].movieName
             binding.txtReportContent.text = myReportList[position].reportContent

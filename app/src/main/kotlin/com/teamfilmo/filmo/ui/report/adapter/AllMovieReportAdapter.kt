@@ -128,22 +128,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         private val binding: ItemReportBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.movieImage.setOnClickListener {
-                getItem(position)?.let { report ->
-                    itemClick?.onClick(report)
-                }
-            }
-            binding.tvTitle.setOnClickListener {
-                getItem(position)?.let { report ->
-                    itemClick?.onClick(report)
-                }
-            }
-            binding.tvContent.setOnClickListener {
-                getItem(position)?.let { report ->
-                    itemClick?.onClick(report)
-                }
-            }
-            binding.btnReply.setOnClickListener {
+            binding.reportCardView.setOnClickListener {
                 getItem(position)?.let { report ->
                     itemClick?.onClick(report)
                 }

@@ -26,6 +26,16 @@ class UserPageFragment :
         val args: UserPageFragmentArgs by navArgs()
         with(binding) {
             myReportRecyclerView.adapter = adapter
+            adapter.userPageListener =
+                object : UserPageAdapter.UserPageListener {
+                    override fun onClick(
+                        position: Int,
+                        reportId: String,
+                    ) {
+                        val action = UserPageFragmentDirections.actionUserPageFragmentToBodyMovieReportFragment(reportId)
+                        navController.navigate(action)
+                    }
+                }
 
             btnBack.setOnClickListener {
                 navController.popBackStack()

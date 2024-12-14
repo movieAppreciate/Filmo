@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
@@ -37,14 +36,23 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 1. 먼저 NavHostFragment를 찾는다 (컨테이너)
+        // NavHostFragment : 프래그먼트들이 들어가고 나가는 '그릇'
         val navHostFragment =
             supportFragmentManager
                 .findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
+
+        // 2. NavHostFragment에서 NavController를 가져온다(리모콘)
+        // NavController : 프로그먼트 간의 이동을 제어하는 역할
         navController = navHostFragment.navController
-        binding.navBar.setupWithNavController(navController)
+
+        // 3. BottomNavigationView와 연결해요
+        // binding.navBar.setupWithNavController(navController)
 
         // 감상문 작성 과정에서 바텀바가 보이지 않도록 하기
         navController.addOnDestinationChangedListener { _, desitnation, _ ->
+            Timber.d("destination.id :${desitnation.id}")
             binding.navBar.visibility =
                 if (desitnation.id == R.id.movieSelectFragment) {
                     View.GONE
@@ -59,11 +67,21 @@ class MainActivity :
             insets
         }
 
-        if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
-            navController.navigate(R.id.allMovieReportFragment)
-        } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
-            Timber.d("")
-            navController.navigate(R.id.movieDetailFragment)
+//        if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
+//            navController.navigate(R.id.allMovieReportFragment)
+//        } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
+//            Timber.d("")
+//            navController.navigate(R.id.movieDetailFragment)
+//        }
+    }
+
+    private fun navigateToHome() {
+        navController.navigate(R.id.allMovieReportFragment) {
+            // 현재 백스택을 전부 비우고 새로 시작
+            popUpTo(R.id.nav_graph) {
+                inclusive = true // 시작 지점까지 포함해서 모두 제거
+            }
+            launchSingleTop = true
         }
     }
 
@@ -74,21 +92,20 @@ class MainActivity :
 
     override fun onBindLayout() {
         enableEdgeToEdge()
-//        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.allMovieReportFragment -> {
-                    Timber.d("홈 클릭 ")
-                    navController.navigate(R.id.allMovieReportFragment)
-                    return@setOnItemSelectedListener true
+                    if (navController.currentDestination?.id != R.id.allMovieReportFragment) {
+                        navController.navigate(R.id.allMovieReportFragment)
+                    }
+                    true
                 }
                 R.id.myPageFragment -> {
                     Timber.d("마이 페이지 ")
                     if (navController.currentDestination?.id != R.id.myPageFragment) {
                         navController.navigate(R.id.myPageFragment)
                     }
-                    return@setOnItemSelectedListener true
+                    true
                 }
 
                 R.id.movieSelectFragment -> {
@@ -96,13 +113,10 @@ class MainActivity :
                     if (navController.currentDestination?.id != R.id.movieSelectFragment) {
                         navController.navigate(R.id.movieSelectFragment)
                     }
-//                    val intent = Intent(this, WriteActivity::class.java)
-//                    Timber.d("감상문 작성 클릭")
-//                    startActivity(intent)
-                    return@setOnItemSelectedListener true
+                    true
                 }
                 else -> {
-                    return@setOnItemSelectedListener false
+                    false
                 }
             }
         }

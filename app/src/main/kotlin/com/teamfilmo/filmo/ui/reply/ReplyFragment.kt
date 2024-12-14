@@ -31,7 +31,7 @@ class ReplyFragment :
         FragmentReplyBinding::inflate,
     ) {
     private var isSubReplyMode = false
-    private var upReplyId = ""
+    private var upReplyId: String? = null
     override val viewModel: ReplyViewModel by viewModels()
     private var deleteSubReplyId: String? = null
 
@@ -197,24 +197,15 @@ class ReplyFragment :
                 }
 
                 override fun onReplyClick(position: Int) {
-                    lifecycleScope.launch {
-                        isSubReplyMode = true
-                        repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            viewModel.replyListStateFlow.collect {
-                                val item = it[position]
-                                upReplyId = item.replyId
-                                binding.editReply.requestFocus()
-                                inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
-                                binding.editReply.hint = "${item.nickname}에게 답글 작성하기"
-                            }
-                        }
-                    }
+                    isSubReplyMode = true
+                    upReplyId = adapter.replyList[position].replyId
+                    inputMethodManager.showSoftInput(binding.editReply, InputMethodManager.SHOW_FORCED)
+                    val nickname = adapter.replyList[position].nickname
+                    binding.editReply.hint = "${nickname}에게 답글 작성하기"
                 }
 
                 override fun onReplyLikeClick(replyId: String) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewModel.handleEvent(ReplyEvent.ClickLike(replyId))
-                    }
+                    viewModel.handleEvent(ReplyEvent.ClickLike(replyId))
                 }
 
                 override fun onReplyMoreClick(
@@ -310,24 +301,37 @@ class ReplyFragment :
                 }
             }
 
-        binding.editReply.setOnClickListener {
-            binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
-        }
+        binding.editReply
+            .setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
+                }
+            }
+
         binding.root.setOnClickListener {
             binding.editReply.hint = "댓글달기"
         }
         binding.btnRegistReply.setOnClickListener {
+            hideKeyboard()
+            binding.btnRegistReply.setImageResource(R.drawable.btn_regist_reply)
+
             if (isSubReplyMode) {
-                viewModel.handleEvent(ReplyEvent.SaveSubReply(upReplyId, args.reportId, binding.editReply.text.toString()))
+                isSubReplyMode = false
+                if (upReplyId != null) {
+                    viewModel.handleEvent(ReplyEvent.SaveSubReply(upReplyId!!, args.reportId, binding.editReply.text.toString()))
+                }
                 Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             } else {
+                isSubReplyMode = false
                 viewModel.handleEvent(ReplyEvent.SaveReply(null, args.reportId, binding.editReply.text.toString()))
                 Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             }
-            isSubReplyMode = false
-            hideKeyboard()
-            binding.editReply.clearAnimation()
-            binding.editReply.text.clear()
+            binding.editReply.apply {
+                clearFocus()
+                clearAnimation()
+                text.clear()
+                hint = "댓글 달기"
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -335,7 +339,8 @@ class ReplyFragment :
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.replyListStateFlow.collect {
                         adapter.setReplyList(it)
-                        binding.txtReplyCount.text = it.size.toString()
+                        binding.txtReplyCount.text = "${it.size}개의 댓글"
+                        binding.recyclerView.scrollToPosition(viewModel.replyListStateFlow.value.size - 1)
                     }
                 }
             }
@@ -406,12 +411,10 @@ class ReplyFragment :
                 adapter.updateLikeState(viewModel.replyListStateFlow.value)
             }
 
-            is ReplyEffect.ScrollToTop -> {
-                binding.recyclerView.scrollToPosition(viewModel.replyListStateFlow.value.size - 1)
-            }
             is ReplyEffect.DeleteReply -> {
-                adapter.removeReplyItem(effect.position)
-                binding.txtReplyCount.text = (viewModel.replyListStateFlow.value.size - 1).toString()
+                adapter.removeReplyItem(effect.replyId)
+                Timber.d("삭제하려는 position :${effect.replyId}")
+                binding.txtReplyCount.text = "${(viewModel.replyListStateFlow.value.size - 1)}개의 댓글"
             }
         }
     }

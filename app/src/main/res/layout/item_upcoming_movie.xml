@@ -29,7 +29,7 @@
             android:layout_width="330dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/gradient_overlay" />
+            android:background="@drawable/gradient_overlay_bottom" />
 
         <LinearLayout
             android:layout_margin="20dp"
@@ -47,13 +47,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:layout_margin="3dp"
-                android:textColor="@color/white"
-                android:id="@+id/age_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="15세 관람가"/>
+<!--            <TextView-->
+<!--                android:layout_margin="3dp"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:id="@+id/age_txt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="15세 관람가"/>-->
 
             <TextView
                 android:layout_margin="3dp"

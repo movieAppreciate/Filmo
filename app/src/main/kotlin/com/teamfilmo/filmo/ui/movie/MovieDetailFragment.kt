@@ -61,7 +61,7 @@ class MovieDetailFragment :
                         viewModel.movieDetailInfo.value.apply {
                             binding.movieDetailShimmer.stopShimmer()
                             binding.movieDetailShimmer.visibility = View.GONE
-                            binding.txtRank.text = getMovieRankInfo(this.certification)
+                            binding.txtRank.text = getMovieRankInfo(this.certification.toString())
                             binding.txtMovieTitle.text = this.title
                             binding.txtMovieEngTitle.text = this.original_title
                             binding.txtReleaseDate.text = this.release_date
