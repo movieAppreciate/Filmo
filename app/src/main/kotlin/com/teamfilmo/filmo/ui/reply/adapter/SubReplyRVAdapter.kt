@@ -147,7 +147,7 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyRVAdapter.SubReplyViewHol
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val subReply = subReplyList[position]
-                        subReplyListener?.onSubReplyMoreClick(subReply.isMySubReply, subReply.upReplyId, subReply.replyId)
+                        subReplyListener?.onSubReplyMoreClick(subReply.isMySubReply, subReply.upReplyId, subReply.replyId, subReply.userId)
                     }
                 }
                 btnLike.setOnClickListener {

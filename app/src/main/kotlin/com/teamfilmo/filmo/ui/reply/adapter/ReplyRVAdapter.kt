@@ -97,8 +97,9 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
                             isMyReply: Boolean,
                             parentReplyId: String,
                             subReplyId: String,
+                            userId: String,
                         ) {
-                            itemClick?.onSubReplyMoreClick(isMyReply, parentReplyId, subReplyId)
+                            itemClick?.onSubReplyMoreClick(isMyReply, parentReplyId, subReplyId, userId)
                         }
                     }
             }
@@ -143,9 +144,9 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
 
             binding.btnMore.setOnClickListener {
                 if (reply.isMyReply) {
-                    itemClick?.onReplyMoreClick(true, replyList[position].replyId)
+                    itemClick?.onReplyMoreClick(true, replyList[position].replyId, replyList[position].userId)
                 } else {
-                    itemClick?.onReplyMoreClick(false, replyList[position].replyId)
+                    itemClick?.onReplyMoreClick(false, replyList[position].replyId, replyList[position].userId)
                 }
             }
 

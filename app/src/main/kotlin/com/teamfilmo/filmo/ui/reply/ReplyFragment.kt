@@ -44,7 +44,7 @@ class ReplyFragment :
 
     // 차단 다이얼로그
     fun showBlockDialog(
-        replyId: String,
+        userId: String,
     ) {
         val dialog =
             context?.let {
@@ -57,7 +57,7 @@ class ReplyFragment :
         dialog?.setItemClickListener(
             object : ItemClickListener {
                 override fun onClick() {
-                    viewModel.handleEvent(ReplyEvent.SaveBlock(replyId))
+                    viewModel.handleEvent(ReplyEvent.SaveBlock(userId))
                 }
             },
         )
@@ -211,6 +211,7 @@ class ReplyFragment :
                 override fun onReplyMoreClick(
                     isMyReply: Boolean,
                     replyId: String,
+                    userId: String,
                 ) {
                     val bottomSheet =
                         if (isMyReply) {
@@ -232,7 +233,7 @@ class ReplyFragment :
                                         bottomSheet.dismiss()
                                     }
                                     "차단" -> {
-                                        showBlockDialog(replyId)
+                                        showBlockDialog(userId)
                                         bottomSheet.dismiss()
                                     }
                                     "삭제하기" -> {
@@ -260,6 +261,7 @@ class ReplyFragment :
                     isMyReply: Boolean,
                     parentReplyId: String,
                     subReplyId: String,
+                    userId: String,
                 ) {
                     deleteSubReplyId = subReplyId
                     Timber.d("더보기 버튼 클릭 :$isMyReply")
@@ -400,9 +402,11 @@ class ReplyFragment :
             }
             is ReplyEffect.SaveComplaint -> {
                 Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.bodyMovieReportFragment)
             }
             is ReplyEffect.SaveBlock -> {
                 Toast.makeText(context, "댓글을 차단했어요!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.allMovieReportFragment)
             }
             is ReplyEffect.SaveLike -> {
                 adapter.updateLikeState(viewModel.replyListStateFlow.value)

@@ -101,7 +101,6 @@ class MainActivity :
                     true
                 }
                 R.id.myPageFragment -> {
-                    Timber.d("마이 페이지 ")
                     if (navController.currentDestination?.id != R.id.myPageFragment) {
                         navController.navigate(R.id.myPageFragment)
                     }
@@ -109,7 +108,6 @@ class MainActivity :
                 }
 
                 R.id.movieSelectFragment -> {
-                    Timber.d("감상문 작성 ")
                     if (navController.currentDestination?.id != R.id.movieSelectFragment) {
                         navController.navigate(R.id.movieSelectFragment)
                     }

@@ -32,6 +32,7 @@ class MovieDetailFragment :
             viewModel.searchMovieDetail(args.movieId)
         }
 
+        binding.btnBack.visibility = View.VISIBLE
         binding.btnBack.setOnClickListener {
             navController.popBackStack()
         }
@@ -41,13 +42,9 @@ class MovieDetailFragment :
         val rank =
             when (certification) {
                 "ALL", "G", "NR" -> "전체 관람가"
-                "12" -> "12세이상 관람가"
-                "15" -> "15세이상 관람가"
-                "18" -> "18세이상 관람가"
-                "PG" -> "10세 이상 관람 불가"
-                "19" -> "청소년 관람 불가"
-                "PG-13" -> "14세 이상 관람가"
-                "R" -> "17세 미만은 보호자와 관람"
+                "12", "PG" -> "12세이상 관람가"
+                "15", "PG-13" -> "15세이상 관람가"
+                "18", "19", "R" -> "청소년 관람불가"
                 else -> "정보 없음"
             }
         return rank

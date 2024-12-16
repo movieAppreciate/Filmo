@@ -11,6 +11,7 @@ interface ReplyInteractionListener {
     fun onReplyMoreClick(
         isMyReply: Boolean,
         replyId: String,
+        userId: String,
     )
 
     fun onSubReplyLikeClick(
@@ -22,6 +23,7 @@ interface ReplyInteractionListener {
         isMyReply: Boolean,
         parentReplyId: String,
         subReplyId: String,
+        userId: String,
     )
 }
 
@@ -37,5 +39,6 @@ interface SubReplyInteractionListener {
         isMyReply: Boolean,
         parentReplyId: String,
         subReplyId: String,
+        userId: String,
     )
 }

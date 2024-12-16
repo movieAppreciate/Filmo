@@ -157,14 +157,10 @@ class BodyMovieReportFragment :
         val rank =
             when (certification) {
                 "ALL", "G", "NR" -> "전체 관람가"
-                "12" -> "12세이상 관람가"
-                "15" -> "15세이상 관람가"
-                "18" -> "18세이상 관람가"
-                "PG" -> "10세 이상 관람 불가"
-                "19" -> "청소년 관람불가"
-                "PG-13" -> "14세 이상 관람가"
-                "R" -> "17세 미만 청소년은 보호자와 함께 관람"
-                else -> "정보없음"
+                "12", "PG" -> "12세이상 관람가"
+                "15", "PG-13" -> "15세이상 관람가"
+                "18", "19", "R" -> "청소년 관람불가"
+                else -> "정보 없음"
             }
         return rank
     }
@@ -203,6 +199,7 @@ class BodyMovieReportFragment :
             object : ItemClickListener {
                 override fun onClick() {
                     // todo : 감상문 차단 뷰모델 로직 호출
+                    if (viewModel.getReportResponse.value.userId == null) Toast.makeText(context, "탈퇴한 사용자입니다", Toast.LENGTH_SHORT).show()
                     viewModel.handleEvent(BodyMovieReportEvent.SaveBlock)
                 }
             },
