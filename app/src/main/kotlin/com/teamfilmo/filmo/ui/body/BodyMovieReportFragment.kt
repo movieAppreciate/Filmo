@@ -69,7 +69,12 @@ class BodyMovieReportFragment :
       팔로잉 버튼 클릭 시
              */
             btnUserFollow.setOnClickListener {
-                viewModel.handleEvent(BodyMovieReportEvent.ClickFollow)
+                // 탈퇴한 사용자의 경우 팔로우 안되도록
+                if (viewModel.getReportResponse.value.userId != null) {
+                    viewModel.handleEvent(BodyMovieReportEvent.ClickFollow)
+                } else {
+                    Toast.makeText(context, "탈퇴한 사용자입니다", Toast.LENGTH_SHORT).show()
+                }
             }
             /*
        미트볼 버튼 클릭 시
