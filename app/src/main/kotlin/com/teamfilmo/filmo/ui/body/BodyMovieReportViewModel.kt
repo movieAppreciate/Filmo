@@ -7,7 +7,6 @@ import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
 import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintResponse
 import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
-import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowRequest
 import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
@@ -234,6 +233,7 @@ class BodyMovieReportViewModel
             viewModelScope.launch {
                 if (_getReportResponse.value.userId == null) return@launch
                 saveBlockUseCase(SaveBlockRequest(targetId = _getReportResponse.value.userId!!)).collect {
+                    if (it == null) return@collect
                     _saveBlockResponse.value = it
                     sendEffect(BodyMovieReportEffect.BlockSuccess)
                 }
@@ -296,18 +296,14 @@ class BodyMovieReportViewModel
      */
         private fun saveFollow() {
             viewModelScope.launch {
-                val saveFollowRequest =
-                    _getReportResponse.value.userId?.let {
-                        SaveFollowRequest(
-                            it,
-                        )
-                    }
                 _getReportResponse.value.userId?.let {
                     saveFollowUseCase(it).collect {
-                        _followInfo.value = it
-                        val updatedFollowInfo = _checkIsFollowResponse.value.copy(isFollowing = true, followId = it.followId)
-                        _checkIsFollowResponse.value = updatedFollowInfo
-                        sendEffect(BodyMovieReportEffect.SaveFollow)
+                        if (it != null) {
+                            _followInfo.value = it
+                            val updatedFollowInfo = _checkIsFollowResponse.value.copy(isFollowing = true, followId = it.followId)
+                            _checkIsFollowResponse.value = updatedFollowInfo
+                            sendEffect(BodyMovieReportEffect.SaveFollow)
+                        }
                     }
                 }
             }
@@ -320,9 +316,11 @@ class BodyMovieReportViewModel
             viewModelScope.launch {
                 // 팔로우 여부 검사할 때 얻은 FollowId를 이용해서 팔로우 취소
                 cancelFollowUseCase(_checkIsFollowResponse.value.followId).collect {
-                    val updatedFollowInfo = _checkIsFollowResponse.value.copy(isFollowing = false)
-                    _checkIsFollowResponse.value = updatedFollowInfo
-                    sendEffect(BodyMovieReportEffect.CancelFollow)
+                    if (it != null && it) {
+                        val updatedFollowInfo = _checkIsFollowResponse.value.copy(isFollowing = false)
+                        _checkIsFollowResponse.value = updatedFollowInfo
+                        sendEffect(BodyMovieReportEffect.CancelFollow)
+                    }
                 }
             }
         }

@@ -13,7 +13,7 @@ data class ReportItem(
     var likeCount: Int,
     val replyCount: Int,
     val bookmarkCount: Int,
-    var isBookmark: Boolean,
+    var isBookmark: Boolean? = null,
     var isLiked: Boolean,
     val movieName: String,
     val likeId: String? = null,

@@ -6,8 +6,8 @@ import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import dagger.Reusable
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 @Reusable
@@ -21,15 +21,15 @@ class RegistBookmarkUseCase
                 val result =
                     bookmarkRepository
                         .registBookmark(SaveBookmarkRequest(reportId))
-                        .onFailure {
-                            Timber.d("bookmark regist failed : ${it.message}")
-                            throw it
-                        }
-                        .onSuccess {
-                            Timber.d("bookmark regist : $it")
-                        }
-                emit(result.getOrNull())
-            }.catch {
-                Timber.e(it)
+                result.onFailure {
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(null)
+                }
+                result.onSuccess {
+                    emit(result.getOrNull())
+                }
             }
     }

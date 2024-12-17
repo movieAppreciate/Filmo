@@ -137,6 +137,7 @@ class UserPageViewModel
         private fun saveFollow() {
             viewModelScope.launch {
                 saveFollowUseCase(_userInfo.value.userId).collect {
+                    if (it == null) return@collect
                     _followInfo.value = it
                     val updatedFollowResponse = _checkIsFollowResponse.value.copy(isFollowing = true)
                     _checkIsFollowResponse.value = updatedFollowResponse

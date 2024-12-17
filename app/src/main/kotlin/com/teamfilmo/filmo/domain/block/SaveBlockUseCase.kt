@@ -7,6 +7,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import timber.log.Timber
 
 class SaveBlockUseCase
@@ -14,13 +15,17 @@ class SaveBlockUseCase
     constructor(
         private val blockRepository: BlockRepository,
     ) {
-        operator fun invoke(saveBlockRequest: SaveBlockRequest): Flow<SaveBlockResponse> =
+        operator fun invoke(saveBlockRequest: SaveBlockRequest): Flow<SaveBlockResponse?> =
             flow {
                 val result = blockRepository.saveBlock(saveBlockRequest)
                 result.onFailure {
-                    throw it
+                    when (it) {
+                        is HttpException -> Timber.e("Network error: ${it.message}")
+                        else -> Timber.e("Unknown error: ${it.message}")
+                    }
+                    emit(null)
                 }
-                emit(result.getOrNull()!!)
+                emit(result.getOrThrow())
             }.catch {
                 Timber.d("Failed to save block")
             }
