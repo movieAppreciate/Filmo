@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.flow
 
 class GetUserInfoUseCase
     @Inject
-    constructor(private val userRepository: UserRepository) {
+    constructor(
+        private val userRepository: UserRepository,
+    ) {
         operator fun invoke(userId: String? = null): Flow<UserResponse?> =
             flow {
                 val result =

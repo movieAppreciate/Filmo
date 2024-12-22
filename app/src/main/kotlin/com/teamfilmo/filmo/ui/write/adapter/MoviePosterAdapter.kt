@@ -23,7 +23,7 @@ class MoviePosterAdapter(
     /*
     DiffUtil.ItemCallback 지정
      */
-    private class MovieDiffCallback : DiffUtil.ItemCallback<com.teamfilmo.filmo.ui.write.select.paging.MovieContentResultWithIndex>() {
+    private class MovieDiffCallback : DiffUtil.ItemCallback<MovieContentResultWithIndex>() {
         override fun areItemsTheSame(
             oldItem: MovieContentResultWithIndex,
             newItem: MovieContentResultWithIndex,
