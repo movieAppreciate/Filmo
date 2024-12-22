@@ -6,7 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.domain.movie.GetTotalPageMovieListUseCase
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
 import com.teamfilmo.filmo.ui.write.select.paging.MovieContentResultWithIndex
 import com.teamfilmo.filmo.ui.write.select.paging.MoviePagingSource
@@ -23,7 +22,6 @@ class MovieSelectViewModel
     @Inject
     constructor(
         private val searchMovieListUseCase: SearchMovieListUseCase,
-        private val getTotalPageMovieListUseCase: GetTotalPageMovieListUseCase,
     ) : BaseViewModel<MovieSelectEffect, MovieSelectEvent>() {
         private val _moviePosterList = MutableStateFlow<MutableList<MovieContentResultWithIndex>>(mutableListOf())
         val moviePosterList: StateFlow<MutableList<MovieContentResultWithIndex>> = _moviePosterList

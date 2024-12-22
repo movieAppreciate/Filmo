@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
@@ -31,14 +33,16 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
     /*
     좋아요 등록
      */
-    fun updateLikeState(
+    suspend fun updateLikeState(
         newList: List<GetReplyResponseItemWithRole>,
     ) {
         val diffCallBack = ReplyDiffCallBack(this.replyList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
         replyList.clear()
         replyList.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
+        withContext(Dispatchers.Main) {
+            diffResult.dispatchUpdatesTo(this@ReplyRVAdapter)
+        }
     }
 
     /*
@@ -50,12 +54,14 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
         notifyItemRemoved(index)
     }
 
-    fun setReplyList(replyList: List<GetReplyResponseItemWithRole>) {
+    suspend fun setReplyList(replyList: List<GetReplyResponseItemWithRole>) {
         val diffCallBack = ReplyDiffCallBack(this.replyList, replyList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
         this.replyList.clear()
         this.replyList.addAll(replyList)
-        diffResult.dispatchUpdatesTo(this)
+        withContext(Dispatchers.Main) {
+            diffResult.dispatchUpdatesTo(this@ReplyRVAdapter)
+        }
     }
 
     override fun onCreateViewHolder(

@@ -22,7 +22,9 @@ import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -340,7 +342,9 @@ class ReplyFragment :
             launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.replyListStateFlow.collect {
-                        adapter.setReplyList(it)
+                        withContext(Dispatchers.IO) {
+                            adapter.setReplyList(it)
+                        }
                         binding.txtReplyCount.text = "${it.size}개의 댓글"
                         binding.recyclerView.scrollToPosition(viewModel.replyListStateFlow.value.size - 1)
                     }
@@ -398,7 +402,9 @@ class ReplyFragment :
                 // 다시 댓글 아이콘 가져오기
                 isSubReplyMode = false
                 binding.editReply.hint = "댓글 달기"
-                adapter.setReplyList(viewModel.replyListStateFlow.value)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    adapter.setReplyList(viewModel.replyListStateFlow.value)
+                }
             }
             is ReplyEffect.SaveComplaint -> {
                 Toast.makeText(context, "댓글을 신고했어요!", Toast.LENGTH_SHORT).show()
@@ -409,10 +415,14 @@ class ReplyFragment :
                 navController.navigate(R.id.allMovieReportFragment)
             }
             is ReplyEffect.SaveLike -> {
-                adapter.updateLikeState(viewModel.replyListStateFlow.value)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    adapter.updateLikeState(viewModel.replyListStateFlow.value)
+                }
             }
             is ReplyEffect.CancelLike -> {
-                adapter.updateLikeState(viewModel.replyListStateFlow.value)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    adapter.updateLikeState(viewModel.replyListStateFlow.value)
+                }
             }
 
             is ReplyEffect.DeleteReply -> {

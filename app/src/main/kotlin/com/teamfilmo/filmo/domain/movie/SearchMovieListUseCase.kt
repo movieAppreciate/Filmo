@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import timber.log.Timber
 
+// 검색된 영화 포스터 리스트를 가져오기
 class SearchMovieListUseCase
     @Inject
     constructor(
         private val movieRepository: MovieRepository,
     ) {
-        private var list = arrayListOf<MovieContentResult>()
+        private val list = arrayListOf<MovieContentResult>()
 
         operator fun invoke(
             query: MovieRequest?,
