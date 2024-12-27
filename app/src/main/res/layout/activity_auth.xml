@@ -55,6 +55,7 @@
         android:gravity="center"
         android:textColor="#9DA4AE"
         android:textSize="12dp"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
