@@ -6,5 +6,5 @@ interface MovieApiRepository {
     suspend fun getUpcomingMovieList(
         apiKey: String,
         page: Int,
-    ): Result<MovieApiResult>
+    ): Result<MovieApiResult?>
 }

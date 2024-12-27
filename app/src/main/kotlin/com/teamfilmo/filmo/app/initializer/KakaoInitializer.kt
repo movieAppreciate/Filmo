@@ -3,6 +3,7 @@ package com.teamfilmo.filmo.app.initializer
 import android.content.Context
 import androidx.startup.Initializer
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.KakaoSdk.appKey
 import com.teamfilmo.filmo.R
 
 class KakaoInitializer : Initializer<Unit> {
@@ -13,7 +14,5 @@ class KakaoInitializer : Initializer<Unit> {
         )
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return listOf()
-    }
+    override fun dependencies(): List<Class<out Initializer<*>>> = listOf()
 }

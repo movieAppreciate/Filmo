@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -18,9 +16,11 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -49,6 +49,9 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
     )
 
     override fun onBindLayout() {
+        var keyHash = Utility.getKeyHash(this)
+        Timber.d("kakao key hash $keyHash")
+
         // 상태바 색깔 처리해주기
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -106,12 +109,16 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
-            AuthEffect.Existing -> {
-                Toast.makeText(this@AuthActivity, "이미 등록된 계정입니다!", Toast.LENGTH_SHORT).show()
+            is AuthEffect.SignUpFailed -> {}
+            is AuthEffect.Existing -> {
+                when (effect.type) {
+                    "google" -> onGoogleLogin()
+                    "naver" -> onNaverLogin()
+                    "kakao" -> onKakaoLogin()
+                }
+                // Toast.makeText(this@AuthActivity, "이미 등록된 계정입니다!", Toast.LENGTH_SHORT).show()
             }
-            AuthEffect.SignUpFailed -> {
-                Timber.d("회원가입 실패")
-            }
+
             is AuthEffect.SignUpSuccess -> {
                 Timber.d("회원가입 성공!")
                 when (effect.type) {
@@ -120,9 +127,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                     "kakao" -> onKakaoLogin()
                 }
             }
-            AuthEffect.NavigateToSignUp -> {
-                Timber.d("회원가입 필요")
-            }
+
             AuthEffect.LoginSuccess -> {
                 lifecycleScope.launch {
                     showToast("로그인 성공")
@@ -134,7 +139,6 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
             AuthEffect.LoginFailed -> {
                 showToast("로그인 실패")
-                //
             }
         }
     }
@@ -147,7 +151,13 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 GetGoogleIdOption
                     .Builder()
                     .setFilterByAuthorizedAccounts(false)
+                    .setAutoSelectEnabled(true)
                     .setServerClientId(getString(R.string.google_client_key))
+                    .build()
+
+            val signInWithGoogleOption: GetSignInWithGoogleOption =
+                GetSignInWithGoogleOption
+                    .Builder(getString(R.string.google_client_key))
                     .build()
 
             val credentialRequest =
@@ -168,7 +178,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 }.onFailure {
                     when (it) {
                         is GetCredentialCancellationException -> {
-                            Log.d("Auth", "로그인이 취소되었습니다")
+                            showToast("로그인 취소")
                         }
                         else -> {}
                     }
@@ -178,81 +188,102 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     private fun onNaverLogin() {
         lifecycleScope.launch {
-            val token =
-                suspendCancellableCoroutine { continuation ->
-                    val oauthLoginCallback =
-                        object : OAuthLoginCallback {
-                            override fun onSuccess() {
-                                Timber.d("naver login success, token: ${NaverIdLoginSDK.getAccessToken()}")
-                                continuation.resume(NaverIdLoginSDK.getAccessToken().toString())
+            try {
+                val token =
+                    suspendCancellableCoroutine { continuation ->
+                        val oauthLoginCallback =
+                            object : OAuthLoginCallback {
+                                override fun onSuccess() {
+                                    Timber.d("naver login success, token: ${NaverIdLoginSDK.getAccessToken()}")
+                                    continuation.resume(NaverIdLoginSDK.getAccessToken().toString())
+                                }
+
+                                override fun onFailure(
+                                    httpStatus: Int,
+                                    message: String,
+                                ) {
+                                    val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+                                    val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
+                                    Timber.e("naver login failed, code: $errorCode, description: $errorDescription")
+                                    continuation.resumeWithException(Exception("naver login failed, code: $errorCode, description: $errorDescription"))
+                                }
+
+                                override fun onError(
+                                    errorCode: Int,
+                                    message: String,
+                                ) {
+                                    onFailure(errorCode, message)
+                                }
                             }
 
-                            override fun onFailure(
-                                httpStatus: Int,
-                                message: String,
-                            ) {
-                                val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-                                val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-                                Timber.e("naver login failed, code: $errorCode, description: $errorDescription")
-                                continuation.resumeWithException(Exception("naver login failed, code: $errorCode, description: $errorDescription"))
-                            }
-
-                            override fun onError(
-                                errorCode: Int,
-                                message: String,
-                            ) {
-                                onFailure(errorCode, message)
-                            }
+                        continuation.invokeOnCancellation {
+                            Timber.d("naver login canceled, ${it?.message}")
                         }
 
-                    continuation.invokeOnCancellation {
-                        Timber.d("naver login canceled, ${it?.message}")
+                        NaverIdLoginSDK.authenticate(
+                            this@AuthActivity,
+                            oauthLoginCallback,
+                        )
                     }
 
-                    NaverIdLoginSDK.authenticate(
-                        this@AuthActivity,
-                        oauthLoginCallback,
-                    )
-                }
-
-            viewModel.handleEvent(AuthEvent.RequestNaverLogin(token))
+                viewModel.handleEvent(AuthEvent.RequestNaverLogin(token))
+            } catch (e: Exception) {
+                showToast("로그인 취소")
+            }
         }
     }
 
     private fun onKakaoLogin() {
         lifecycleScope.launch {
-            val token =
-                suspendCancellableCoroutine { continuation ->
-                    val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                        if (error != null) {
-                            Timber.w("kakao login error ${error.message}")
-                            continuation.resumeWithException(error)
-                        } else if (token != null) {
-                            Timber.i("kakao login success, ${token.accessToken}")
-                            continuation.resume(token)
-                        }
-                    }
-
-                    continuation.invokeOnCancellation {
-                        Timber.d("kakao login canceled, ${it?.message}")
-                    }
-
-                    if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@AuthActivity)) {
-                        try {
-                            UserApiClient.instance.loginWithKakaoTalk(this@AuthActivity, callback = kakaoLoginCallback)
-                        } catch (error: Throwable) {
-                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+            try {
+                val token =
+                    suspendCancellableCoroutine { continuation ->
+                        val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+                            if (error != null) {
+                                // 코루틴의 실행 흐름에서 에러 발생 시 해당 에러를 코루틴의 예외로 전파한다.
                                 continuation.resumeWithException(error)
-                            } else {
-                                UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
+                            } else if (token != null) {
+                                Timber.i("kakao login success, ${token.accessToken}")
+                                // 성공하면 토큰을 전달한다.
+                                continuation.resume(token)
                             }
                         }
-                    } else {
-                        UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
-                    }
-                }
 
-            viewModel.handleEvent(AuthEvent.RequestKakaoLogin(token))
+                        continuation.invokeOnCancellation {
+                            when (it) {
+                                // todo : 카카오 로그인 창을 닫은 경우 처리
+                                is ClientError -> {
+                                    Timber.d("kakao login canceled, ${it?.message}")
+                                }
+                            }
+                        }
+
+                        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@AuthActivity)) {
+                            try {
+                                UserApiClient.instance.loginWithKakaoTalk(this@AuthActivity, callback = kakaoLoginCallback)
+                            } catch (error: Throwable) {
+                                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                    continuation.resumeWithException(error)
+                                } else {
+                                    Timber.d("kakao login else")
+                                    UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
+                                }
+                            }
+                        } else {
+                            UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
+                        }
+                    }
+
+                viewModel.handleEvent(AuthEvent.RequestKakaoLogin(token))
+            } catch (e: ClientError) {
+                // 이후 전파한 예외를 잡아서 처리해주면 된다
+                when (e.reason) {
+                    ClientErrorCause.Cancelled -> {
+                        showToast("로그인 취소")
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 }

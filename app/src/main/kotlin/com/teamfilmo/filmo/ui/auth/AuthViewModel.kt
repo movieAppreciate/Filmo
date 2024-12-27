@@ -2,7 +2,6 @@ package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -40,13 +39,16 @@ class AuthViewModel
         private val googleLoginRequestUseCase: GoogleLoginRequestUseCase,
         private val kakaoLoginRequestUseCase: KakaoLoginRequestUseCase,
     ) : BaseViewModel<AuthEffect, AuthEvent>() {
+        private var googleCredential: Credential? = null
+
         override fun handleEvent(event: AuthEvent) {
             when (event) {
                 is AuthEvent.RequestGoogleLogin -> {
                     requestGoogleLogin(event.credential)
+                    googleCredential = event.credential
                 }
-                is AuthEvent.RequestNaverLogin -> requestNaverLogin(event.token)
-                is AuthEvent.RequestKakaoLogin -> requestKakaoLogin(event.token)
+                is AuthEvent.RequestNaverLogin -> requestNaverLogin()
+                is AuthEvent.RequestKakaoLogin -> requestKakaoLogin()
             }
         }
 
@@ -80,23 +82,21 @@ class AuthViewModel
                             }
                             is SignUpResult.Existing -> {
                                 // 이미 다른 로그인으로 등록된 경우
-                                Timber.d("이미 등록된 경우 : ${it.response}")
-                                sendEffect(AuthEffect.Existing)
+                                // 그 방식으로 로그인 처리
+                                sendEffect(AuthEffect.Existing(it.response.type))
                             }
                             is SignUpResult.Error -> {
                                 Timber.d("회원 가입 실패")
-                                sendEffect(AuthEffect.SignUpFailed)
                             }
                         }
                     } else {
                         Timber.d("회원가입 UseCase 형태 null? : $it")
-                        sendEffect(AuthEffect.SignUpFailed)
                     }
                 }
             }
         }
 
-        private fun requestKakaoLogin(token: OAuthToken) {
+        private fun requestKakaoLogin() {
             launch {
                 val email =
                     suspendCancellableCoroutine { continuation ->
@@ -112,7 +112,6 @@ class AuthViewModel
                     }
 
                 try {
-                    requestSignUp(email, "kakao")
                     kakaoLoginRequestUseCase(email)
                         .onSuccess {
                             Timber.d("kakao login success")
@@ -121,15 +120,15 @@ class AuthViewModel
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("로그인 실패")
-                            sendEffect(AuthEffect.LoginFailed)
+                            // sendEffect(AuthEffect.LoginFailed)
+                            requestSignUp(email, "kakao")
                         }
                 } catch (e: Exception) {
-                    sendEffect(AuthEffect.SignUpFailed)
                 }
             }
         }
 
-        private fun requestNaverLogin(token: String) {
+        private fun requestNaverLogin() {
             launch {
                 val email =
                     runCatching {
@@ -170,7 +169,6 @@ class AuthViewModel
                     }.getOrThrow()
 
                 try {
-                    requestSignUp(email, "naver")
                     naverLoginRequestUseCase(email)
                         .onSuccess {
                             Timber.d("naver login success : $it")
@@ -178,11 +176,11 @@ class AuthViewModel
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("naver login failed: ${it.message}")
-                            sendEffect(AuthEffect.LoginFailed)
+//                            sendEffect(AuthEffect.LoginFailed)
+                            requestSignUp(email, "naver")
                         }
                 } catch (e: Exception) {
                     Timber.e("Google sign-in process failed: ${e.message}")
-                    sendEffect(AuthEffect.SignUpFailed)
                 }
             }
         }
@@ -194,7 +192,6 @@ class AuthViewModel
                         GoogleIdTokenCredential.createFrom(
                             credential.data,
                         )
-                    requestSignUp(googleIdTokenCredential.id, "google")
                     googleLoginRequestUseCase(credential)
                         .onSuccess {
                             Timber.d("google login success")
@@ -202,7 +199,8 @@ class AuthViewModel
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("google login failed: ${it.message}")
-                            sendEffect(AuthEffect.LoginFailed)
+                            // sendEffect(AuthEffect.LoginFailed)
+                            requestSignUp(googleIdTokenCredential.id, "google")
                         }
                 } catch (e: Exception) {
                     Timber.e("Google sign-in process failed: ${e.message}")

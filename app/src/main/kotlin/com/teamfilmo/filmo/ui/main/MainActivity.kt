@@ -66,13 +66,6 @@ class MainActivity :
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
-
-//        if (intent.getBooleanExtra("NAVIGATE_TO_ALL_MOVIE_REPORT", false)) {
-//            navController.navigate(R.id.allMovieReportFragment)
-//        } else if (intent.getBooleanExtra("NAVIGATE_TO_MOVIE_DETAIL", false)) {
-//            Timber.d("")
-//            navController.navigate(R.id.movieDetailFragment)
-//        }
     }
 
     private fun navigateToHome() {
@@ -123,6 +116,7 @@ class MainActivity :
     override fun handleEffect(effect: MainEffect) {
         when (effect) {
             is MainEffect.NavigateToLogin -> {
+                // 토큰이 없을 경우 로그인 화면으로 넘어가기
                 val intent = Intent(this, AuthActivity::class.java)
                 requestLogin.launch(intent)
             }

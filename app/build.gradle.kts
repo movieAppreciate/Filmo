@@ -54,6 +54,13 @@ android {
         getByName("debug") {
             storeFile = file("$rootDir/settings/debug.keystore")
         }
+
+        create("release") {
+            keyPassword = "filmokey0"
+            keyAlias = "key0"
+            storePassword = "filmo0830"
+            storeFile = file("/Users/sunghyeon/FilmoKeyStore")
+        }
     }
 
     buildTypes {
@@ -67,6 +74,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

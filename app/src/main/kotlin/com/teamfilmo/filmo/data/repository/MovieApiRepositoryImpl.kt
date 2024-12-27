@@ -7,11 +7,18 @@ import javax.inject.Inject
 
 class MovieApiRepositoryImpl
     @Inject
-    constructor(private val movieApiDataSource: MovieApiDataSource) : MovieApiRepository {
+    constructor(
+        private val movieApiDataSource: MovieApiDataSource,
+    ) : MovieApiRepository {
         override suspend fun getUpcomingMovieList(
             apiKey: String,
             page: Int,
-        ): Result<MovieApiResult> {
-            return movieApiDataSource.getUpcomingMovieList(apiKey, page)
-        }
+        ): Result<MovieApiResult?> =
+            runCatching {
+                val response = movieApiDataSource.getUpcomingMovieList(apiKey, page)
+                when {
+                    response.isSuccessful -> response.body()
+                    else -> null
+                }
+            }
     }

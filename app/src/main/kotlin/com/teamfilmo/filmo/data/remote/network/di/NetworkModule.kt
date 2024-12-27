@@ -70,15 +70,14 @@ object NetworkModule {
         okHttpClient: OkHttpClient,
         @ContentType contentType: String,
         json: Json,
-    ): Retrofit {
-        return Retrofit
+    ): Retrofit =
+        Retrofit
             .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
             .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))
             .build()
-    }
 
     @Provides
     @Singleton
@@ -89,13 +88,12 @@ object NetworkModule {
         okHttpClient: OkHttpClient,
         @ContentType contentType: String,
         json: Json,
-    ): Retrofit {
-        return Retrofit
+    ): Retrofit =
+        Retrofit
             .Builder()
             .baseUrl(movieApiBaseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(ResultCallAdapter.Factory(retryCount))
             .addConverterFactory(json.asConverterFactory(contentType.toMediaType()))
             .build()
-    }
 }

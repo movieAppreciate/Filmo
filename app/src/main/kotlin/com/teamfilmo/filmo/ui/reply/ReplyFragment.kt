@@ -3,10 +3,13 @@ package com.teamfilmo.filmo.ui.reply
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -303,12 +306,36 @@ class ReplyFragment :
                 }
             }
 
-        binding.editReply
-            .setOnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
-                }
-            }
+        binding.editReply.apply {
+            addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int,
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int,
+                    ) {
+                        if (count > 0) {
+                            binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
+                        } else {
+                            binding.btnRegistReply.setImageResource(R.drawable.btn_regist_reply)
+                            binding.btnRegistReply.isClickable = false
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                    }
+                },
+            )
+        }
 
         binding.root.setOnClickListener {
             binding.editReply.hint = "댓글달기"
@@ -319,14 +346,16 @@ class ReplyFragment :
 
             if (isSubReplyMode) {
                 isSubReplyMode = false
-                if (upReplyId != null) {
+                if (upReplyId != null && binding.editReply.text.isNotEmpty()) {
                     viewModel.handleEvent(ReplyEvent.SaveSubReply(upReplyId!!, args.reportId, binding.editReply.text.toString()))
                 }
                 Toast.makeText(context, "답글이 등록되었어요!", Toast.LENGTH_SHORT).show()
             } else {
                 isSubReplyMode = false
-                viewModel.handleEvent(ReplyEvent.SaveReply(null, args.reportId, binding.editReply.text.toString()))
-                Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+                if (binding.editReply.text.isNotEmpty()) {
+                    viewModel.handleEvent(ReplyEvent.SaveReply(null, args.reportId, binding.editReply.text.toString()))
+                    Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
+                }
             }
             binding.editReply.apply {
                 clearFocus()

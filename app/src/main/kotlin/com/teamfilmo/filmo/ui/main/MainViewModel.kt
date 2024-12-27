@@ -27,14 +27,17 @@ class MainViewModel
         }
 
         // Token 유무 검사
+        // 1. 토큰 확인
         private fun checkUserToken() {
             userTokenSource
                 .getUserToken()
                 .onEach {
                     Timber.d("토큰 유무 검사 :$it")
                     if (it.isEmpty()) {
+                        // 만약 토큰이 없을 경우
                         sendEffect(MainEffect.NavigateToLogin)
                     } else {
+                        // 2. 토큰이 있을 경우 토큰 유효성 검증
                         isValidateUserToken()
                     }
                 }.launchIn(viewModelScope)
@@ -46,6 +49,7 @@ class MainViewModel
                 .getUserToken()
                 .onEach {
                     if (it.isEmpty()) {
+                        // 만약 토큰이 없다면
                         sendEffect(MainEffect.NavigateToLogin)
                     }
                 }.launchIn(viewModelScope)

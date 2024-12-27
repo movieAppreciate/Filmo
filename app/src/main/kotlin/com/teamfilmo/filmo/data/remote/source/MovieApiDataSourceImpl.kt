@@ -4,6 +4,7 @@ import com.teamfilmo.filmo.data.remote.model.movie.MovieApiResult
 import com.teamfilmo.filmo.data.remote.service.MovieApiService
 import com.teamfilmo.filmo.data.source.MovieApiDataSource
 import javax.inject.Inject
+import retrofit2.Response
 
 class MovieApiDataSourceImpl
     @Inject
@@ -13,7 +14,5 @@ class MovieApiDataSourceImpl
         override suspend fun getUpcomingMovieList(
             api_key: String,
             page: Int,
-        ): Result<MovieApiResult> {
-            return movieApiService.getUpcomingMovies(api_key, page)
-        }
+        ): Response<MovieApiResult> = movieApiService.getUpcomingMovies(api_key, page)
     }

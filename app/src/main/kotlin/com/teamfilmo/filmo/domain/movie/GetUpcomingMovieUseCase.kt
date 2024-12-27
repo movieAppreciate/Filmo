@@ -14,7 +14,7 @@ class GetUpcomingMovieUseCase
         private val movieApiRepository: MovieApiRepository,
     ) {
         companion object {
-            const val SERVICE_KEY = "f05219d9db24ba715593fc3a9c55c641"
+            const val SERVICE_KEY = "a03cd18043a24a01005b3c585cdcc01a"
         }
 
         operator fun invoke(): Flow<List<MovieResult>> =
@@ -22,7 +22,7 @@ class GetUpcomingMovieUseCase
                 val result =
                     movieApiRepository.getUpcomingMovieList(SERVICE_KEY, 1)
                 result.onSuccess {
-                    emit(it.results)
+                    if (it != null) emit(it.results)
                 }
                 result.onFailure {
                     when (it) {
