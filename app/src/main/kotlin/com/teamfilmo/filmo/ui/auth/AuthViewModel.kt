@@ -192,6 +192,7 @@ class AuthViewModel
                         GoogleIdTokenCredential.createFrom(
                             credential.data,
                         )
+
                     googleLoginRequestUseCase(credential)
                         .onSuccess {
                             Timber.d("google login success")

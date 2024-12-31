@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.auth
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.method.LinkMovementMethod
@@ -13,14 +12,13 @@ import androidx.core.text.buildSpannedString
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -41,17 +39,7 @@ import timber.log.Timber
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
 
-    @Suppress("ktlint:standard:property-naming")
-    private val USER_PREFERENCES_NAME = "user_preferences"
-
-    private val Context.dataStore by preferencesDataStore(
-        name = USER_PREFERENCES_NAME,
-    )
-
     override fun onBindLayout() {
-        var keyHash = Utility.getKeyHash(this)
-        Timber.d("kakao key hash $keyHash")
-
         // 상태바 색깔 처리해주기
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -151,7 +139,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 GetGoogleIdOption
                     .Builder()
                     .setFilterByAuthorizedAccounts(false)
-                    .setAutoSelectEnabled(true)
+                    .setAutoSelectEnabled(false)
                     .setServerClientId(getString(R.string.google_client_key))
                     .build()
 
@@ -180,7 +168,12 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                         is GetCredentialCancellationException -> {
                             showToast("로그인 취소")
                         }
-                        else -> {}
+                        is NoCredentialException -> {
+                            showToast("다른 플랫폼으로 로그인해주세요")
+                        }
+                        else -> {
+                            Timber.d("google login failed :$it")
+                        }
                     }
                 }
         }
