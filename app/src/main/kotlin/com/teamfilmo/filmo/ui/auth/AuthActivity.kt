@@ -9,6 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
@@ -131,6 +132,22 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
         }
     }
 
+    private suspend fun getCredential(
+        credentialManager: CredentialManager,
+        credentialRequest: GetCredentialRequest,
+    ): Result<Credential> =
+        runCatching {
+            val response =
+                credentialManager.getCredential(
+                    request = credentialRequest,
+                    context = this@AuthActivity,
+                )
+            response.credential
+        }.onSuccess {
+            val credential = it
+            viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
+        }
+
     private fun onGoogleLogin() {
         lifecycleScope.launch {
             val credentialManager = CredentialManager.create(this@AuthActivity)
@@ -154,28 +171,32 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                     .addCredentialOption(credentialOption)
                     .build()
 
-            val response =
-                runCatching {
-                    credentialManager.getCredential(
-                        request = credentialRequest,
-                        context = this@AuthActivity,
-                    )
-                }.onSuccess {
-                    val credential = it.credential
-                    viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
-                }.onFailure {
-                    when (it) {
-                        is GetCredentialCancellationException -> {
-                            showToast("로그인 취소")
-                        }
-                        is NoCredentialException -> {
-                            showToast("다른 플랫폼으로 로그인해주세요")
-                        }
-                        else -> {
-                            Timber.d("google login failed :$it")
-                        }
+            getCredential(
+                credentialManager,
+                credentialRequest,
+            ).onFailure {
+                when (it) {
+                    is GetCredentialCancellationException -> {
+                        showToast("로그인 취소")
+                    }
+                    is NoCredentialException -> {
+                        // 다시 시도해주세요 ??
+                        Timber.d("NoCredentialException :$it")
+                        val signInCredentialRequest =
+                            GetCredentialRequest
+                                .Builder()
+                                .addCredentialOption(signInWithGoogleOption)
+                                .build()
+                        getCredential(credentialManager, signInCredentialRequest)
+                            .onFailure {
+                                showToast("잠시 후에 다시 시도하거나 다른 플랫폼으로 로그인해주세요")
+                            }
+                    }
+                    else -> {
+                        Timber.d("google login failed :$it")
                     }
                 }
+            }
         }
     }
 
