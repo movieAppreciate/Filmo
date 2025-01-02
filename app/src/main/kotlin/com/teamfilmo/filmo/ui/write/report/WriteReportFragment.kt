@@ -156,6 +156,8 @@ class WriteReportFragment :
 
                 viewModel.handleEvent(WriteReportEvent.RegisterReport(request))
             } else {
+                // 키보드 내리기
+
                 if (binding.editReportTitle.text?.length == 0) {
                     Toast.makeText(context, "감상문 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
                 } else if (binding.editReportBody.text

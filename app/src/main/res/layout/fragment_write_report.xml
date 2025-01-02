@@ -81,6 +81,8 @@
             android:background="@color/transparent"
             android:hint="제목을 입력해주세요."
             android:maxLength="20"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,6 +98,8 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:imeOptions="actionNext"
+            android:singleLine="true"
             android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,6 +131,8 @@
             app:layout_constraintTop_toTopOf="@+id/view2" />
 
         <EditText
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             android:id="@+id/edit_report_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
