@@ -150,7 +150,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     private fun onGoogleLogin() {
         lifecycleScope.launch {
-            val credentialManager = CredentialManager.create(this@AuthActivity)
+            var credentialManager = CredentialManager.create(this@AuthActivity)
 
             val credentialOption =
                 GetGoogleIdOption
@@ -180,16 +180,25 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                         showToast("로그인 취소")
                     }
                     is NoCredentialException -> {
-                        // 다시 시도해주세요 ??
-                        Timber.d("NoCredentialException :$it")
                         val signInCredentialRequest =
                             GetCredentialRequest
                                 .Builder()
                                 .addCredentialOption(signInWithGoogleOption)
                                 .build()
+
                         getCredential(credentialManager, signInCredentialRequest)
                             .onFailure {
-                                showToast("잠시 후에 다시 시도하거나 다른 플랫폼으로 로그인해주세요")
+                                when (it) {
+                                    is GetCredentialCancellationException -> {
+                                        showToast("로그인 취소")
+                                    }
+                                    is NoCredentialException -> {
+                                        showToast("기기에 계정을 등록하고 다시 시도해주세요")
+                                    }
+                                    else -> {
+                                        showToast("잠시 후에 다시 시도해주세요")
+                                    }
+                                }
                             }
                     }
                     else -> {
