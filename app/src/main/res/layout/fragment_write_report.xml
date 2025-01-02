@@ -26,12 +26,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
+            android:gravity="right"
             android:id="@+id/btn_report_register"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:stateListAnimator="@null"
             android:text="등록"
             android:textColor="@color/gray02"
             app:layout_constraintBottom_toBottomOf="@+id/btn_back"
@@ -56,6 +56,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:layout_margin="10dp"
+
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />

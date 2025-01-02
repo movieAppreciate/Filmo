@@ -27,6 +27,7 @@ class ReportThumbnailFragment :
         context?.let { MovieThumbnailAdapter(it) }
     }
     private val navController by lazy { findNavController() }
+    val args: ReportThumbnailFragmentArgs by navArgs()
 
     companion object {
         fun newInstance(): ReportThumbnailFragment {

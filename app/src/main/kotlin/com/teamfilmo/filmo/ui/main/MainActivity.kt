@@ -68,21 +68,6 @@ class MainActivity :
         }
     }
 
-    private fun navigateToHome() {
-        navController.navigate(R.id.allMovieReportFragment) {
-            // 현재 백스택을 전부 비우고 새로 시작
-            popUpTo(R.id.nav_graph) {
-                inclusive = true // 시작 지점까지 포함해서 모두 제거
-            }
-            launchSingleTop = true
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        binding.navBar.selectedItemId = R.id.allMovieReportFragment
-    }
-
     override fun onBindLayout() {
         enableEdgeToEdge()
         binding.navBar.setOnItemSelectedListener {

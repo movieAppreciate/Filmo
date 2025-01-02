@@ -133,14 +133,19 @@
         android:name="com.teamfilmo.filmo.ui.write.thumbnail.ReportThumbnailFragment"
         android:label="ReportThumbnailFragment" >
         <argument
-            android:name="movieName"
-            app:argType="string" />
-        <argument
             android:name="movieId"
             app:argType="string" />
+
+        <argument
+            android:name="movieName"
+            app:argType="string" />
+
         <action
             android:id="@+id/action_reportThumbnailFragment_to_modifyReportFragment"
             app:destination="@id/modifyReportFragment" />
+        <action
+            android:id="@+id/action_reportThumbnailFragment_to_writeReportFragment"
+            app:destination="@id/writeReportFragment" />
     </fragment>
     <fragment
         android:id="@+id/myPageFragment"

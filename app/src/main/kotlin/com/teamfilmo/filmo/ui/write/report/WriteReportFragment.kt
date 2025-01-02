@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -21,6 +22,7 @@ import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -40,6 +42,36 @@ class WriteReportFragment :
             val fragment = WriteReportFragment()
             fragment.arguments = args
             return fragment
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+
+        viewModel.handleEvent(
+            WriteReportEvent.SaveReportState(
+                binding.editReportTitle.text.toString(),
+                binding.editReportBody.text.toString(),
+                binding.editReportTag.text.toString(),
+                uri,
+            ),
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            viewModel.reportInfoStateFlow.collect {
+                binding.editReportTitle.setText(it.title)
+                binding.editReportBody.setText(it.content)
+                binding.editReportTag.setText(it.tagString)
+            }
         }
     }
 
@@ -118,7 +150,7 @@ class WriteReportFragment :
                             binding.editReportBody.text
                                 .toString(),
                         imageUrl = uri!!,
-                        movieId = args.movieId.toString(),
+                        movieId = args.movieId,
                         tagString = tagString?.replace(" ", "").toString(),
                     )
 
