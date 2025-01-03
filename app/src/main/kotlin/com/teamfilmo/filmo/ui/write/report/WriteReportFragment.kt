@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -22,8 +21,6 @@ import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class WriteReportFragment :
@@ -42,36 +39,6 @@ class WriteReportFragment :
             val fragment = WriteReportFragment()
             fragment.arguments = args
             return fragment
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("onStop")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("onPause")
-
-        viewModel.handleEvent(
-            WriteReportEvent.SaveReportState(
-                binding.editReportTitle.text.toString(),
-                binding.editReportBody.text.toString(),
-                binding.editReportTag.text.toString(),
-                uri,
-            ),
-        )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        lifecycleScope.launch {
-            viewModel.reportInfoStateFlow.collect {
-                binding.editReportTitle.setText(it.title)
-                binding.editReportBody.setText(it.content)
-                binding.editReportTag.setText(it.tagString)
-            }
         }
     }
 
@@ -139,7 +106,6 @@ class WriteReportFragment :
             binding.btnReportRegister.setTextColor(requireContext().getColor(R.color.primary))
         }
 
-        Timber.d("영화 이름:${args.movieName}")
         binding.txtSelectedMovie.text = args.movieName
         binding.btnReportRegister.setOnClickListener {
             if (binding.editReportTitle.text != null && binding.editReportBody.text != null && uri != null) {
@@ -171,7 +137,6 @@ class WriteReportFragment :
         }
 
         binding.btnSelectPoster.setOnClickListener {
-            Timber.d("write report : $args")
             val action = WriteReportFragmentDirections.navigateToThumbnail(movieName = args.movieName, movieId = args.movieId)
             navController.navigate(action)
         }
