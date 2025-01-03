@@ -34,26 +34,7 @@ class WriteReportViewModel
                     registerReport(event.request)
                     sendEffect(WriteReportEffect.NavigateToMain)
                 }
-                is WriteReportEvent.SaveReportState -> {
-                    saveReport(event.reportTitle, event.reportContent, event.tagString, event.posterUri)
-                }
             }
-        }
-
-        private fun saveReport(
-            title: String?,
-            content: String?,
-            tagString: String?,
-            posterUri: String?,
-        ) {
-            val report =
-                ReportInfo(
-                    title,
-                    content,
-                    tagString,
-                    posterUri,
-                )
-            _reportInfoStateFlow.value = report
         }
 
         private fun registerReport(
