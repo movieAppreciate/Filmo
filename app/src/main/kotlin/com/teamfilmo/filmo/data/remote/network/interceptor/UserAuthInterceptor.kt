@@ -56,6 +56,8 @@ class UserAuthInterceptor(
                     val currentAccessToken = dataStore.get().getUserToken().firstOrNull()
                     val currentRefreshToken = dataStore.get().getRefreshToken().firstOrNull()
 
+                    Timber.d("currentRefreshToken :$currentRefreshToken")
+
                     if (currentAccessToken.isNullOrBlank() || currentRefreshToken.isNullOrBlank()) {
                         return@withLock Token(null, null)
                     }

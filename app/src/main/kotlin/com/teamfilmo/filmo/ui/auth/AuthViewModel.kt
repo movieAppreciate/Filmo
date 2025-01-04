@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
+import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
@@ -8,6 +9,7 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
 import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
 import com.teamfilmo.filmo.data.remote.model.user.SignUpResult
 import com.teamfilmo.filmo.data.remote.model.user.UserInfo
@@ -22,8 +24,6 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -52,8 +52,12 @@ class AuthViewModel
             }
         }
 
-        private val _signUpResponse = MutableStateFlow<UserInfo?>(null)
-        val signUpResponse = _signUpResponse.asStateFlow()
+        private fun saveUserToken(response: LoginResponse) {
+            viewModelScope.launch {
+                userTokenSource.setUserToken(response.accessToken)
+                userTokenSource.setRefreshToken(response.refreshToken)
+            }
+        }
 
         // 토큰이 없기 때문에 로그인 화면이 뜬 것이다! 따라서 로그인 요청이 들어오면 회원가입 후 로그인이 실행되도록 한다.
         // 다음부터는 저장된 토큰을 통해 자동으로 로그인이 구현된다.
@@ -116,7 +120,7 @@ class AuthViewModel
                         .onSuccess {
                             Timber.d("kakao login success")
                             // 로그인 성공 시 access token 저장하기
-                            userTokenSource.setUserToken(it.accessToken)
+                            saveUserToken(it)
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("로그인 실패")
@@ -172,7 +176,7 @@ class AuthViewModel
                     naverLoginRequestUseCase(email)
                         .onSuccess {
                             Timber.d("naver login success : $it")
-                            userTokenSource.setUserToken(it.accessToken)
+                            saveUserToken(it)
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("naver login failed: ${it.message}")
@@ -196,11 +200,10 @@ class AuthViewModel
                     googleLoginRequestUseCase(credential)
                         .onSuccess {
                             Timber.d("google login success")
-                            userTokenSource.setUserToken(it.accessToken)
+                            saveUserToken(it)
                             sendEffect(AuthEffect.LoginSuccess)
                         }.onFailure {
                             Timber.e("google login failed: ${it.message}")
-                            // sendEffect(AuthEffect.LoginFailed)
                             requestSignUp(googleIdTokenCredential.id, "google")
                         }
                 } catch (e: Exception) {
