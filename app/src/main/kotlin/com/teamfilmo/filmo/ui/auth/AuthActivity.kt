@@ -98,14 +98,15 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     override fun handleEffect(effect: AuthEffect) {
         when (effect) {
-            is AuthEffect.SignUpFailed -> {}
+            is AuthEffect.SignUpFailed -> {
+                showToast("회원가입이 실패했어요! 계속되면 관리자에게 문의해주세요")
+            }
             is AuthEffect.Existing -> {
                 when (effect.type) {
                     "google" -> onGoogleLogin()
                     "naver" -> onNaverLogin()
                     "kakao" -> onKakaoLogin()
                 }
-                // Toast.makeText(this@AuthActivity, "이미 등록된 계정입니다!", Toast.LENGTH_SHORT).show()
             }
 
             is AuthEffect.SignUpSuccess -> {
@@ -177,6 +178,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             ).onFailure {
                 when (it) {
                     is GetCredentialCancellationException -> {
+                        Timber.d("GetCredentialCancellationException: $it")
                         showToast("로그인 취소")
                     }
                     is NoCredentialException -> {
@@ -190,6 +192,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                             .onFailure {
                                 when (it) {
                                     is GetCredentialCancellationException -> {
+                                        Timber.d("GetCredentialCancellationException: $it")
                                         showToast("로그인 취소")
                                     }
                                     is NoCredentialException -> {

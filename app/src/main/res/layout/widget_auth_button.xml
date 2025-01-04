@@ -25,7 +25,7 @@
         android:layout_marginStart="6dp"
         android:text="Button Text"
         android:textColor="#000000"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

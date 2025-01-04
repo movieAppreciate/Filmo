@@ -15,7 +15,6 @@ import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import com.teamfilmo.filmo.ui.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity :
@@ -52,7 +51,6 @@ class MainActivity :
 
         // 감상문 작성 과정에서 바텀바가 보이지 않도록 하기
         navController.addOnDestinationChangedListener { _, desitnation, _ ->
-            Timber.d("destination.id :${desitnation.id}")
             binding.navBar.visibility =
                 if (desitnation.id == R.id.movieSelectFragment) {
                     View.GONE
