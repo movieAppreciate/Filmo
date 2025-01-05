@@ -1,10 +1,8 @@
 package com.teamfilmo.filmo.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,8 +11,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
-import com.teamfilmo.filmo.ui.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity :
@@ -24,18 +22,23 @@ class MainActivity :
     override val viewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
 
-    private val requestLogin =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                viewModel.handleEvent(MainEvent.CheckUserToken)
-            } else {
-                finish()
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            insets
+        }
+    }
+
+    override fun onDestroy() {
+        Timber.d("메인 onDestroy")
+        super.onDestroy()
+    }
+
+    override fun onBindLayout() {
         // 1. 먼저 NavHostFragment를 찾는다 (컨테이너)
         // NavHostFragment : 프래그먼트들이 들어가고 나가는 '그릇'
         val navHostFragment =
@@ -59,26 +62,11 @@ class MainActivity :
                 }
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
-    }
-
-    override fun onBindLayout() {
-        enableEdgeToEdge()
         binding.navBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.allMovieReportFragment -> {
                     if (navController.currentDestination?.id != R.id.allMovieReportFragment) {
                         navController.navigate(R.id.allMovieReportFragment)
-                    }
-                    true
-                }
-                R.id.myPageFragment -> {
-                    if (navController.currentDestination?.id != R.id.myPageFragment) {
-                        navController.navigate(R.id.myPageFragment)
                     }
                     true
                 }
@@ -89,21 +77,19 @@ class MainActivity :
                     }
                     true
                 }
+                R.id.myPageFragment -> {
+                    // 만약 메인 페이지에 있다가 -> 마이 페이지로 들어온 경우
+                    // 다시 홈 탭을 누르면 새 창말고 해당 탭으로 이동하기
+                    if (navController.currentDestination?.id != R.id.myPageFragment) {
+                        navController.navigate(R.id.myPageFragment)
+                    }
+                    true
+                }
+
                 else -> {
                     false
                 }
             }
-        }
-    }
-
-    override fun handleEffect(effect: MainEffect) {
-        when (effect) {
-            is MainEffect.NavigateToLogin -> {
-                // 토큰이 없을 경우 로그인 화면으로 넘어가기
-                val intent = Intent(this, AuthActivity::class.java)
-                requestLogin.launch(intent)
-            }
-            else -> {}
         }
     }
 }

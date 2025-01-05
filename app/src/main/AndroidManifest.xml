@@ -16,10 +16,8 @@
         android:theme="@style/Theme.Filmo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+        <activity android:name=".ui.splash.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,16 +25,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+        <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="true">
 
 
         </activity>
-        <activity android:name=".ui.search.SearchActivity" />
-        <activity android:name=".ui.notification.NotificationActivity" />
-        <activity
-            android:name=".ui.write.WriteActivity"
-            android:windowSoftInputMode="adjustNothing"/>
 
        <!-- Kakao Login Page -->
         <activity
