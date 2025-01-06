@@ -20,6 +20,7 @@ import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import com.teamfilmo.filmo.ui.widget.ModalBottomSheet
 import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -27,7 +28,6 @@ class BodyMovieReportFragment :
     BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
         FragmentBodyMovieReportBinding::inflate,
     ) {
-    private var reportId: String = ""
     private var isMyPost: Boolean = false
     private var movieName: String = ""
     override val viewModel: BodyMovieReportViewModel by viewModels()
@@ -36,14 +36,9 @@ class BodyMovieReportFragment :
 
     override fun onBindLayout() {
         super.onBindLayout()
-
-        reportId = args.reportId
-
-        viewModel.handleEvent(BodyMovieReportEvent.ShowReport(reportId))
-
         with(binding) {
             btnLike.setOnClickListener {
-                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton(reportId = reportId))
+                viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton)
             }
 
             movieDetail.movieDetailShimmer.visibility = View.GONE
@@ -94,7 +89,7 @@ class BodyMovieReportFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
-                viewModel.checkLikeResponse.collect {
+                viewModel.checkLikeResponse.collectLatest {
                     binding.btnLike.isSelected = it.isLike
                 }
             }
@@ -113,7 +108,7 @@ class BodyMovieReportFragment :
             }
             launch {
                 viewModel.getReportResponse.collect {
-                    viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
+                    //  viewModel.handleEvent(BodyMovieReportEvent.ShowMovieInfo(it.movieId))
                     binding.apply {
                         txtUserName.text = it.nickname ?: "익명의 리뷰어"
                         tvMovieTitle.text = movieName

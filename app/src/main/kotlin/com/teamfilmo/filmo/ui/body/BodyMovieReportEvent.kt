@@ -18,9 +18,7 @@ sealed class BodyMovieReportEvent : BaseEvent() {
         val updateReportRequest: UpdateReportRequest,
     ) : BodyMovieReportEvent()
 
-    data class ClickLikeButton(
-        val reportId: String,
-    ) : BodyMovieReportEvent()
+    data object ClickLikeButton : BodyMovieReportEvent()
 
     data class ShowReport(
         val reportId: String,
