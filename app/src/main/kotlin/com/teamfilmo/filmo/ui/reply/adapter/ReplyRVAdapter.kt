@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
 import com.teamfilmo.filmo.databinding.ItemReplyBinding
+import com.teamfilmo.filmo.domain.model.reply.GetReplyItemWithRole
 import com.teamfilmo.filmo.ui.reply.ReplyInteractionListener
 import com.teamfilmo.filmo.ui.reply.SubReplyInteractionListener
 import com.teamfilmo.filmo.ui.reply.SubReplyWithLikeInfo
@@ -20,7 +20,7 @@ import kotlin.math.abs
 import timber.log.Timber
 
 class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
-    val replyList: ArrayList<GetReplyResponseItemWithRole> = arrayListOf()
+    val replyList: ArrayList<GetReplyItemWithRole> = arrayListOf()
     var itemClick: ReplyInteractionListener? = null
     private var currentUserId: String = ""
 
@@ -32,7 +32,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
     좋아요 등록
      */
     fun updateLikeState(
-        newList: List<GetReplyResponseItemWithRole>,
+        newList: List<GetReplyItemWithRole>,
     ) {
         val diffCallBack = ReplyDiffCallBack(this.replyList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
@@ -50,7 +50,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
         notifyItemRemoved(index)
     }
 
-    fun setReplyList(replyList: List<GetReplyResponseItemWithRole>) {
+    fun setReplyList(replyList: List<GetReplyItemWithRole>) {
         val diffCallBack = ReplyDiffCallBack(this.replyList, replyList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
         this.replyList.clear()
@@ -135,7 +135,7 @@ class ReplyRVAdapter : RecyclerView.Adapter<ReplyRVAdapter.ReplyViewHolder>() {
             subReplyAdapter.updateItemLikeState(subReplyId, isLiked)
         }
 
-        fun bind(reply: GetReplyResponseItemWithRole) {
+        fun bind(reply: GetReplyItemWithRole) {
             binding.txtReply.text = reply.content
             binding.txtReplyCount.text = reply.subReply?.size?.toString() ?: "0"
 

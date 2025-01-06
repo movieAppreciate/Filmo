@@ -2,21 +2,21 @@ package com.teamfilmo.filmo.ui.reply
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
-import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.data.remote.entity.block.SaveBlockRequest
+import com.teamfilmo.filmo.data.remote.entity.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CountLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.save.SaveReplyRequest
 import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
+import com.teamfilmo.filmo.domain.model.reply.GetReplyItemWithRole
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import com.teamfilmo.filmo.domain.reply.DeleteReplyUseCase
 import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.reply.SaveReplyUseCase
@@ -114,8 +114,8 @@ class ReplyViewModel
         val userInfo: StateFlow<UserInfo> = _userInfo
 
         // 댓글 전체 리스트
-        private val _replyListStateFlow = MutableStateFlow(emptyList<GetReplyResponseItemWithRole>())
-        val replyListStateFlow: StateFlow<List<GetReplyResponseItemWithRole>> = _replyListStateFlow
+        private val _replyListStateFlow = MutableStateFlow(emptyList<GetReplyItemWithRole>())
+        val replyListStateFlow: StateFlow<List<GetReplyItemWithRole>> = _replyListStateFlow
 
         // 답글 전체 리스트
         private val _subReplyList = MutableStateFlow(emptyList<SubReplyWithLikeInfo>())
@@ -437,7 +437,7 @@ class ReplyViewModel
                                         list.addAll(subReplyList)
                                         _subReplyList.value = list
                                     }
-                                    GetReplyResponseItemWithRole(
+                                    GetReplyItemWithRole(
                                         replyId = reply.replyId,
                                         reportId = reply.reportId,
                                         content = reply.content,

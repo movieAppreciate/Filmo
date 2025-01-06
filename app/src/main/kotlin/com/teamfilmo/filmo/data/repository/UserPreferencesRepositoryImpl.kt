@@ -5,8 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.gson.Gson
-import com.google.protobuf.type
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

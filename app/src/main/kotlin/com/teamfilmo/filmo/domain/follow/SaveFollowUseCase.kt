@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.follow
 
-import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.save.SaveFollowResponse
 import com.teamfilmo.filmo.domain.repository.FollowRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.ui.modify
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
 import com.teamfilmo.filmo.domain.report.UpdateReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

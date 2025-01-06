@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieApiResult
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieApiResult
 
 interface MovieApiRepository {
     suspend fun getUpcomingMovieList(

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
+import com.teamfilmo.filmo.data.remote.entity.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.databinding.FollowerItemBinding
 import com.teamfilmo.filmo.databinding.FollowingItemBinding
 

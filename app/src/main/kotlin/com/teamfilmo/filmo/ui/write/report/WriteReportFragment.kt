@@ -17,7 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint

@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.databinding.FragmentModifyReportBinding
 import com.teamfilmo.filmo.ui.widget.CustomDialog
 import com.teamfilmo.filmo.ui.widget.ItemClickListener

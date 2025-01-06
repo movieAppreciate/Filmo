@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.ui.body
 
 import com.teamfilmo.filmo.base.event.BaseEvent
-import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 
 sealed class BodyMovieReportEvent : BaseEvent() {
     data object SaveBlock : BodyMovieReportEvent()

@@ -1,10 +1,10 @@
 package com.teamfilmo.filmo.data.source
 
-import com.teamfilmo.filmo.data.remote.model.like.CancelLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.CountLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CancelLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CountLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeResponse
 
 interface LikeDataSource {
     suspend fun saveLike(saveLikeRequest: SaveLikeRequest): Result<SaveLikeResponse>

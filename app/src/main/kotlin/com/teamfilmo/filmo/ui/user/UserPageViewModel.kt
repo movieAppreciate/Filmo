@@ -2,16 +2,16 @@ package com.teamfilmo.filmo.ui.user
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
-import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
-import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
-import com.teamfilmo.filmo.data.remote.model.report.MyPageReportItem
-import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.check.CheckIsFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.save.SaveFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.movie.detail.DetailMovieRequest
+import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
+import com.teamfilmo.filmo.data.remote.entity.user.info.UserResponse
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.CountFollowUseCase
 import com.teamfilmo.filmo.domain.follow.SaveFollowUseCase
+import com.teamfilmo.filmo.domain.model.mypage.MyPageReportItem
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
 import com.teamfilmo.filmo.domain.report.GetUserReportListUseCase

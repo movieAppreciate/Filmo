@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
-import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.ItemReportBinding
+import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -97,6 +97,8 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             holder.bindLikeImage(item.isLiked)
             holder.bindLikeCount(item.likeCount)
             holder.bindMovieImage(item.imageUrl.toString())
+            holder.itemView.apply {
+            }
         }
     }
 

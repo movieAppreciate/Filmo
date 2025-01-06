@@ -1,11 +1,11 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.DeleteReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.get.GetReplyResponseItem
+import com.teamfilmo.filmo.data.remote.entity.reply.save.SaveReplyRequest
+import com.teamfilmo.filmo.data.remote.entity.reply.save.SaveReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyRequest
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

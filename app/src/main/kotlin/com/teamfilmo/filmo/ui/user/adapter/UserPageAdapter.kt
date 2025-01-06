@@ -3,8 +3,8 @@ package com.teamfilmo.filmo.ui.user.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.teamfilmo.filmo.data.remote.model.report.MyPageReportItem
 import com.teamfilmo.filmo.databinding.ItemUserReportBinding
+import com.teamfilmo.filmo.domain.model.mypage.MyPageReportItem
 
 class UserPageAdapter : RecyclerView.Adapter<UserPageAdapter.MyPageViewHolder>() {
     private var myReportList: List<MyPageReportItem> = emptyList()

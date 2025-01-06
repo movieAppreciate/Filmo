@@ -3,15 +3,13 @@ package com.teamfilmo.filmo.ui.body
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
-import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
-import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.data.remote.entity.block.SaveBlockRequest
+import com.teamfilmo.filmo.data.remote.entity.block.SaveBlockResponse
+import com.teamfilmo.filmo.data.remote.entity.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.entity.follow.check.CheckIsFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
 import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
@@ -21,6 +19,8 @@ import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
+import com.teamfilmo.filmo.domain.model.movie.DetailMovie
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.DeleteReportUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
@@ -115,7 +115,7 @@ class BodyMovieReportViewModel
          */
         private val _movieDetailInfo =
             MutableStateFlow(
-                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ""),
+                DetailMovie(null, null, null, null, null, null, null, null, null, null),
             )
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()

@@ -2,7 +2,7 @@ package com.teamfilmo.filmo.ui.follow.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
+import com.teamfilmo.filmo.data.remote.entity.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.GetFollowerListUseCase
 import kotlinx.coroutines.flow.first

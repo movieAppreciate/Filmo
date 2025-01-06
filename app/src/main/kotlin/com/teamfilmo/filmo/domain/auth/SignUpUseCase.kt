@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.auth
 
-import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
-import com.teamfilmo.filmo.data.remote.model.user.SignUpResult
+import com.teamfilmo.filmo.data.remote.entity.user.signup.SignUpRequest
+import com.teamfilmo.filmo.data.remote.entity.user.signup.SignUpResult
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

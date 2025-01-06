@@ -1,11 +1,11 @@
 package com.teamfilmo.filmo.ui.reply.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItemWithRole
+import com.teamfilmo.filmo.domain.model.reply.GetReplyItemWithRole
 
 class ReplyDiffCallBack(
-    private val oldList: List<GetReplyResponseItemWithRole>,
-    private val newList: List<GetReplyResponseItemWithRole>,
+    private val oldList: List<GetReplyItemWithRole>,
+    private val newList: List<GetReplyItemWithRole>,
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
 
@@ -14,14 +14,10 @@ class ReplyDiffCallBack(
     override fun areItemsTheSame(
         oldItemPosition: Int,
         newItemPosition: Int,
-    ): Boolean {
-        return oldList[oldItemPosition].replyId == newList[newItemPosition].replyId
-    }
+    ): Boolean = oldList[oldItemPosition].replyId == newList[newItemPosition].replyId
 
     override fun areContentsTheSame(
         oldItemPosition: Int,
         newItemPosition: Int,
-    ): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
-    }
+    ): Boolean = oldList[oldItemPosition] == newList[newItemPosition]
 }

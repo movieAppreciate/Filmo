@@ -10,8 +10,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
+import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint

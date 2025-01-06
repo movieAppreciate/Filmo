@@ -6,12 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
-import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
-import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
-import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeResponse
 import com.teamfilmo.filmo.domain.bookmark.DeleteBookmarkUseCase
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.bookmark.RegistBookmarkUseCase
@@ -19,9 +16,11 @@ import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
+import com.teamfilmo.filmo.domain.model.movie.DetailMovie
+import com.teamfilmo.filmo.domain.model.movie.MovieInfo
+import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
-import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
 import com.teamfilmo.filmo.ui.report.paging.ReportPagingSource
@@ -64,7 +63,6 @@ class AllMovieReportViewModel
         private val registBookmarkUseCase: RegistBookmarkUseCase,
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
-        private val searchMovieDetailUseCase: SearchMovieDetailUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
         init {
             getMovieReports()
@@ -74,7 +72,7 @@ class AllMovieReportViewModel
     영화 상세 정보
          */
 
-        private val _movieDetailResponse = MutableStateFlow(DetailMovieResponse())
+        private val _movieDetailResponse = MutableStateFlow(DetailMovie())
         val movieDetailResponse = _movieDetailResponse.asStateFlow()
 
         /*
@@ -121,17 +119,6 @@ class AllMovieReportViewModel
             }
         }
 
-        // 영화 상세 정보
-        private fun searchMovieDetail(movieId: Int) {
-            viewModelScope.launch {
-                searchMovieDetailUseCase(movieId).collect {
-                    if (it != null) {
-                        _movieDetailResponse.value = it
-                    }
-                }
-            }
-        }
-
         // 감상문 페이징
         private fun getMovieReports() {
             viewModelScope.launch(Dispatchers.IO) {
@@ -140,7 +127,7 @@ class AllMovieReportViewModel
                         PagingConfig(
                             pageSize = 20,
                             enablePlaceholders = false,
-                            prefetchDistance = 3,
+                            prefetchDistance = 4,
                         ),
                     pagingSourceFactory = {
                         ReportPagingSource(

@@ -1,9 +1,9 @@
 package com.teamfilmo.filmo.data.source
 
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkCountResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkListResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.SaveBookmarkRequest
 
 interface BookmarkDataSource {
     suspend fun registBookmark(reportId: SaveBookmarkRequest): Result<BookmarkResponse>

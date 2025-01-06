@@ -1,9 +1,9 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
-import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
-import com.teamfilmo.filmo.data.remote.model.user.RefreshResponse
-import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
+import com.teamfilmo.filmo.data.remote.entity.user.RefreshResponse
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginRequest
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginResponse
+import com.teamfilmo.filmo.data.remote.entity.user.signup.SignUpRequest
 import kotlinx.serialization.json.JsonElement
 import retrofit2.Response
 import retrofit2.http.Body

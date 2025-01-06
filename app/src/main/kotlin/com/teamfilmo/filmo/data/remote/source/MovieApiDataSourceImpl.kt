@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.data.remote.source
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieApiResult
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieApiResult
 import com.teamfilmo.filmo.data.remote.service.MovieApiService
 import com.teamfilmo.filmo.data.source.MovieApiDataSource
 import javax.inject.Inject

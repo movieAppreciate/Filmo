@@ -33,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="USER_A"
             android:textStyle="bold"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/user_image"
@@ -60,6 +59,8 @@
             android:src="@drawable/ic_more"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/txt_time"
             app:layout_constraintTop_toTopOf="@+id/user_id" />
 
 
@@ -80,7 +81,6 @@
             android:id="@+id/txt_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"
             android:textColor="@color/gray02"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/btn_like"
@@ -92,7 +92,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="3일전"
             android:textColor="@color/gray02"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"

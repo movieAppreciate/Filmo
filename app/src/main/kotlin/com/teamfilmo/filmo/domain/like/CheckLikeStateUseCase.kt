@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.like
 
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

@@ -287,18 +287,18 @@ class BodyMovieReportFragment :
                             binding.movieDetail.apply {
                                 txtRank.text = getMovieRankInfo(it.certification.toString())
                                 txtMovieTitle.text = it.title
-                                txtMovieEngTitle.text = it.original_title
-                                txtReleaseDate.text = it.release_date
+                                txtMovieEngTitle.text = it.originalTitle
+                                txtReleaseDate.text = it.releaseDate
                                 txtGenre.text =
                                     it.genres?.joinToString(", ") {
                                         it.name.toString()
                                     }
-                                txtNation.text = it.production_companies?.first()?.origin_country
-                                txtRationing.text = it.production_companies?.joinToString(", ") { it.name.toString() }
+                                txtNation.text = it.productionCompanies?.first()?.origin_country
+                                txtRationing.text = it.productionCompanies?.joinToString(", ") { it.name.toString() }
                                 txtRunningTime.text = it.runtime.toString()
                                 txtSummary.text = it.overview.toString()
 
-                                getImage("https://image.tmdb.org/t/p/original" + it.poster_path, movieImage)
+                                getImage("https://image.tmdb.org/t/p/original" + it.posterPath, movieImage)
 
                                 val rentLogoPath =
                                     it.providers

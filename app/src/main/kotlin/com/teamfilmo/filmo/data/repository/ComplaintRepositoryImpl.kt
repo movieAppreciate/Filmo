@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.repository
 
-import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
-import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintResponse
+import com.teamfilmo.filmo.data.remote.entity.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.entity.complaint.SaveComplaintResponse
 import com.teamfilmo.filmo.data.source.ComplaintDataSource
 import com.teamfilmo.filmo.domain.repository.ComplaintRepository
 import javax.inject.Inject

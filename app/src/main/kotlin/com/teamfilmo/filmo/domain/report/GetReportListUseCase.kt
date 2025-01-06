@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.report
 
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportResponse
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

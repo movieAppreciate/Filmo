@@ -325,6 +325,7 @@ class ReplyFragment :
                     ) {
                         if (count > 0) {
                             binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
+                            binding.btnRegistReply.isClickable = true
                         } else {
                             binding.btnRegistReply.setImageResource(R.drawable.btn_regist_reply)
                             binding.btnRegistReply.isClickable = false

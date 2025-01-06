@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.bookmark
 
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.SaveBookmarkRequest
 import com.teamfilmo.filmo.domain.repository.BookmarkRepository
 import dagger.Reusable
 import javax.inject.Inject

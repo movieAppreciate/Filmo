@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
+import com.teamfilmo.filmo.data.remote.entity.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.GetFollowingListUseCase
 import com.teamfilmo.filmo.ui.follow.paging.FollowingPagingSource
@@ -15,7 +15,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 @HiltViewModel

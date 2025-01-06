@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.report
 
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportItem
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListRequest
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportItem
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportRequest
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +19,7 @@ class GetUserReportListUseCase
     ) {
         operator fun invoke(targetId: String): Flow<List<SearchReportItem>> =
             flow {
-                val result = reportRepository.searchUserReport(SearchUserReportListRequest(targetId))
+                val result = reportRepository.searchReport(SearchReportRequest(targetId = targetId))
                 result.onFailure {
                     when (it) {
                         is HttpException -> Timber.e("Network error: ${it.message}")
