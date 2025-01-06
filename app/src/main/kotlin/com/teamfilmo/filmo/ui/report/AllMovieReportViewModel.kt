@@ -24,8 +24,6 @@ import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
-import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import com.teamfilmo.filmo.ui.report.paging.ReportPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -55,8 +53,6 @@ data class AllReportBookmarkState(
 class AllMovieReportViewModel
     @Inject
     constructor(
-        private val userPreferencesRepository: UserPreferencesRepository,
-        private val getUserInfoUserCase: GetUserInfoUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val getMovieNameUseCase: GetMovieNameUseCase,
@@ -74,10 +70,9 @@ class AllMovieReportViewModel
             getMovieReports()
             getUpcomingMovieList()
         }
-
-    /*
+        /*
     영화 상세 정보
-     */
+         */
 
         private val _movieDetailResponse = MutableStateFlow(DetailMovieResponse())
         val movieDetailResponse = _movieDetailResponse.asStateFlow()
@@ -118,8 +113,6 @@ class AllMovieReportViewModel
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
-                is AllMovieReportEvent.LoadReport -> {
-                }
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
                 // 새로 고침
