@@ -2,10 +2,10 @@ package com.teamfilmo.filmo.ui.report.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
-import com.teamfilmo.filmo.data.remote.model.report.all.ReportItem
+import com.teamfilmo.filmo.data.remote.entity.movie.detail.DetailMovieRequest
 import com.teamfilmo.filmo.domain.bookmark.GetBookmarkLIstUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
+import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
@@ -51,7 +51,13 @@ class ReportPagingSource(
                     val reportList = reportListResponse?.searchReport ?: emptyList()
                     val hasNext = reportListResponse?.hasNext ?: false
 
+                    val movieNames =
+                        reportList.associate {
+                            it.reportId to getName(it.reportId)
+                        }
+
                     reportList.map { reportItem ->
+                        val likeState = checkLikeStateUseCase(reportItem.reportId, "report").first()
                         ReportItem(
                             reportId = reportItem.reportId,
                             title = reportItem.title,
@@ -63,9 +69,9 @@ class ReportPagingSource(
                             replyCount = reportItem.replyCount,
                             bookmarkCount = reportItem.bookmarkCount,
                             isBookmark = bookmarkList?.any { it.reportId == reportItem.reportId },
-                            isLiked = checkLikeStateUseCase(reportItem.reportId, "report").first()!!.isLike,
-                            likeId = checkLikeStateUseCase(reportItem.reportId, "report").first()?.likeId,
-                            movieName = getName(reportItem.reportId),
+                            isLiked = likeState?.isLike ?: false,
+                            likeId = likeState?.likeId,
+                            movieName = movieNames[reportItem.reportId] ?: "",
                         )
                     } to hasNext
                 }.first()
