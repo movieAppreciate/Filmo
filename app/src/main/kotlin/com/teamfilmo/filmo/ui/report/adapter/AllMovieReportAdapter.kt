@@ -42,7 +42,10 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                 override fun areContentsTheSame(
                     oldItem: ReportItem,
                     newItem: ReportItem,
-                ): Boolean = oldItem == newItem
+                ): Boolean =
+                    oldItem.reportId == newItem.reportId &&
+                        oldItem.likeCount == newItem.likeCount &&
+                        oldItem.isLiked == newItem.isLiked // 상세 내용 비교
             }
     }
 
