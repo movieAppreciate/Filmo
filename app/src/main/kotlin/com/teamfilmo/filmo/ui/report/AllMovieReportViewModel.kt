@@ -21,6 +21,7 @@ import com.teamfilmo.filmo.domain.model.movie.MovieInfo
 import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import com.teamfilmo.filmo.domain.movie.GetUpcomingMovieUseCase
 import com.teamfilmo.filmo.domain.movie.detail.GetMovieNameUseCase
+import com.teamfilmo.filmo.domain.reply.GetReplyUseCase
 import com.teamfilmo.filmo.domain.report.GetReportListUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
 import com.teamfilmo.filmo.ui.report.paging.ReportPagingSource
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class AllReportLikeState(
     val reportId: String = "",
@@ -48,10 +50,20 @@ data class AllReportBookmarkState(
     var isBookmarked: Boolean = false,
 )
 
+data class ReportState(
+    val reportId: String = "",
+    val reportTitle: String = "",
+    val reportContent: String = "",
+    val isLiked: Boolean = false,
+    val likeCount: Int = 0,
+    val replyCount: Int = 0,
+)
+
 @HiltViewModel
 class AllMovieReportViewModel
     @Inject
     constructor(
+        private val getReplyUseCase: GetReplyUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val getReportUseCase: GetReportUseCase,
         private val getMovieNameUseCase: GetMovieNameUseCase,
@@ -68,6 +80,19 @@ class AllMovieReportViewModel
             getMovieReports()
             getUpcomingMovieList()
         }
+
+        // 본문 페이지에서 업데이트한 감상 정보
+        private val _updatedReportStateInfo = MutableStateFlow(ReportState())
+        val updatedReportStateInfo = _updatedReportStateInfo.asStateFlow()
+
+        private val _updatedReportId = MutableStateFlow<String?>(null)
+        val updatedReportId = _updatedReportId.asStateFlow()
+
+        // 최근에 클릭된 감상문
+        fun setClickedReportId(updatedReportId: String) {
+            _updatedReportId.value = updatedReportId
+        }
+
         /*
     영화 상세 정보
          */
@@ -111,11 +136,56 @@ class AllMovieReportViewModel
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
+                is AllMovieReportEvent.UpdateReport -> updateReport(event.reportId)
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
                 // 새로 고침
                 is AllMovieReportEvent.RefreshReport -> getMovieReports()
                 else -> {}
+            }
+        }
+
+        // 본문에서 업데이트한 감상문 정보 반영하기
+        private fun updateReport(reportId: String) {
+            viewModelScope.launch {
+                checkLikeStateUseCase(reportId, "report").collect {
+                    if (it != null) {
+                        _updatedReportStateInfo.value =
+                            _updatedReportStateInfo.value.copy(
+                                reportId = reportId,
+                                isLiked = it.isLike,
+                            )
+                    }
+                }
+
+                countLikeUseCase(reportId).collect {
+                    if (it != null) {
+                        _updatedReportStateInfo.value =
+                            _updatedReportStateInfo.value.copy(
+                                reportId = reportId,
+                                likeCount = it.countLike,
+                            )
+                    }
+                }
+                getReplyUseCase(reportId).collect {
+                    if (it != null) {
+                        Timber.d("댓글 사이즈 :${it.size}")
+                        _updatedReportStateInfo.value =
+                            _updatedReportStateInfo.value.copy(
+                                reportId = reportId,
+                                replyCount = it.size,
+                            )
+                    }
+                }
+                getReportUseCase(reportId).collect {
+                    if (it != null) {
+                        _updatedReportStateInfo.value =
+                            _updatedReportStateInfo.value.copy(
+                                reportContent = it.content ?: "",
+                                reportTitle = it.title ?: "",
+                            )
+                    }
+                }
             }
         }
 
@@ -220,7 +290,6 @@ class AllMovieReportViewModel
                         return@collect
                     } else {
                         _saveLikeResponse.value = it
-                        updateLikeCount(reportId, true)
 
                         val updatedLikeState =
                             _checkLikeResponse.value.copy(
@@ -229,16 +298,23 @@ class AllMovieReportViewModel
                             )
 
                         _checkLikeResponse.value = updatedLikeState
-                        sendEffect(AllMovieReportEffect.RegistLike(reportId))
+                    }
+                }
+                countLikeUseCase(reportId).collect {
+                    if (it != null) {
+                        _likeCount.value = it.countLike
+                        sendEffect(AllMovieReportEffect.RegistLike(reportId, true, _likeCount.value))
                     }
                 }
             }
         }
 
-/*
-좋아요 취소
- */
-        private fun cancelLike(likeId: String) {
+// 좋아요 취소
+
+        private fun cancelLike(
+            reportId: String,
+            likeId: String,
+        ) {
             viewModelScope.launch {
                 if (_checkLikeResponse.value.likeId == null) return@launch
                 cancelLikeUseCase(likeId).collect {
@@ -249,8 +325,12 @@ class AllMovieReportViewModel
                             isLike = false,
                         )
                     _checkLikeResponse.value = updatedLikeState
-                    updateLikeCount(reportId = _saveLikeResponse.value.targetId, false)
-                    sendEffect(AllMovieReportEffect.CancelLike(_saveLikeResponse.value.targetId))
+                }
+                countLikeUseCase(reportId).collect {
+                    if (it != null) {
+                        _likeCount.value = it.countLike
+                        sendEffect(AllMovieReportEffect.CancelLike(reportId, false, _likeCount.value))
+                    }
                 }
             }
         }
@@ -265,7 +345,7 @@ class AllMovieReportViewModel
                     if (it != null) {
                         _checkLikeResponse.value = it
                         if (it.isLike) {
-                            if (it.likeId != null) cancelLike(it.likeId)
+                            if (it.likeId != null) cancelLike(targetId, it.likeId)
                         } else {
                             saveLike(targetId)
                         }
@@ -277,13 +357,12 @@ class AllMovieReportViewModel
         // 좋아요 수 업데이트
         private fun updateLikeCount(
             reportId: String,
-            isLiked: Boolean,
         ) {
             viewModelScope.launch {
                 countLikeUseCase(reportId).collect {
                     if (it != null) {
                         _likeCount.value = it.countLike
-                        sendEffect(AllMovieReportEffect.CountLike(reportId, _likeCount.value))
+                        sendEffect(AllMovieReportEffect.CancelLike(reportId, false, _likeCount.value))
                     }
                 }
             }

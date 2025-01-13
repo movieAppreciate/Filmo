@@ -55,7 +55,7 @@ class MainActivity :
         // 감상문 작성 과정에서 바텀바가 보이지 않도록 하기
         navController.addOnDestinationChangedListener { _, desitnation, _ ->
             binding.navBar.visibility =
-                if (desitnation.id == R.id.movieSelectFragment) {
+                if (desitnation.id == R.id.writeReportFragment) {
                     View.GONE
                 } else {
                     View.VISIBLE

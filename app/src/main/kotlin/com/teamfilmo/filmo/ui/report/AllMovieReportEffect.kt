@@ -7,11 +7,13 @@ sealed interface AllMovieReportEffect : BaseEffect {
     data class RegistLike(
         val reportId: String,
         val isLiked: Boolean = true,
+        val likeCount: Int,
     ) : AllMovieReportEffect
 
     data class CancelLike(
         val reportId: String,
         val isLiked: Boolean = false,
+        val likeCount: Int,
     ) : AllMovieReportEffect
 
     data class CountLike(

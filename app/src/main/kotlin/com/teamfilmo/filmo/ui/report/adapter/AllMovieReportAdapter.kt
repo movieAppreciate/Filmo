@@ -16,12 +16,18 @@ import java.util.Locale
 import kotlin.math.abs
 
 sealed class ReportPayload {
-    data class LikePayload(
-        val isLiked: Boolean,
+    data class ModifyReportPayLoad(
+        val title: String,
+        val content: String,
     ) : ReportPayload()
 
-    data class LikeCountPayload(
+    data class LikePayload(
+        val isLiked: Boolean,
         val likeCount: Int,
+    ) : ReportPayload()
+
+    data class ReplyCountPayLoad(
+        val replyCount: Int,
     ) : ReportPayload()
 }
 
@@ -45,7 +51,9 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                 ): Boolean =
                     oldItem.reportId == newItem.reportId &&
                         oldItem.likeCount == newItem.likeCount &&
-                        oldItem.isLiked == newItem.isLiked // 상세 내용 비교
+                        oldItem.isLiked == newItem.isLiked &&
+                        // 상세 내용 비교
+                        oldItem.replyCount == newItem.replyCount
             }
     }
 
@@ -58,25 +66,42 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
     fun updateLikeState(
         reportId: String,
         isLiked: Boolean,
-    ) {
-        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
-        if (position != -1) {
-            getItem(position)?.let {
-                it.isLiked = isLiked
-                notifyItemChanged(position, ReportPayload.LikePayload(isLiked))
-            }
-        }
-    }
-
-    fun updateLikeCount(
-        reportId: String,
         likeCount: Int,
     ) {
         val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
             getItem(position)?.let {
+                it.isLiked = isLiked
                 it.likeCount = likeCount
-                notifyItemChanged(position, ReportPayload.LikeCountPayload(likeCount))
+                notifyItemChanged(position, ReportPayload.LikePayload(isLiked, likeCount))
+            }
+        }
+    }
+
+    fun updateReplyCount(
+        reportId: String,
+        replyCount: Int,
+    ) {
+        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
+        if (position != -1) {
+            getItem(position)?.let {
+                it.replyCount = replyCount
+                notifyItemChanged(position, ReportPayload.ReplyCountPayLoad(replyCount))
+            }
+        }
+    }
+
+    fun updateModifyReport(
+        reportId: String,
+        title: String,
+        content: String,
+    ) {
+        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
+        if (position != -1) {
+            getItem(position)?.let {
+                it.title = title
+                it.content = content
+                notifyItemChanged(position, ReportPayload.ModifyReportPayLoad(title, content))
             }
         }
     }
@@ -117,13 +142,19 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                 when (val payload = it as ReportPayload) {
                     is ReportPayload.LikePayload -> {
                         getItem(position)?.isLiked = payload.isLiked
-                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
-                    }
-
-                    is ReportPayload.LikeCountPayload -> {
                         getItem(position)?.likeCount = payload.likeCount
+                        holder.bindLikeButton(if (payload.isLiked) R.drawable.ic_like_selected else R.drawable.ic_like_unselected)
                         holder.bindLikeCount(payload.likeCount)
                     }
+
+                    is ReportPayload.ReplyCountPayLoad -> {
+                        getItem(position)?.replyCount = payload.replyCount
+                        holder.bindReplyCount(payload.replyCount)
+                    }
+                    is ReportPayload.ModifyReportPayLoad -> {
+                        holder.bindModifyReport(payload.title, payload.content)
+                    }
+                    else -> {}
                 }
             }
         }
@@ -203,6 +234,18 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             binding.tvMovie.text = item.movieName
 
             bindMovieImage(item.imageUrl.toString())
+        }
+
+        fun bindModifyReport(
+            title: String,
+            content: String,
+        ) {
+            binding.tvTitle.text = title
+            binding.tvContent.text = content
+        }
+
+        fun bindReplyCount(count: Int) {
+            binding.tvReplyCount.text = count.toString()
         }
 
         fun bindMovieImage(imageUrl: String) {

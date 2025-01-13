@@ -5,13 +5,13 @@ package com.teamfilmo.filmo.domain.model.report.all
  */
 data class ReportItem(
     val reportId: String,
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val createDate: String,
     val imageUrl: String?,
     val nickname: String?,
     var likeCount: Int,
-    val replyCount: Int,
+    var replyCount: Int,
     val bookmarkCount: Int,
     var isBookmark: Boolean? = null,
     var isLiked: Boolean,

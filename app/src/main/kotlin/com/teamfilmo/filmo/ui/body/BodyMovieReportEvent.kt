@@ -24,9 +24,5 @@ sealed class BodyMovieReportEvent : BaseEvent() {
         val reportId: String,
     ) : BodyMovieReportEvent()
 
-    data class ShowMovieInfo(
-        val movieId: Int,
-    ) : BodyMovieReportEvent()
-
     data object ClickMoreButton : BodyMovieReportEvent()
 }

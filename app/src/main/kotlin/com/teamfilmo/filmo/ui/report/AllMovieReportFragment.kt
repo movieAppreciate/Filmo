@@ -2,12 +2,10 @@ package com.teamfilmo.filmo.ui.report
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
@@ -23,7 +21,9 @@ class AllMovieReportFragment :
     BaseFragment<FragmentAllMovieReportBinding, AllMovieReportViewModel, AllMovieReportEffect, AllMovieReportEvent>(
         FragmentAllMovieReportBinding::inflate,
     ) {
-    override val viewModel: AllMovieReportViewModel by viewModels()
+    override val viewModel: AllMovieReportViewModel by activityViewModels()
+
+    private var clickedReportId: String? = null
     private val navController by lazy { findNavController() }
     private val allMovieReportAdapter by lazy {
         AllMovieReportAdapter()
@@ -31,25 +31,29 @@ class AllMovieReportFragment :
     val movieInfoAdapter by lazy {
         MovieInfoAdapter()
     }
+    val args: AllMovieReportFragmentArgs by navArgs()
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            viewModel.updatedReportId.collectLatest {
+                if (it != null) {
+                    viewModel.handleEvent(AllMovieReportEvent.UpdateReport(it))
+                }
+            }
+        }
+    }
 
     override fun handleEffect(effect: AllMovieReportEffect) {
         when (effect) {
             is AllMovieReportEffect.RegistLike -> {
-                allMovieReportAdapter.updateLikeState(effect.reportId, true)
+                allMovieReportAdapter.updateLikeState(effect.reportId, true, effect.likeCount)
             }
 
             is AllMovieReportEffect.CancelLike -> {
-                allMovieReportAdapter.updateLikeState(effect.reportId, false)
+                allMovieReportAdapter.updateLikeState(effect.reportId, false, effect.likeCount)
             }
 
-            is AllMovieReportEffect.CountLike ->
-                lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        viewModel.likeState.collect {
-                            allMovieReportAdapter.updateLikeCount(effect.reportId, effect.likeCount)
-                        }
-                    }
-                }
             else -> {}
         }
     }
@@ -57,22 +61,29 @@ class AllMovieReportFragment :
     override fun onBindLayout() {
         binding.layoutShimmer.startShimmer()
 
-        // todo : 뒤로 가기 시 앱 종료 확인 로직 추가
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingData.collectLatest {
-                binding.layoutShimmer.stopShimmer()
-                binding.layoutShimmer.visibility = View.GONE
-                allMovieReportAdapter.submitData(pagingData = it)
+            launch {
+                viewModel.updatedReportStateInfo.collectLatest {
+                    allMovieReportAdapter.updateLikeState(it.reportId, it.isLiked, it.likeCount)
+                    allMovieReportAdapter.updateReplyCount(it.reportId, it.replyCount)
+                    allMovieReportAdapter.updateModifyReport(it.reportId, it.reportTitle, it.reportContent)
+                }
             }
-        }
+            launch {
+                viewModel.pagingData.collectLatest {
+                    binding.layoutShimmer.stopShimmer()
+                    binding.layoutShimmer.visibility = View.GONE
+                    allMovieReportAdapter.submitData(pagingData = it)
+                }
+            }
 
-        // 로딩 추가
-        // moviePosterAdapter의 loadStateFlow 속성에서 값을 수집한다.
-        // 데이터의 현재 로드상태(로드 중, 성공적으로 로드되었는지, 오류가 발생했는지)를 내보낸다.
-        // collectLatest : 흐름에서 방출된 최신값을 수집한다.
-        // 가장 최근 상태만 중요한 UI 업데이트에서 유용하다.
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            // 로딩 추가
+            // moviePosterAdapter의 loadStateFlow 속성에서 값을 수집한다.
+            // 데이터의 현재 로드상태(로드 중, 성공적으로 로드되었는지, 오류가 발생했는지)를 내보낸다.
+            // collectLatest : 흐름에서 방출된 최신값을 수집한다.
+            // 가장 최근 상태만 중요한 UI 업데이트에서 유용하다.
+
+            launch {
                 allMovieReportAdapter.loadStateFlow.collectLatest {
                     when (it.refresh) {
                         is LoadState.Loading -> {
@@ -97,27 +108,24 @@ class AllMovieReportFragment :
             }
         }
 
-        childFragmentManager.commit {
-            setReorderingAllowed(true)
-
-            with(binding) {
-                allMovieReportRecyclerview.adapter = allMovieReportAdapter
-                movieRecyclerview.adapter = movieInfoAdapter
-                // 새로고침
-                swiperefresh.setOnRefreshListener {
-                    viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
-                    swiperefresh.isRefreshing = false
-                }
+        with(binding) {
+            allMovieReportRecyclerview.adapter = allMovieReportAdapter
+            movieRecyclerview.adapter = movieInfoAdapter
+            // 새로고침
+            swiperefresh.setOnRefreshListener {
+                viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
+                swiperefresh.isRefreshing = false
             }
+        }
 
-            lifecycleScope.launch {
-                viewModel.upcomingMovieList.collect { movieInfoList ->
-                    binding.movieRecyclerview.apply {
-                        movieInfoAdapter.setMovieInfoList(movieInfoList)
-                    }
+        lifecycleScope.launch {
+            viewModel.upcomingMovieList.collect { movieInfoList ->
+                binding.movieRecyclerview.apply {
+                    movieInfoAdapter.setMovieInfoList(movieInfoList)
                 }
             }
         }
+
         movieInfoAdapter.itemClick =
             object : MovieInfoAdapter.ItemClick {
                 val movie = movieInfoAdapter.movieList
@@ -131,6 +139,8 @@ class AllMovieReportFragment :
         allMovieReportAdapter.itemClick =
             object : AllMovieReportAdapter.ItemClick {
                 override fun onClick(report: ReportItem) {
+                    viewModel.setClickedReportId(report.reportId)
+                    clickedReportId = report.reportId
                     navigateToBodyReport(report.reportId)
                 }
 
