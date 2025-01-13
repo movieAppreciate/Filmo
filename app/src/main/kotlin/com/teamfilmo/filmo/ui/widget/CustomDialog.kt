@@ -11,7 +11,9 @@ import androidx.fragment.app.DialogFragment
 import com.teamfilmo.filmo.databinding.CustomDialogBinding
 
 interface ItemClickListener {
-    fun onClick()
+    fun onButton2Click()
+
+    fun onButton1Click()
 }
 
 class CustomDialog(
@@ -24,7 +26,11 @@ class CustomDialog(
     private lateinit var binding: CustomDialogBinding
     private val message = dialogMessage
 
-    fun setItemClickListener(listener: ItemClickListener) {
+    fun setButton2ClickListener(listener: ItemClickListener) {
+        this.itemClickListener = listener
+    }
+
+    fun setButton1ClickListener(listener: ItemClickListener) {
         this.itemClickListener = listener
     }
 
@@ -49,11 +55,12 @@ class CustomDialog(
             button1.text = button1Text
             button2.text = button2Text
             button1.setOnClickListener {
+                itemClickListener.onButton1Click()
                 dismiss()
             }
             button2.setOnClickListener {
                 // 인터페이스르 통해 다이얼로그를 호출한 액티비티나 프래그먼트에 값을 전달한다.
-                itemClickListener.onClick()
+                itemClickListener.onButton2Click()
                 dismiss()
             }
             binding.txtDialogMessage.text = message

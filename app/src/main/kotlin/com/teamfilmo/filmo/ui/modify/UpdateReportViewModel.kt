@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.ui.modify
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
@@ -12,18 +13,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @HiltViewModel
-class ModifyReportViewModel
+class UpdateReportViewModel
     @Inject
     constructor(
+        private val savedStateHandle: SavedStateHandle,
         private val updateReportUseCase: UpdateReportUseCase,
         private val getReportUseCase: GetReportUseCase,
-    ) : BaseViewModel<ModifyReportEffect, ModifyReportEvent>() {
-        override fun handleEvent(event: ModifyReportEvent) {
-            super.handleEvent(event)
+    ) : BaseViewModel<UpdateReportEffect, UpdateReportEvent>() {
+        companion object {
+            private const val KEY_REPORT_ID = "reportId" // args와 동일한 키 사용!
         }
+
+        init {
+            getReport()
+        }
+
+        val reportId: String? = savedStateHandle[KEY_REPORT_ID]
 
         /*
 개별 감상문 정보
@@ -49,8 +56,17 @@ class ModifyReportViewModel
             )
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
-        fun getReport(reportId: String) {
+        override fun handleEvent(event: UpdateReportEvent) {
+            when (event) {
+                is UpdateReportEvent.UpdateReport -> {
+                    updateReport(event.request)
+                }
+            }
+        }
+
+        private fun getReport() {
             viewModelScope.launch {
+                if (reportId == null) return@launch
                 getReportUseCase(reportId).collect {
                     if (it != null) {
                         _getReportResponse.value = it
@@ -59,10 +75,12 @@ class ModifyReportViewModel
             }
         }
 
-        fun updateReport(request: UpdateReportRequest) {
+        private fun updateReport(request: UpdateReportRequest) {
             viewModelScope.launch {
                 updateReportUseCase(request).collect {
-                    Timber.d("updateReportUseCase : $it")
+                    if (it != null) {
+                        sendEffect(UpdateReportEffect.UpdateSuccess)
+                    }
                 }
             }
         }
