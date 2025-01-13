@@ -1,19 +1,17 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchAllReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportRequest
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchReportResponse
-import com.teamfilmo.filmo.data.remote.model.report.search.SearchUserReportListRequest
-import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
+import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportResponse
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchAllReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportResponse
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 /**
  * 감상문
@@ -51,14 +49,6 @@ import retrofit2.http.Query
  * 감상문 삭제
  */
 interface ReportService {
-    /*
-    유저 감상문
-     */
-    @POST("/report/searchReport")
-    suspend fun searchUserReport(
-        @Body body: SearchUserReportListRequest,
-    ): Result<SearchReportResponse>
-
     /**
      * 감상문 등록
      */
@@ -96,18 +86,6 @@ interface ReportService {
          */
         @Body requestAllReport: SearchReportRequest,
     ): Result<SearchReportResponse>
-
-    /**
-     * 다른 유저의 감상문 검색
-     */
-    @GET("/report/otherReportOfUser")
-    suspend fun otherReportOfUser(
-        /**
-         * 유저 아이디
-         */
-        @Query("userId")
-        userId: String,
-    ): Result<String>
 
     /**
      * 감상문 조회

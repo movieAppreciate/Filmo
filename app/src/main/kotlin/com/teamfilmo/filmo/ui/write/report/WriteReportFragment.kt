@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,9 +16,11 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
-import com.teamfilmo.filmo.data.remote.model.report.regist.RegistReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.databinding.FragmentWriteReportBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
+import com.teamfilmo.filmo.ui.widget.CustomDialog
+import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -142,23 +143,31 @@ class WriteReportFragment :
         }
 
         binding.btnBack.setOnClickListener {
-            showConfirmationDialog()
+            showModifyMovieDialog()
         }
     }
 
-    private fun showConfirmationDialog() {
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        dialogBuilder.setTitle("영화 변경")
-        dialogBuilder.setMessage("감상문을 작성할 영화를 변경하시겠습니까?")
-        dialogBuilder.setPositiveButton("네!") { _, _ ->
-            navController.navigate(R.id.movieSelectFragment)
-        }
-        dialogBuilder.setNegativeButton("아니요!") { dialog, _ ->
-            dialog.dismiss()
-        }
+    // 영화 변경  다이얼로그
+    private fun showModifyMovieDialog() {
+        val dialog =
+            context?.let {
+                CustomDialog(
+                    button2Text = "영화 변경",
+                    dialogMessage = "감상문을 작성할 영화를 변경할까요?",
+                )
+            }
+        dialog?.show(parentFragmentManager, "WriteReportFragment")
+        dialog?.setButton2ClickListener(
+            object : ItemClickListener {
+                override fun onButton2Click() {
+                    navController.navigate(R.id.movieSelectFragment)
+                }
 
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
+                override fun onButton1Click() {
+                    dialog.dismiss()
+                }
+            },
+        )
     }
 
     override fun handleEffect(effect: WriteReportEffect) {

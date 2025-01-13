@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieApiResult
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieApiResult
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

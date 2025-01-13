@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.follow.MutualFollowUserInfo
+import com.teamfilmo.filmo.data.remote.entity.follow.MutualFollowUserInfo
 import com.teamfilmo.filmo.domain.follow.CheckIsFollowUseCase
 import com.teamfilmo.filmo.domain.follow.GetFollowerListUseCase
 import com.teamfilmo.filmo.ui.follow.paging.FollowerPagingSource

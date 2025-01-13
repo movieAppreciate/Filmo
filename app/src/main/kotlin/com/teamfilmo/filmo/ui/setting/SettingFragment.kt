@@ -41,11 +41,14 @@ class SettingFragment :
                 )
             }
         dialog?.show(parentFragmentManager, "UserDeleteDialog")
-        dialog?.setItemClickListener(
+        dialog?.setButton2ClickListener(
             object : ItemClickListener {
-                override fun onClick() {
+                override fun onButton2Click() {
                     // todo : 감상문 신고 뷰모델 로직 호출
                     viewModel.handleEvent(SettingEvent.QuitUser)
+                }
+
+                override fun onButton1Click() {
                 }
             },
         )

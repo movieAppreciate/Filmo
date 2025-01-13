@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {

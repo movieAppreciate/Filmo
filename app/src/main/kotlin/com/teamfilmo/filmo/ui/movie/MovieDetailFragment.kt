@@ -21,13 +21,12 @@ class MovieDetailFragment :
     ) {
     override val viewModel: MovieDetailViewModel by viewModels()
     private val navController by lazy { findNavController() }
+    val args: MovieDetailFragmentArgs by navArgs()
 
     override fun onBindLayout() {
         super.onBindLayout()
-
         binding.movieDetailShimmer.startShimmer()
 
-        val args: MovieDetailFragmentArgs by navArgs()
         lifecycleScope.launch {
             viewModel.searchMovieDetail(args.movieId)
         }
@@ -60,20 +59,20 @@ class MovieDetailFragment :
                             binding.movieDetailShimmer.visibility = View.GONE
                             binding.txtRank.text = getMovieRankInfo(this.certification.toString())
                             binding.txtMovieTitle.text = this.title
-                            binding.txtMovieEngTitle.text = this.original_title
-                            binding.txtReleaseDate.text = this.release_date
+                            binding.txtMovieEngTitle.text = this.originalTitle
+                            binding.txtReleaseDate.text = this.releaseDate
                             binding.txtSummary.text = this.overview
                             binding.txtGenre.text =
                                 this.genres?.joinToString(", ") {
                                     it.name.toString()
                                 }
-                            binding.txtNation.text = this.production_companies?.first()?.origin_country
-                            binding.txtRationing.text = this.production_companies?.joinToString(", ") { it.name.toString() }
+                            binding.txtNation.text = this.productionCompanies?.first()?.origin_country
+                            binding.txtRationing.text = this.productionCompanies?.joinToString(", ") { it.name.toString() }
                             binding.txtRunningTime.text = this.runtime.toString()
                             Glide
                                 .with(binding.root.context)
                                 .asBitmap()
-                                .load("https://image.tmdb.org/t/p/original" + this.poster_path)
+                                .load("https://image.tmdb.org/t/p/original" + this.posterPath)
                                 .into(binding.movieImage)
                         }
                         binding.readMore.setOnClickListener {

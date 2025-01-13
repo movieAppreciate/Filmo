@@ -1,11 +1,11 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.data.remote.model.reply.DeleteReplyResponse
-import com.teamfilmo.filmo.data.remote.model.reply.get.GetReplyResponseItem
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.save.SaveReplyResponse
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.DeleteReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.get.GetReplyResponseItem
+import com.teamfilmo.filmo.data.remote.entity.reply.save.SaveReplyRequest
+import com.teamfilmo.filmo.data.remote.entity.reply.save.SaveReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyRequest
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyResponse
 
 interface ReplyRepository {
     suspend fun saveReply(request: SaveReplyRequest): Result<SaveReplyResponse>

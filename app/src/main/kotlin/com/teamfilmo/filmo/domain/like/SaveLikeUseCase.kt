@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.like
 
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeResponse
 import com.teamfilmo.filmo.domain.repository.LikeRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.ui.write.select.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.teamfilmo.filmo.data.remote.model.movie.MovieContentResult
-import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieContentResult
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieRequest
 import com.teamfilmo.filmo.domain.movie.SearchMovieListUseCase
 import kotlinx.coroutines.flow.first
 

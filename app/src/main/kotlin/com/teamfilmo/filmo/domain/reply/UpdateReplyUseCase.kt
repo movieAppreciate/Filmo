@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.domain.reply
 
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyRequest
-import com.teamfilmo.filmo.data.remote.model.reply.update.UpdateReplyResponse
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyRequest
+import com.teamfilmo.filmo.data.remote.entity.reply.update.UpdateReplyResponse
 import com.teamfilmo.filmo.domain.repository.ReplyRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

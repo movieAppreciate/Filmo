@@ -1,11 +1,11 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkCountResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkListResponse
-import com.teamfilmo.filmo.data.remote.model.bookmark.SaveBookmarkRequest
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkCountResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkListResponse
+import com.teamfilmo.filmo.data.remote.entity.bookmark.SaveBookmarkRequest
 
 interface BookmarkRepository {
-    suspend fun registBookmark(reportId: SaveBookmarkRequest): Result<com.teamfilmo.filmo.data.remote.model.bookmark.BookmarkResponse>
+    suspend fun registBookmark(reportId: SaveBookmarkRequest): Result<com.teamfilmo.filmo.data.remote.entity.bookmark.BookmarkResponse>
 
     suspend fun deleteBookmark(bookmarkId: Long): Result<String>
 

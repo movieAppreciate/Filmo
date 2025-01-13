@@ -2,7 +2,7 @@ package com.teamfilmo.filmo.ui.movie
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
+import com.teamfilmo.filmo.domain.model.movie.DetailMovie
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class MovieDetailViewModel
          */
         private val _movieDetailInfo =
             MutableStateFlow(
-                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ""),
+                DetailMovie(null, null, null, null, null, null, null, null, null, null),
             )
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()

@@ -1,9 +1,9 @@
 package com.teamfilmo.filmo.domain.repository
 
-import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
-import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
-import com.teamfilmo.filmo.data.remote.model.user.SignUpRequest
-import com.teamfilmo.filmo.data.remote.model.user.SignUpResult
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginRequest
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginResponse
+import com.teamfilmo.filmo.data.remote.entity.user.signup.SignUpRequest
+import com.teamfilmo.filmo.data.remote.entity.user.signup.SignUpResult
 
 interface AuthRepository {
     suspend fun signUp(

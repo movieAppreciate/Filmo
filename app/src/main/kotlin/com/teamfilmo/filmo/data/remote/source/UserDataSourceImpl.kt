@@ -1,7 +1,7 @@
 package com.teamfilmo.filmo.data.remote.source
 
-import com.teamfilmo.filmo.data.remote.model.user.DeleteUserResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserResponse
+import com.teamfilmo.filmo.data.remote.entity.user.delete.DeleteUserResponse
+import com.teamfilmo.filmo.data.remote.entity.user.info.UserResponse
 import com.teamfilmo.filmo.data.remote.service.UserService
 import com.teamfilmo.filmo.data.source.UserDataSource
 import javax.inject.Inject

@@ -39,8 +39,11 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
+    private lateinit var credentialManager: CredentialManager
 
     override fun onBindLayout() {
+        credentialManager = CredentialManager.create(this)
+
         // 상태바 색깔 처리해주기
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -151,8 +154,6 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
     private fun onGoogleLogin() {
         lifecycleScope.launch {
-            var credentialManager = CredentialManager.create(this@AuthActivity)
-
             val credentialOption =
                 GetGoogleIdOption
                     .Builder()

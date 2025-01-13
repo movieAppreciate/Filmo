@@ -1,6 +1,5 @@
 package com.teamfilmo.filmo.ui.write.select
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -14,7 +13,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentSelectMovieBinding
-import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -111,8 +109,8 @@ class MovieSelectFragment :
 
         // 여기서 뒤로 가기를 하면 allmoviereportfragment가 새로굄된다.
         binding.btnBack.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            startActivity(intent)
+            navController.popBackStack()
+            // navController.navigate(R.id.allMovieReportFragment)
         }
 
         binding.movieSearchView.setOnQueryTextListener(

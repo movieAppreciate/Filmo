@@ -1,10 +1,10 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.follow.FollowerListResponse
-import com.teamfilmo.filmo.data.remote.model.follow.FollowingListResponse
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
-import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
-import com.teamfilmo.filmo.data.remote.model.follow.save.SaveFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.FollowerListResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.FollowingListResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.check.CheckIsFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.count.FollowCountResponse
+import com.teamfilmo.filmo.data.remote.entity.follow.save.SaveFollowResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST

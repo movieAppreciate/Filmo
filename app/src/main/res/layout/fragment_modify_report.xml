@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
+    android:padding="10dp"
     android:paddingHorizontal="20dp"
     android:layout_width="match_parent"
-    android:scrollbars="none"
     android:layout_height="match_parent">
 
 
@@ -18,8 +18,8 @@
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:background="@color/transparent"
             android:src="@drawable/ic_back"
@@ -27,7 +27,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_report_modify"
+            android:gravity="center"
+            android:id="@+id/btn_update"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

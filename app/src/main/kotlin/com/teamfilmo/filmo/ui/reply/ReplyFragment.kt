@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -57,10 +56,14 @@ class ReplyFragment :
                 )
             }
 
-        dialog?.setItemClickListener(
+        dialog?.setButton2ClickListener(
             object : ItemClickListener {
-                override fun onClick() {
+                override fun onButton2Click() {
                     viewModel.handleEvent(ReplyEvent.SaveBlock(userId))
+                }
+
+                override fun onButton1Click() {
+                    dialog.dismiss()
                 }
             },
         )
@@ -79,10 +82,13 @@ class ReplyFragment :
                 )
             }
 
-        dialog?.setItemClickListener(
+        dialog?.setButton2ClickListener(
             object : ItemClickListener {
-                override fun onClick() {
+                override fun onButton2Click() {
                     viewModel.handleEvent(ReplyEvent.SaveComplaint(replyId))
+                }
+
+                override fun onButton1Click() {
                 }
             },
         )
@@ -100,12 +106,15 @@ class ReplyFragment :
                     dialogMessage = resources.getString(R.string.txt_delete_reply),
                 )
             }
-        dialog?.setItemClickListener(
+        dialog?.setButton2ClickListener(
             object : ItemClickListener {
-                override fun onClick() {
+                override fun onButton2Click() {
                     viewModel.handleEvent(ReplyEvent.DeleteReply(replyId, reportId))
                     Toast.makeText(context, "댓글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                     setupKeyboardDismiss()
+                }
+
+                override fun onButton1Click() {
                 }
             },
         )
@@ -125,12 +134,15 @@ class ReplyFragment :
                     dialogMessage = resources.getString(R.string.txt_delete_sub_reply),
                 )
             }
-        dialog?.setItemClickListener(
+        dialog?.setButton2ClickListener(
             object : ItemClickListener {
-                override fun onClick() {
+                override fun onButton2Click() {
                     viewModel.handleEvent(ReplyEvent.DeleteSubReply(replyId, reportId))
                     Toast.makeText(context, "답글을 삭제했어요!", Toast.LENGTH_SHORT).show()
                     hideKeyboard()
+                }
+
+                override fun onButton1Click() {
                 }
             },
         )
@@ -175,7 +187,7 @@ class ReplyFragment :
                         isSubReplyMode = false
                         binding.editReply.hint = "댓글 달기"
                     } else {
-                        parentFragmentManager.popBackStack()
+//                        navController.popBackStack()
                     }
                 }
             },
@@ -188,7 +200,9 @@ class ReplyFragment :
                 isSubReplyMode = false
                 binding.editReply.hint = "댓글 달기"
             } else {
-                navController.popBackStack()
+                // popBackStack  1. DestinationId : 이동하려는 화면, 2. inclusive : 이동하려는 화면까지 제거된다.
+                // 이렇게 할 경우 업데이트된 댓글 수가 반영되지 않음
+                navController.popBackStack(R.id.bodyMovieReportFragment, false)
             }
         }
 
@@ -325,6 +339,7 @@ class ReplyFragment :
                     ) {
                         if (count > 0) {
                             binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
+                            binding.btnRegistReply.isClickable = true
                         } else {
                             binding.btnRegistReply.setImageResource(R.drawable.btn_regist_reply)
                             binding.btnRegistReply.isClickable = false

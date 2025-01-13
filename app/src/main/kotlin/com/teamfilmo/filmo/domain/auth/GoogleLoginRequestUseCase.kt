@@ -4,8 +4,8 @@ import androidx.credentials.Credential
 import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.teamfilmo.filmo.data.remote.model.user.LoginRequest
-import com.teamfilmo.filmo.data.remote.model.user.LoginResponse
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginRequest
+import com.teamfilmo.filmo.data.remote.entity.user.login.LoginResponse
 import com.teamfilmo.filmo.domain.repository.AuthRepository
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.movie
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieResult
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieResult
 import com.teamfilmo.filmo.domain.repository.MovieApiRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

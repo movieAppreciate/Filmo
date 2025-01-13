@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.movie
 
-import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
+import com.teamfilmo.filmo.data.remote.entity.movie.ThumbnailRequest
 import com.teamfilmo.filmo.domain.repository.MovieRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

@@ -2,9 +2,9 @@ package com.teamfilmo.filmo.ui.mypage
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.follow.count.FollowCountResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.data.remote.entity.follow.count.FollowCountResponse
 import com.teamfilmo.filmo.domain.follow.CountFollowUseCase
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

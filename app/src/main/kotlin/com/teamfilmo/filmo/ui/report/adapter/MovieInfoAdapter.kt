@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.teamfilmo.filmo.data.remote.model.movie.MovieInfo
 import com.teamfilmo.filmo.databinding.ItemUpcomingMovieBinding
-import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter.ItemClick
+import com.teamfilmo.filmo.domain.model.movie.MovieInfo
 import timber.log.Timber
 
 class MovieInfoAdapter : RecyclerView.Adapter<MovieInfoAdapter.MovieInfoViewHolder>() {

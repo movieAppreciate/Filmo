@@ -1,11 +1,11 @@
 package com.teamfilmo.filmo.data.remote.service
 
-import com.teamfilmo.filmo.data.remote.model.movie.MovieRequest
-import com.teamfilmo.filmo.data.remote.model.movie.MovieResponse
-import com.teamfilmo.filmo.data.remote.model.movie.PosterResponse
-import com.teamfilmo.filmo.data.remote.model.movie.ThumbnailRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.DetailMovieRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieRequest
+import com.teamfilmo.filmo.data.remote.entity.movie.MovieResponse
+import com.teamfilmo.filmo.data.remote.entity.movie.PosterResponse
+import com.teamfilmo.filmo.data.remote.entity.movie.ThumbnailRequest
+import com.teamfilmo.filmo.data.remote.entity.movie.detail.DetailMovieRequest
+import com.teamfilmo.filmo.data.remote.entity.movie.detail.response.DetailMovieEntity
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -32,7 +32,7 @@ interface MovieService {
          * 영화 아이디
          */
         @Body movieId: DetailMovieRequest,
-    ): Result<DetailMovieResponse>
+    ): Result<DetailMovieEntity>
 
     /**
      * 영화 관련 동영상 조회

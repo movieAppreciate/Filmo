@@ -3,15 +3,14 @@ package com.teamfilmo.filmo.ui.body
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockRequest
-import com.teamfilmo.filmo.data.remote.model.block.SaveBlockResponse
-import com.teamfilmo.filmo.data.remote.model.complaint.SaveComplaintRequest
-import com.teamfilmo.filmo.data.remote.model.follow.check.CheckIsFollowResponse
-import com.teamfilmo.filmo.data.remote.model.like.CheckLikeResponse
-import com.teamfilmo.filmo.data.remote.model.like.SaveLikeRequest
-import com.teamfilmo.filmo.data.remote.model.movie.detail.response.DetailMovieResponse
-import com.teamfilmo.filmo.data.remote.model.report.get.GetReportResponse
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
+import com.teamfilmo.filmo.data.remote.entity.block.SaveBlockRequest
+import com.teamfilmo.filmo.data.remote.entity.block.SaveBlockResponse
+import com.teamfilmo.filmo.data.remote.entity.complaint.SaveComplaintRequest
+import com.teamfilmo.filmo.data.remote.entity.follow.check.CheckIsFollowResponse
+import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
+import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
+import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
+import com.teamfilmo.filmo.data.remote.entity.user.info.UserResponse
 import com.teamfilmo.filmo.domain.block.SaveBlockUseCase
 import com.teamfilmo.filmo.domain.complaint.SaveComplaintUseCase
 import com.teamfilmo.filmo.domain.follow.CancelFollowUseCase
@@ -21,16 +20,17 @@ import com.teamfilmo.filmo.domain.like.CancelLikeUseCase
 import com.teamfilmo.filmo.domain.like.CheckLikeStateUseCase
 import com.teamfilmo.filmo.domain.like.CountLikeUseCase
 import com.teamfilmo.filmo.domain.like.SaveLikeUseCase
+import com.teamfilmo.filmo.domain.model.movie.DetailMovie
 import com.teamfilmo.filmo.domain.movie.detail.SearchMovieDetailUseCase
 import com.teamfilmo.filmo.domain.report.DeleteReportUseCase
 import com.teamfilmo.filmo.domain.report.GetReportUseCase
-import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -39,7 +39,6 @@ class BodyMovieReportViewModel
     @Inject
     constructor(
         private val savedStateHandle: SavedStateHandle,
-        private val userPreferencesRepository: UserPreferencesRepository,
         private val countLikeUseCase: CountLikeUseCase,
         private val checkLikeStateUseCase: CheckLikeStateUseCase,
         private val registerLikeUseCase: SaveLikeUseCase,
@@ -58,22 +57,22 @@ class BodyMovieReportViewModel
             private const val KEY_REPORT_ID = "reportId" // args와 동일한 키 사용!
         }
 
-        private val reportId: String = checkNotNull(savedStateHandle[KEY_REPORT_ID])
+        val reportId: String? = savedStateHandle[KEY_REPORT_ID]
+        var movieId: Int? = null
 
         init {
             // 데이터 로드
             getReport()
+            checkLikeState()
             // 현재 로그인한 유저 정보
             viewModelScope.launch {
-                userPreferencesRepository.getUserInfo().collect {
+                getUserInfoUseCase().collect {
                     if (it != null) {
-                        userInfo = it
+                        _userInfo.value = it
                     }
                 }
             }
         }
-
-        private var userNickName: String? = null
 
     /*
     좋아요 여부 변수
@@ -97,12 +96,13 @@ class BodyMovieReportViewModel
         본인의 게시글인기?
          */
         private val _isMyPost = MutableStateFlow(false)
-        val isMyPost: StateFlow<Boolean> = _isMyPost
+        val isMyPost = _isMyPost.asStateFlow()
 
         /*
         현재 로그인한 유저 정보
          */
-        private var userInfo = UserInfo()
+        private val _userInfo = MutableStateFlow(UserResponse())
+        val userInfo = _userInfo.asStateFlow()
 
         /*
   영화 상세 내용
@@ -114,39 +114,20 @@ class BodyMovieReportViewModel
     영화 상세 정보
          */
         private val _movieDetailInfo =
-            MutableStateFlow(
-                DetailMovieResponse(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, ""),
-            )
+            MutableStateFlow(DetailMovie())
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()
 
     /*
     개별 감상문 정보
      */
-        private val _getReportResponse =
-            MutableStateFlow(
-                GetReportResponse(
-                    reportId = "",
-                    title = "",
-                    content = "",
-                    userId = "",
-                    movieId = 0,
-                    tagString = "",
-                    complaintCount = 0,
-                    replyCount = 0,
-                    likeCount = 0,
-                    viewCount = 0,
-                    imageUrl = "",
-                    createDate = "",
-                    lastModifiedDate = "",
-                    nickname = "",
-                ),
-            )
+        private val _getReportResponse = MutableStateFlow(GetReportResponse())
         val getReportResponse: StateFlow<GetReportResponse> = _getReportResponse.asStateFlow()
 
         // 좋아요 등록
         private fun saveLike() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 registerLikeUseCase(
                     SaveLikeRequest(
                         targetId = reportId,
@@ -177,6 +158,7 @@ class BodyMovieReportViewModel
         // 좋아요 토글
         private fun toggleLike() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 checkLikeStateUseCase(reportId, "report").collect {
                     if (it != null) {
                         _checkLikeResponse.value = it
@@ -195,6 +177,7 @@ class BodyMovieReportViewModel
         // 좋아요 수 업데이트
         private fun updateLikeCount() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 countLikeUseCase(reportId).collect {
                     if (it != null) {
                         _likeCount.value = it.countLike
@@ -222,27 +205,17 @@ class BodyMovieReportViewModel
      */
         private fun saveComplaint() {
             viewModelScope.launch {
+                if (_getReportResponse.value.reportId == null) {
+                    return@launch
+                }
                 saveComplaintUseCase(
                     SaveComplaintRequest(
-                        targetId = _getReportResponse.value.reportId,
+                        targetId = _getReportResponse.value.reportId!!,
                         type = "report",
                     ),
                 ).collect {
                     if (it != null) {
                         sendEffect(BodyMovieReportEffect.ComplaintSuccess)
-                    }
-                }
-            }
-        }
-
-    /*
-    사용자 닉네임
-     */
-        private fun getUserNickName(userId: String) {
-            viewModelScope.launch {
-                getUserInfoUseCase(userId).collect {
-                    if (it != null) {
-                        userNickName = it.nickname
                     }
                 }
             }
@@ -301,20 +274,6 @@ class BodyMovieReportViewModel
         }
 
     /*
-    팔로우 여부 검사
-     */
-        private fun checkIsFollow() {
-            viewModelScope.launch {
-                if (_getReportResponse.value.userId == null) return@launch
-                checkIsFollowUseCase(_getReportResponse.value.userId!!).collect {
-                    if (it != null) {
-                        _checkIsFollowResponse.value = it
-                    }
-                }
-            }
-        }
-
-    /*
     영화 줄거리
      */
         private fun getMovieContent() {
@@ -329,7 +288,6 @@ class BodyMovieReportViewModel
                 searchMovieDetailUseCase(movieId).collect {
                     if (it != null) {
                         _movieDetailInfo.value = it
-                        sendEffect(BodyMovieReportEffect.ShowMovieInfo)
                     }
                 }
             }
@@ -337,6 +295,7 @@ class BodyMovieReportViewModel
 
         private fun deleteReport() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 deleteReportUseCase(reportId).collect {
                     Timber.d("삭제 결과 :$it")
                 }
@@ -345,28 +304,35 @@ class BodyMovieReportViewModel
 
         private fun getReport() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 getReportUseCase(reportId).collect {
                     if (it != null) {
                         _getReportResponse.value = it
-                        _likeCount.value = it.likeCount
-                        checkLikeState()
-                        checkIsFollow()
-                        searchMovieDetail(it.movieId)
-                        if (userInfo.userId == _getReportResponse.value.userId) {
+                        if (_userInfo.value.userId == it.userId) {
                             _isMyPost.value = true
                         } else {
                             // else 문을 적어주지 않으면 안되는 것이었다. 코드를 잘못 작성해줬음.
                             _isMyPost.value = false
                         }
-                        _getReportResponse.value.userId?.let { it1 -> getUserNickName(userId = it1) }
-                        sendEffect(BodyMovieReportEffect.ShowReport)
+                        Timber.d("it.movieId :${it.movieId}")
+                        movieId = it.movieId
+
+                        it.userId?.let {
+                            val followStatus = checkIsFollowUseCase(it).first()
+                            if (followStatus != null) {
+                                _checkIsFollowResponse.value = followStatus
+                            }
+                        }
+                        _likeCount.value = it.likeCount ?: 0
                     }
                 }
+                movieId?.let { searchMovieDetail(it) }
             }
         }
 
         private fun checkLikeState() {
             viewModelScope.launch {
+                if (reportId == null)return@launch
                 checkLikeStateUseCase(reportId, "report").collect {
                     if (it != null) {
                         _checkLikeResponse.value = it
@@ -394,11 +360,6 @@ class BodyMovieReportViewModel
                 }
                 is BodyMovieReportEvent.ShowReport -> {
                     getReport()
-                }
-                is BodyMovieReportEvent.ShowMovieInfo -> {
-                    searchMovieDetail(event.movieId)
-                }
-                is BodyMovieReportEvent.UpdateReport -> {
                 }
                 is BodyMovieReportEvent.DeleteReport -> {
                     deleteReport()

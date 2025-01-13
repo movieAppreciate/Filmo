@@ -2,8 +2,8 @@ package com.teamfilmo.filmo.ui.setting
 
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
-import com.teamfilmo.filmo.data.remote.model.user.UserInfo
 import com.teamfilmo.filmo.data.source.UserTokenSource
+import com.teamfilmo.filmo.domain.model.user.UserInfo
 import com.teamfilmo.filmo.domain.repository.UserPreferencesRepository
 import com.teamfilmo.filmo.domain.user.DeleteUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,6 +1,6 @@
 package com.teamfilmo.filmo.domain.report
 
-import com.teamfilmo.filmo.data.remote.model.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
