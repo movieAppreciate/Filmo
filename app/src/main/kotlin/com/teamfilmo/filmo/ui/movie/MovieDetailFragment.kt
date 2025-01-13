@@ -21,13 +21,12 @@ class MovieDetailFragment :
     ) {
     override val viewModel: MovieDetailViewModel by viewModels()
     private val navController by lazy { findNavController() }
+    val args: MovieDetailFragmentArgs by navArgs()
 
     override fun onBindLayout() {
         super.onBindLayout()
-
         binding.movieDetailShimmer.startShimmer()
 
-        val args: MovieDetailFragmentArgs by navArgs()
         lifecycleScope.launch {
             viewModel.searchMovieDetail(args.movieId)
         }

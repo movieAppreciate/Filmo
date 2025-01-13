@@ -11,8 +11,8 @@ data class DetailMovie(
     val certification: String? = null,
     val originalTitle: String? = null,
     val releaseDate: String? = null,
-    val productionCompanies: List<ProductionCompany>? = null,
+    val productionCompanies: List<ProductionCompany>? = emptyList(),
     val providers: Providers? = null,
-    val genres: List<Genre>? = null,
+    val genres: List<Genre>? = emptyList(),
     val posterPath: String? = null,
 )
