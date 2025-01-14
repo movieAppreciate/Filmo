@@ -32,6 +32,10 @@ class MainActivity :
         }
     }
 
+    fun updateBottomNav(itemId: Int) {
+        binding.navBar.selectedItemId = itemId
+    }
+
     override fun onBindLayout() {
         // 1. 먼저 NavHostFragment를 찾는다 (컨테이너)
         // NavHostFragment : 프래그먼트들이 들어가고 나가는 '그릇'
