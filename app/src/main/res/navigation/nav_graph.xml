@@ -193,6 +193,9 @@
         <argument
             android:name="nickName"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_settingFragment_to_allMovieReportFragment"
+            app:destination="@id/allMovieReportFragment" />
     </fragment>
     <fragment
         android:id="@+id/followFragment"
@@ -235,6 +238,9 @@
         <action
             android:id="@+id/navigateToWriteReport"
             app:destination="@id/writeReportFragment" />
+        <action
+            android:id="@+id/action_movieSelectFragment_to_allMovieReportFragment"
+            app:destination="@id/allMovieReportFragment" />
 
     </fragment>
     <fragment
@@ -252,6 +258,9 @@
             app:destination="@id/reportThumbnailFragment" />
         <action
             android:id="@+id/action_writeReportFragment_to_movieSelectFragment"
+            app:destination="@id/movieSelectFragment" />
+        <action
+            android:id="@+id/action_writeReportFragment_to_movieSelectFragment2"
             app:destination="@id/movieSelectFragment" />
     </fragment>
 

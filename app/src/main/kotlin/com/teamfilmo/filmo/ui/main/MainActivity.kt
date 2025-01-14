@@ -12,7 +12,6 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity :
@@ -31,11 +30,6 @@ class MainActivity :
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
-    }
-
-    override fun onDestroy() {
-        Timber.d("메인 onDestroy")
-        super.onDestroy()
     }
 
     override fun onBindLayout() {
