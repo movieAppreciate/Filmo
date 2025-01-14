@@ -160,7 +160,7 @@ class WriteReportFragment :
         dialog?.setButton2ClickListener(
             object : ItemClickListener {
                 override fun onButton2Click() {
-                    navController.navigate(R.id.movieSelectFragment)
+                    navController.popBackStack(R.id.movieSelectFragment, false)
                 }
 
                 override fun onButton1Click() {
