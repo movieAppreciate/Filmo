@@ -28,6 +28,7 @@ class MovieSelectFragment :
     override val viewModel: MovieSelectViewModel by viewModels()
 
     private var queryText: String? = null
+    private var isQueried: Boolean = false
     private val moviePosterAdapter by lazy {
         context?.let { MoviePosterAdapter(it) }
     }
@@ -108,7 +109,7 @@ class MovieSelectFragment :
                         it.source.refresh is LoadState.NotLoading &&
                             moviePosterAdapter?.itemCount == 0
 
-                    if (isListEmpty) {
+                    if (isListEmpty && isQueried) {
                         Toast.makeText(context, "검색 결과가 없어요", Toast.LENGTH_SHORT).show()
                     }
                     binding.movieProgressBarAppend.isVisible = it.source.append is LoadState.Loading
@@ -125,6 +126,7 @@ class MovieSelectFragment :
         binding.movieSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    isQueried = true
                     // 처음 검색 시에는 1페이지 데이터를 가져옴
                     queryText = query
                     viewModel.handleEvent(MovieSelectEvent.SearchMovie(queryText))
@@ -132,6 +134,7 @@ class MovieSelectFragment :
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    isQueried = false
                     viewModel.handleEvent(MovieSelectEvent.InitializeMovieList)
                     return true
                 }

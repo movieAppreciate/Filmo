@@ -7,11 +7,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
-import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentAllMovieReportBinding
 import com.teamfilmo.filmo.domain.model.report.all.ReportItem
-import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +35,6 @@ class AllMovieReportFragment :
 
     override fun onResume() {
         super.onResume()
-        (requireActivity() as MainActivity).updateBottomNav(R.id.allMovieReportFragment)
         lifecycleScope
             .launch {
                 viewModel.updatedReportId.collectLatest {
