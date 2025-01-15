@@ -297,7 +297,7 @@ class BodyMovieReportViewModel
             viewModelScope.launch {
                 if (reportId == null)return@launch
                 deleteReportUseCase(reportId).collect {
-                    Timber.d("삭제 결과 :$it")
+                    if (it != null) sendEffect(BodyMovieReportEffect.DeleteSuccess)
                 }
             }
         }

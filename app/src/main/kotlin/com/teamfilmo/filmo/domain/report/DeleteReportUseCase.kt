@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.domain.report
 
+import com.teamfilmo.filmo.data.remote.entity.report.delete.DeleteReportResponse
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ class DeleteReportUseCase
     constructor(
         private val reportRepository: ReportRepository,
     ) {
-        operator fun invoke(reportId: String): Flow<String?> =
+        operator fun invoke(reportId: String): Flow<DeleteReportResponse?> =
             flow {
                 val result = reportRepository.deleteReport(reportId)
                 result.onFailure {

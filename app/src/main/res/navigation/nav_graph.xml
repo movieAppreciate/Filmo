@@ -12,7 +12,10 @@
             android:name="updatedReportId"
             android:defaultValue=""
             app:argType="string"/>
-
+        <argument
+            android:name="isDeleted"
+            android:defaultValue="false"
+            app:argType="boolean"/>
 
         <action
             android:id="@+id/navigateToBody"
@@ -76,6 +79,15 @@
         </action>
 
         <action
+            android:id="@+id/deleteReportItem"
+            app:destination="@id/allMovieReportFragment">
+            <argument
+                android:name="reportId"
+                android:defaultValue=""
+                app:argType="string" />
+        </action>
+
+        <action
             android:id="@+id/navigateToReply"
             app:destination="@id/replyFragment"
             app:popUpToSaveState="true"
@@ -97,6 +109,9 @@
         <action
             android:id="@+id/action_bodyMovieReportFragment_to_allMovieReportFragment"
             app:destination="@id/allMovieReportFragment" />
+        <action
+            android:id="@+id/action_bodyMovieReportFragment_to_updateReportFragment"
+            app:destination="@id/updateReportFragment" />
 
     </fragment>
 
@@ -154,6 +169,12 @@
 
         <action
             android:id="@+id/navigateToBody"
+            app:destination="@id/bodyMovieReportFragment" />
+        <action
+            android:id="@+id/navigateToAllReport"
+            app:destination="@id/allMovieReportFragment" />
+        <action
+            android:id="@+id/action_updateReportFragment_to_bodyMovieReportFragment"
             app:destination="@id/bodyMovieReportFragment" />
     </fragment>
     <fragment

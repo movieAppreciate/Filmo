@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.service
 
+import com.teamfilmo.filmo.data.remote.entity.report.delete.DeleteReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportResponse
@@ -7,6 +8,7 @@ import com.teamfilmo.filmo.data.remote.entity.report.search.SearchAllReportReque
 import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportRequest
 import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -66,7 +68,7 @@ interface ReportService {
     @PATCH("/report/updateReport")
     suspend fun updateReport(
         @Body updateReportRequest: UpdateReportRequest,
-    ): Result<String>
+    ): Result<UpdateReportResponse>
 
     /*
     전체 감상문 검색
@@ -109,5 +111,5 @@ interface ReportService {
          */
         @Path("reportId")
         reportId: String,
-    ): Result<String>
+    ): Result<DeleteReportResponse>
 }

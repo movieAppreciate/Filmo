@@ -35,14 +35,17 @@ class AllMovieReportFragment :
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope
-            .launch {
-                viewModel.updatedReportId.collectLatest {
-                    if (it != null) {
-                        viewModel.handleEvent(AllMovieReportEvent.UpdateReport(it))
-                    }
+        if (args.isDeleted) {
+            viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
+            binding.swiperefresh.isRefreshing = true
+        }
+        lifecycleScope.launch {
+            viewModel.updatedReportId.collectLatest {
+                if (it != null) {
+                    viewModel.handleEvent(AllMovieReportEvent.UpdateReport(it))
                 }
             }
+        }
     }
 
     override fun handleEffect(effect: AllMovieReportEffect) {
@@ -54,7 +57,6 @@ class AllMovieReportFragment :
             is AllMovieReportEffect.CancelLike -> {
                 allMovieReportAdapter.updateLikeState(effect.reportId, false, effect.likeCount)
             }
-
             else -> {}
         }
     }
@@ -75,6 +77,7 @@ class AllMovieReportFragment :
                     binding.layoutShimmer.stopShimmer()
                     binding.layoutShimmer.visibility = View.GONE
                     allMovieReportAdapter.submitData(pagingData = it)
+                    binding.swiperefresh.isRefreshing = false
                 }
             }
 
@@ -98,6 +101,7 @@ class AllMovieReportFragment :
                             binding.layoutShimmer.visibility = View.GONE
                             binding.reportProgressBar.visibility = View.GONE
                             binding.movieRecyclerview.visibility = View.VISIBLE
+                            binding.swiperefresh.isRefreshing = false
                         }
                         is LoadState.Error -> {
                             binding.layoutShimmer.stopShimmer()
@@ -115,7 +119,10 @@ class AllMovieReportFragment :
             // 새로고침
             swiperefresh.setOnRefreshListener {
                 viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
-                swiperefresh.isRefreshing = false
+                binding.layoutShimmer.visibility = View.VISIBLE
+                binding.layoutShimmer.startShimmer()
+                binding.movieRecyclerview.visibility = View.GONE
+                swiperefresh.isRefreshing = true
             }
         }
 
