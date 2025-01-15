@@ -41,6 +41,8 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
     override val viewModel: AuthViewModel by viewModels()
     private lateinit var credentialManager: CredentialManager
 
+    private lateinit var credential: Credential
+
     override fun onBindLayout() {
         credentialManager = CredentialManager.create(this)
 
@@ -105,6 +107,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 showToast("회원가입이 실패했어요! 계속되면 관리자에게 문의해주세요")
             }
             is AuthEffect.Existing -> {
+                showToast("이미 등록된 계정이 있어요 ${effect.type} 계정으로 로그인합니다")
                 when (effect.type) {
                     "google" -> onGoogleLogin()
                     "naver" -> onNaverLogin()
@@ -113,21 +116,25 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             }
 
             is AuthEffect.SignUpSuccess -> {
-                Timber.d("회원가입 성공!")
+                showToast("회원가입 성공")
                 when (effect.type) {
-                    "google" -> onGoogleLogin()
-                    "naver" -> onNaverLogin()
-                    "kakao" -> onKakaoLogin()
+                    "google" -> {
+                        viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
+                    }
+                    "naver" -> {
+                        viewModel.handleEvent(AuthEvent.RequestNaverLogin)
+                    }
+                    "kakao" -> {
+                        viewModel.handleEvent(AuthEvent.RequestKakaoLogin)
+                    }
                 }
             }
 
             AuthEffect.LoginSuccess -> {
-                lifecycleScope.launch {
-                    showToast("로그인 성공")
-                    val intent = Intent(this@AuthActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+                showToast("로그인 성공")
+                val intent = Intent(this@AuthActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish()
             }
 
             AuthEffect.LoginFailed -> {
@@ -148,11 +155,12 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 )
             response.credential
         }.onSuccess {
-            val credential = it
+            credential = it
             viewModel.handleEvent(AuthEvent.RequestGoogleLogin(credential))
         }
 
     private fun onGoogleLogin() {
+        Timber.d("onGoogleLogin")
         lifecycleScope.launch {
             val credentialOption =
                 GetGoogleIdOption
@@ -253,7 +261,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                         )
                     }
 
-                viewModel.handleEvent(AuthEvent.RequestNaverLogin(token))
+                viewModel.handleEvent(AuthEvent.RequestNaverLogin)
             } catch (e: Exception) {
                 showToast("로그인 취소")
             }
@@ -301,7 +309,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                         }
                     }
 
-                viewModel.handleEvent(AuthEvent.RequestKakaoLogin(token))
+                viewModel.handleEvent(AuthEvent.RequestKakaoLogin)
             } catch (e: ClientError) {
                 // 이후 전파한 예외를 잡아서 처리해주면 된다
                 when (e.reason) {

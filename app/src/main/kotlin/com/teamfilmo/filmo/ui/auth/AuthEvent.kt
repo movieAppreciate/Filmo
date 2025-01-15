@@ -1,7 +1,6 @@
 package com.teamfilmo.filmo.ui.auth
 
 import androidx.credentials.Credential
-import com.kakao.sdk.auth.model.OAuthToken
 import com.teamfilmo.filmo.base.event.BaseEvent
 
 sealed class AuthEvent : BaseEvent() {
@@ -9,11 +8,7 @@ sealed class AuthEvent : BaseEvent() {
         val credential: Credential,
     ) : AuthEvent()
 
-    data class RequestNaverLogin(
-        val token: String,
-    ) : AuthEvent()
+    data object RequestNaverLogin : AuthEvent()
 
-    data class RequestKakaoLogin(
-        val token: OAuthToken,
-    ) : AuthEvent()
+    data object RequestKakaoLogin : AuthEvent()
 }

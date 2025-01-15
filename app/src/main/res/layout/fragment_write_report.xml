@@ -17,8 +17,8 @@
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:background="@color/transparent"
             android:src="@drawable/ic_back"
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:gravity="right"
+            android:gravity="center"
             android:id="@+id/btn_report_register"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"

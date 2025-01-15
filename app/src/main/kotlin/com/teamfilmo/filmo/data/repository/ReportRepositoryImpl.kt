@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.data.remote.source
 
+import com.teamfilmo.filmo.data.remote.entity.report.delete.DeleteReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.get.GetReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
 import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportResponse
@@ -7,6 +8,7 @@ import com.teamfilmo.filmo.data.remote.entity.report.search.SearchAllReportReque
 import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportRequest
 import com.teamfilmo.filmo.data.remote.entity.report.search.SearchReportResponse
 import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
+import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportResponse
 import com.teamfilmo.filmo.data.source.ReportDataSource
 import com.teamfilmo.filmo.domain.repository.ReportRepository
 import javax.inject.Inject
@@ -16,9 +18,9 @@ class ReportRepositoryImpl
     constructor(
         private val reportDataSource: ReportDataSource,
     ) : ReportRepository {
-        override suspend fun updateReport(request: UpdateReportRequest): Result<String> = reportDataSource.updateReport(request)
+        override suspend fun updateReport(request: UpdateReportRequest): Result<UpdateReportResponse> = reportDataSource.updateReport(request)
 
-        override suspend fun deleteReport(reportId: String): Result<String> = reportDataSource.deleteReport(reportId)
+        override suspend fun deleteReport(reportId: String): Result<DeleteReportResponse> = reportDataSource.deleteReport(reportId)
 
         override suspend fun searchAllReport(body: SearchAllReportRequest): Result<SearchReportResponse> = reportDataSource.searchAllReport(body)
 

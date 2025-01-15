@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.databinding.FragmentSelectMovieBinding
 import com.teamfilmo.filmo.ui.write.adapter.MoviePosterAdapter
@@ -24,7 +25,10 @@ class MovieSelectFragment :
     BaseFragment<FragmentSelectMovieBinding, MovieSelectViewModel, MovieSelectEffect, MovieSelectEvent>(
         FragmentSelectMovieBinding::inflate,
     ) {
+    override val viewModel: MovieSelectViewModel by viewModels()
+
     private var queryText: String? = null
+    private var isQueried: Boolean = false
     private val moviePosterAdapter by lazy {
         context?.let { MoviePosterAdapter(it) }
     }
@@ -39,6 +43,14 @@ class MovieSelectFragment :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        with(binding.movieSearchView) {
+            setQuery("", false)
+            clearFocus()
+        }
+    }
+
     private fun navigateWriteReportFragment(
         movieName: String,
         movieId: Int,
@@ -47,8 +59,6 @@ class MovieSelectFragment :
 
         navController.navigate(action)
     }
-
-    override val viewModel: MovieSelectViewModel by viewModels()
 
     override fun onBindLayout() {
         super.onBindLayout()
@@ -99,7 +109,7 @@ class MovieSelectFragment :
                         it.source.refresh is LoadState.NotLoading &&
                             moviePosterAdapter?.itemCount == 0
 
-                    if (isListEmpty) {
+                    if (isListEmpty && isQueried) {
                         Toast.makeText(context, "검색 결과가 없어요", Toast.LENGTH_SHORT).show()
                     }
                     binding.movieProgressBarAppend.isVisible = it.source.append is LoadState.Loading
@@ -107,15 +117,16 @@ class MovieSelectFragment :
             }
         }
 
-        // 여기서 뒤로 가기를 하면 allmoviereportfragment가 새로굄된다.
+        // 여기서 뒤로 가기를 하면 allmoviereportfragment가 새로고침된다.
+        // 기존 데이터가 뜨도록 popBackStack 해준다.
         binding.btnBack.setOnClickListener {
-            navController.popBackStack()
-            // navController.navigate(R.id.allMovieReportFragment)
+            navController.popBackStack(R.id.allMovieReportFragment, false)
         }
 
         binding.movieSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    isQueried = true
                     // 처음 검색 시에는 1페이지 데이터를 가져옴
                     queryText = query
                     viewModel.handleEvent(MovieSelectEvent.SearchMovie(queryText))
@@ -123,6 +134,7 @@ class MovieSelectFragment :
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    isQueried = false
                     viewModel.handleEvent(MovieSelectEvent.InitializeMovieList)
                     return true
                 }

@@ -42,18 +42,6 @@ class BodyMovieReportFragment :
             }
         }
 
-    override fun onResume() {
-        super.onResume()
-
-        lifecycleScope.launch {
-            navController.currentBackStack.collect {
-                it.map {
-                    Timber.d("body onResume -> ${it.destination.displayName}")
-                }
-            }
-        }
-    }
-
     override fun onBindLayout() {
         super.onBindLayout()
 
@@ -68,14 +56,8 @@ class BodyMovieReportFragment :
 
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener {
-                lifecycleScope.launch {
-                    navController.currentBackStack.collect {
-                        it.map {
-                            Timber.d("body back clicked ${it.destination.route}")
-                        }
-                    }
-                }
-                navController.popBackStack()
+                val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false)
+                navController.navigate(action)
             }
 
             /*
@@ -238,9 +220,10 @@ class BodyMovieReportFragment :
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
-//                        val action = BodyMovieReportFragmentDirections.updateReportItem(viewModel.reportId)
-//                        navController.navigate(action)
-                        navController.popBackStack()
+                        if (viewModel.reportId != null) {
+                            val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false)
+                            navController.navigate(action)
+                        }
                     }
                 },
             )
@@ -314,8 +297,6 @@ class BodyMovieReportFragment :
                     if (viewModel.getReportResponse.value.reportId != null) {
                         viewModel.handleEvent(BodyMovieReportEvent.DeleteReport(viewModel.getReportResponse.value.reportId!!))
                     }
-                    navController.navigate(R.id.allMovieReportFragment)
-                    Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onButton1Click() {
@@ -328,14 +309,21 @@ class BodyMovieReportFragment :
 
     override fun handleEffect(effect: BodyMovieReportEffect) {
         when (effect) {
+            is BodyMovieReportEffect.DeleteSuccess -> {
+                Toast.makeText(context, "감상문을 삭제했어요!", Toast.LENGTH_SHORT).show()
+                val action = BodyMovieReportFragmentDirections.deleteReportItem(args.reportId, isDeleted = true)
+                navController.navigate(action)
+            }
             is BodyMovieReportEffect.BlockSuccess -> {
                 // 메인 화면으로 이동
-                navController.navigate(R.id.allMovieReportFragment)
+                val action = BodyMovieReportFragmentDirections.deleteReportItem(args.reportId, isDeleted = true)
+                navController.navigate(action)
             }
             is BodyMovieReportEffect.ComplaintSuccess -> {
                 // 감상문 신고
                 Toast.makeText(context, "감상문을 신고했어요!", Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.allMovieReportFragment)
+                val action = BodyMovieReportFragmentDirections.deleteReportItem(args.reportId, isDeleted = true)
+                navController.navigate(action)
             }
             is BodyMovieReportEffect.CancelFollow -> {
                 // 팔로우 취소

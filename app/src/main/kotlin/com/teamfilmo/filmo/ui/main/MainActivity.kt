@@ -12,7 +12,6 @@ import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.activity.BaseActivity
 import com.teamfilmo.filmo.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity :
@@ -33,11 +32,6 @@ class MainActivity :
         }
     }
 
-    override fun onDestroy() {
-        Timber.d("메인 onDestroy")
-        super.onDestroy()
-    }
-
     override fun onBindLayout() {
         // 1. 먼저 NavHostFragment를 찾는다 (컨테이너)
         // NavHostFragment : 프래그먼트들이 들어가고 나가는 '그릇'
@@ -54,6 +48,7 @@ class MainActivity :
 
         // 감상문 작성 과정에서 바텀바가 보이지 않도록 하기
         navController.addOnDestinationChangedListener { _, desitnation, _ ->
+            binding.navBar.selectedItemId = desitnation.id
             binding.navBar.visibility =
                 if (desitnation.id == R.id.writeReportFragment) {
                     View.GONE
