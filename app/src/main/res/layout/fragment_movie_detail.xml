@@ -139,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:textColor="@color/black"
+        android:textColor="@color/gray00"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
         app:layout_constraintStart_toEndOf="@+id/textView6"
@@ -149,12 +149,14 @@
         android:id="@+id/txt_movie_eng_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/gray00"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/txt_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/txt_movie_title" />
 
     <TextView
         android:id="@+id/txt_release_date"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/txt_movie_eng_title"
@@ -162,6 +164,7 @@
 
     <TextView
         android:id="@+id/txt_rank"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/txt_release_date"
@@ -169,6 +172,7 @@
 
     <TextView
         android:id="@+id/txt_genre"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/txt_rank"
@@ -178,12 +182,13 @@
         android:id="@+id/txt_nation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/gray00"
         app:layout_constraintStart_toStartOf="@+id/txt_rank"
         app:layout_constraintTop_toTopOf="@+id/textView11" />
 
     <TextView
         android:id="@+id/txt_running_time"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -192,6 +197,7 @@
 
     <TextView
         android:id="@+id/txt_rationing"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/textView12"
@@ -199,6 +205,7 @@
 
     <TextView
         android:id="@+id/txt_summary"
+        android:textColor="@color/gray00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

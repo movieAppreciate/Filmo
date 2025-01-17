@@ -76,6 +76,7 @@
             app:layout_constraintTop_toBottomOf="@id/txt_selected_movie" />
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:textColor="@color/gray00"
             android:id="@+id/edit_report_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +100,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:textColor="@color/gray00"
             android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@color/transparent"
+            android:textColor="@color/gray00"
             android:hint="@string/tag_hint"
             android:textSize="15sp"
             android:textStyle="bold"

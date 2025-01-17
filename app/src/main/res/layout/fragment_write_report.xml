@@ -99,7 +99,6 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:imeOptions="actionNext"
-            android:singleLine="true"
             android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
