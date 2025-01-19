@@ -181,6 +181,7 @@ class AllMovieReportViewModel
                     if (it != null) {
                         _updatedReportStateInfo.value =
                             _updatedReportStateInfo.value.copy(
+                                reportId = reportId,
                                 reportContent = it.content ?: "",
                                 reportTitle = it.title ?: "",
                             )

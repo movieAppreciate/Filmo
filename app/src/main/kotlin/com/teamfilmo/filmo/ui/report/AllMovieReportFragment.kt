@@ -15,6 +15,7 @@ import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -35,16 +36,16 @@ class AllMovieReportFragment :
 
     override fun onResume() {
         super.onResume()
+
+        Timber.d("clicked report id :$clickedReportId")
+        // 본문에서 감상문을 변화시켰다면 !!
         if (args.isDeleted) {
+            // 구조 변경 필요
             viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
             binding.swiperefresh.isRefreshing = true
         }
-        lifecycleScope.launch {
-            viewModel.updatedReportId.collectLatest {
-                if (it != null) {
-                    viewModel.handleEvent(AllMovieReportEvent.UpdateReport(it))
-                }
-            }
+        if (args.isUpdated) {
+            viewModel.handleEvent(AllMovieReportEvent.UpdateReport(args.updatedReportId))
         }
     }
 
@@ -67,6 +68,7 @@ class AllMovieReportFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.updatedReportStateInfo.collectLatest {
+                    Timber.d("$it")
                     allMovieReportAdapter.updateLikeState(it.reportId, it.isLiked, it.likeCount)
                     allMovieReportAdapter.updateReplyCount(it.reportId, it.replyCount)
                     allMovieReportAdapter.updateModifyReport(it.reportId, it.reportTitle, it.reportContent)

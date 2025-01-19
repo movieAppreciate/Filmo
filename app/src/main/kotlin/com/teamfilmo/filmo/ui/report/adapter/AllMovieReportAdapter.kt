@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import timber.log.Timber
 
 sealed class ReportPayload {
     data class ModifyReportPayLoad(
@@ -96,11 +97,13 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         title: String,
         content: String,
     ) {
+        Timber.d("adapter에서 받은 값 :$title")
         val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
             getItem(position)?.let {
                 it.title = title
                 it.content = content
+                Timber.d("adapter에서 받은 값 :$title")
                 notifyItemChanged(position, ReportPayload.ModifyReportPayLoad(title, content))
             }
         }
@@ -125,8 +128,6 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             holder.bindLikeImage(item.isLiked)
             holder.bindLikeCount(item.likeCount)
             holder.bindMovieImage(item.imageUrl.toString())
-            holder.itemView.apply {
-            }
         }
     }
 
@@ -240,6 +241,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
             title: String,
             content: String,
         ) {
+            Timber.d("bindModifyReport :$title")
             binding.tvTitle.text = title
             binding.tvContent.text = content
         }
