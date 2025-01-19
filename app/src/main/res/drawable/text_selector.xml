@@ -4,5 +4,5 @@
         android:color="@color/primary" />
 
     <item android:state_selected="false"
-        android:color="@color/gray02" />
+        android:color="?attr/colorOnSecondaryContainer" />
 </selector>

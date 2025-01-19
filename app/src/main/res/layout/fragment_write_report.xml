@@ -2,21 +2,22 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
-    android:paddingHorizontal="20dp"
+    android:paddingHorizontal="10dp"
+    android:id="@+id/scrollView"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:scrollbars="none"
+    android:background="?attr/colorSurface"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_gravity="center_horizontal"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
         <ImageButton
-            android:id="@+id/btn_back"
+            android:id="@+id/btn_write_report_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
@@ -34,9 +35,9 @@
             android:clickable="false"
             android:text="등록"
             android:textColor="@color/gray02"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_write_report_back"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_back"
+            app:layout_constraintTop_toTopOf="@+id/btn_write_report_back"
             app:layout_constraintVertical_bias="0.555" />
 
         <TextView
@@ -48,16 +49,14 @@
             android:textColor="@color/gray01"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_back" />
+            app:layout_constraintTop_toBottomOf="@id/btn_write_report_back" />
 
         <TextView
             android:id="@+id/txt_selected_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_margin="10dp"
-
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -184,7 +183,7 @@
         <ImageView
             android:id="@+id/iv_thumbnail"
             android:layout_width="400dp"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"

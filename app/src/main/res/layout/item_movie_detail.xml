@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageButton
-        android:id="@+id/btn_movie_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/movie_detail_shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <include
+            layout="@layout/layout_movie_detail_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <TextView
         android:id="@+id/title"
@@ -20,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:text="영화 상세 정보"
-        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,165 +48,169 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:text="개봉"
-        android:textColor="@color/gray02"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="등급"
-        android:textColor="@color/gray02"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="장르"
-        android:textColor="@color/gray02"
         app:layout_constraintEnd_toEndOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="국가"
-        android:textColor="@color/gray02"
         app:layout_constraintEnd_toEndOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="21dp"
         android:layout_marginTop="10dp"
         android:text="러닝타임"
-        android:textColor="@color/gray02"
         app:layout_constraintStart_toStartOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="배급"
-        android:textColor="@color/gray02"
         app:layout_constraintEnd_toEndOf="@+id/textView11"
         app:layout_constraintStart_toStartOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <TextView
+        android:textColor="@color/gray02"
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="줄거리"
-        android:textColor="@color/gray02"
         app:layout_constraintStart_toStartOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-    <View
-        android:id="@+id/view9"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="1dp"
-        android:background="@color/gray04"
+    <TextView
+        android:id="@+id/txt_movie_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/textView6" />
 
-    <View
-        android:id="@+id/view6"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView7"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
+    <TextView
+        android:id="@+id/txt_movie_eng_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/txt_movie_title"
+        app:layout_constraintTop_toBottomOf="@+id/txt_movie_title" />
+
+    <TextView
+        android:id="@+id/txt_release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/txt_movie_eng_title"
         app:layout_constraintTop_toTopOf="@+id/textView7" />
 
-    <View
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
+    <TextView
+        android:id="@+id/txt_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/txt_release_date"
         app:layout_constraintTop_toTopOf="@+id/textView8" />
 
-    <View
-        android:id="@+id/view7"
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView9"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
+    <TextView
+        android:id="@+id/txt_genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/txt_rank"
         app:layout_constraintTop_toTopOf="@+id/textView9" />
 
-    <View
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView11"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
+    <TextView
+        android:id="@+id/txt_nation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/txt_rank"
         app:layout_constraintTop_toTopOf="@+id/textView11" />
 
-    <View
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="1dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+    <TextView
+        android:id="@+id/txt_running_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
-    <View
-        android:layout_width="100dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView10"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
+    <TextView
+        android:id="@+id/txt_rationing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/textView10" />
 
-    <View
-        android:id="@+id/view8"
-        android:layout_width="240dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@color/gray04"
-        app:layout_constraintBottom_toBottomOf="@+id/textView21"
-        app:layout_constraintStart_toEndOf="@+id/textView21"
-        app:layout_constraintTop_toTopOf="@+id/textView21" />
+    <TextView
+        android:id="@+id/txt_summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView21"
+        app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
+    <TextView
+        android:id="@+id/read_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="더보기"
+        android:textColor="@color/primary"
+        app:layout_constraintStart_toStartOf="@+id/txt_summary"
+        app:layout_constraintTop_toBottomOf="@+id/txt_summary" />
 
-    <View
+    <ImageView
+        android:id="@+id/movie_image"
         android:layout_width="150dp"
         android:layout_height="200dp"
-        android:background="@color/gray04"
-        app:layout_constraintEnd_toEndOf="@+id/title"
-        app:layout_constraintTop_toTopOf="@+id/view9" />
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_rationing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

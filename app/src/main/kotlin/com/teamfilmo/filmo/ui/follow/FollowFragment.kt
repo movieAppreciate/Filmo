@@ -27,7 +27,7 @@ class FollowFragment :
         val userId = args.userId
 
         // 뒤로 가기
-        binding.btnBack.setOnClickListener {
+        binding.btnFollowBack.setOnClickListener {
             navController.popBackStack()
         }
 

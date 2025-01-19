@@ -9,11 +9,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.data.remote.entity.report.regist.RegistReportRequest
@@ -49,6 +51,28 @@ class WriteReportFragment :
             imm.hideSoftInputFromWindow(windowToken, 0)
         }
 
+        // todo : 화면 스크롤 시 감지하기
+
+        binding.scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            // 스크롤 방향 감지
+            when {
+                scrollY > oldScrollY -> {
+                    // 아래로 스크롤
+                    hideKeyboard(v)
+                }
+            }
+        }
+
+        binding.editReportBody
+            .setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                    hideKeyboard(binding.editReportBody)
+                    binding.scrollView.scrollToDescendant(binding.ivThumbnail)
+                    true
+                } else {
+                    false
+                }
+            }
         binding.editReportTag.apply {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
@@ -142,7 +166,7 @@ class WriteReportFragment :
             navController.navigate(action)
         }
 
-        binding.btnBack.setOnClickListener {
+        binding.btnWriteReportBack.setOnClickListener {
             showModifyMovieDialog()
         }
     }

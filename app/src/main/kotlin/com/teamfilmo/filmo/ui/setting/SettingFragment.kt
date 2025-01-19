@@ -55,7 +55,7 @@ class SettingFragment :
     }
 
     override fun onBindLayout() {
-        binding.btnInfo.setOnClickListener {
+        binding.btnAnnounce.setOnClickListener {
             Toast.makeText(context, "서비스를 준비하고 있어요! 조금만 기다려주세요 :)", Toast.LENGTH_SHORT).show()
         }
         binding.btnQuestion.setOnClickListener {

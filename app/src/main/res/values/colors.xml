@@ -7,7 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
     <color name="grey">#FF9DA4AE</color>
 
     <color name="button_text">#111927</color>
@@ -15,4 +14,21 @@
     <color name="clicked_button_text">#FF333F</color>
     <color name="clicked_button_background">#FFEBEC</color>
     <color name="clicked_button_stroke">#FF858C</color>
+
+    <color name="button_color">#2A2A2A</color>
+<!--    <color name="dialog_background_color">#FAF9FD</color>-->
+    <color name="dialog_background_color">@color/white</color>
+    <color name="dialog_text_color">#FF000000</color>
+    <color name="dialog_sub_text_color">@color/material_dynamic_neutral70</color>
+    <color name="primary">#FF333F</color>
+    <color name="button_background_color">@color/material_dynamic_neutral80</color>
+
+    <color name="stroke_color">@color/gray02</color>
+    <color name="reverse_stroke_color">#48484B</color>
+
+    <color name="background_color3">@color/gray01</color>
+    <color name="background_color2">@color/gray04</color>
+
+
+
 </resources>

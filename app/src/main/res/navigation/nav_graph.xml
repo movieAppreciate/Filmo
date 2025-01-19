@@ -17,6 +17,11 @@
             android:defaultValue="false"
             app:argType="boolean"/>
 
+        <argument
+            android:name="isUpdated"
+            android:defaultValue="false"
+            app:argType="boolean"/>
+
         <action
             android:id="@+id/navigateToBody"
             app:destination="@id/bodyMovieReportFragment"

@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:backgroundTint="@color/gray04"
-    android:layout_width="300dp"
-    android:layout_gravity="end"
-    android:layout_marginTop="5dp"
-    app:strokeColor="@color/gray05"
+    android:layout_width="match_parent"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:background="@drawable/rectangle_sub_reply"
     android:layout_height="wrap_content">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/user_image"
@@ -66,16 +59,16 @@
 
         <ImageButton
             android:id="@+id/btn_like"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="6dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_like"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/txt_reply"
             app:layout_constraintTop_toBottomOf="@+id/txt_reply"
-            app:layout_constraintVertical_bias="1.0" />
+            />
 
         <TextView
             android:id="@+id/txt_like_count"
@@ -101,8 +94,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-</com.google.android.material.card.MaterialCardView>
 
 
 

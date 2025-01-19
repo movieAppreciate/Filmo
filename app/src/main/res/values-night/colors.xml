@@ -7,4 +7,19 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="button_color">#FFFFFFFF</color>
+    <color name="dialog_background_color">#48484B</color>
+    <color name="dialog_text_color">#CAC4D0</color>
+    <color name="dialog_sub_text_color">@color/material_dynamic_neutral40</color>
+
+    <color name="primary">#FFB4A8</color>
+    <color name="button_background_color">#747679</color>
+    <color name="stroke_color">#48484B</color>
+    <color name="reverse_stroke_color">@color/gray02</color>
+
+
+    <color name="background_color2">#48484B</color>
+    <color name="background_color3">@color/gray02</color>
+
+
 </resources>

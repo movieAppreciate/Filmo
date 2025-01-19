@@ -2,21 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:paddingHorizontal="20dp"
+    android:scrollbars="none"
+    android:background="?attr/colorSurface"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_gravity="center_horizontal"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/btn_back"
+            android:id="@+id/btn_back_update_report"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
@@ -35,29 +34,30 @@
             android:stateListAnimator="@null"
             android:text="수정"
             android:textColor="@color/primary"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back_update_report"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_back"
+            app:layout_constraintTop_toTopOf="@+id/btn_back_update_report"
             app:layout_constraintVertical_bias="0.555" />
 
         <TextView
+
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="선택한 영화"
-            android:textColor="@color/gray01"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_back" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_back_update_report" />
 
 
         <TextView
+            android:textColor="?attr/colorOnSurface"
             android:id="@+id/txt_selected_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="서울의 봄"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@id/txt_selected_movie" />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:textColor="@color/gray00"
+            android:textColor="@color/dialog_text_color"
             android:id="@+id/edit_report_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:textColor="@color/gray00"
+            android:textColor="?android:attr/textColorPrimary"
             android:id="@+id/edit_report_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:padding="10dp"
             android:background="@color/transparent"
             android:hint="영화를 보고 난 후의 생각을 자유롭게 작성해주세요."
-            android:textColorHint="@color/gray02"
+            android:textColorHint="@color/dialog_text_color"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
@@ -119,12 +119,11 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_report_title" />
 
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:id="@+id/view3"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="10dp"
-            android:background="@color/gray02"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -136,6 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="태그 입력"
+            android:textColor="?attr/colorOnSurface"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -173,6 +173,7 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="20dp"
             android:text="썸네일 선택"
             android:textStyle="bold"
