@@ -164,7 +164,6 @@ class ReplyFragment :
                     val outRect = Rect()
                     binding.editReply.getGlobalVisibleRect(outRect)
                     if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                        binding.editReply.clearFocus()
                         hideKeyboard()
                     }
                 }

@@ -1,5 +1,6 @@
 package com.teamfilmo.filmo.ui.movie
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.domain.model.movie.DetailMovie
@@ -15,12 +16,23 @@ import kotlinx.coroutines.launch
 class MovieDetailViewModel
     @Inject
     constructor(
+        private val savedStateHandle: SavedStateHandle,
         private val searchMovieDetailUseCase: SearchMovieDetailUseCase,
     ) : BaseViewModel<DetailMovieEffect, DetailMovieEvent>() {
+        companion object {
+            private const val KEY_MOVIE_ID = "movieId" // args와 동일한 키 사용!
+        }
+
+        val movieId: Int? = savedStateHandle[KEY_MOVIE_ID]
+
+        init {
+            searchMovieDetail()
+        }
+
         override fun handleEvent(event: DetailMovieEvent) {
             when (event) {
-                is DetailMovieEvent.ClickMovie -> searchMovieDetail(event.movieId)
-                is DetailMovieEvent.ClickMoreButton -> getMovieContent()
+                is DetailMovieEvent.ClickMovie -> {
+                }
             }
         }
 
@@ -40,8 +52,9 @@ class MovieDetailViewModel
 
         val movieDetailInfo = _movieDetailInfo.asStateFlow()
 
-        fun searchMovieDetail(movieId: Int) {
+        fun searchMovieDetail() {
             viewModelScope.launch {
+                if (movieId == null) return@launch
                 searchMovieDetailUseCase(movieId).collect {
                     if (it != null) {
                         _movieDetailInfo.value = it
@@ -50,9 +63,5 @@ class MovieDetailViewModel
                     }
                 }
             }
-        }
-
-        private fun getMovieContent() {
-            _movieContent.value = movieDetailInfo.value.overview.toString()
         }
     }

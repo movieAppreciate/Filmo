@@ -110,12 +110,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sub_reply_recycerView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="@+id/btn_more"
         app:layout_constraintTop_toBottomOf="@+id/btn_reply"
-        tools:itemCount="1"
+        app:layout_constraintWidth_percent="0.75"
         tools:listitem="@layout/item_sub_reply" />
 
     <ImageButton

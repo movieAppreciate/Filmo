@@ -29,7 +29,7 @@
         android:textSize="12sp"
         android:layout_marginBottom="4dp"
         android:text="변경된 내용은 저장되지 않아요"
-        android:textColor="@color/gray02"
+        android:textColor="@color/dialog_sub_text_color"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
 
 
     <Button
-        android:textColor="@color/black"
+        android:textColor="@color/dialog_text_color"
         android:textStyle="bold"
         android:id="@+id/button2"
         style="@style/Widget.Material3.Button.TextButton.Dialog"

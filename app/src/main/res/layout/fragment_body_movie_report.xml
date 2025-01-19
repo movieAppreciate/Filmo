@@ -2,12 +2,11 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:backgroundTint="@color/white"
     android:layout_width="match_parent"
+    android:background="?attr/colorSurface"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,20 +16,22 @@
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/movieimage"
+            android:src="@drawable/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_gravity="top"
             android:background="@drawable/gradient_overlay_top"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <View
             android:id="@+id/view5"
@@ -80,11 +81,11 @@
 
 
         <TextView
+            android:textColor="?attr/colorOnSurface"
             android:id="@+id/report_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="@color/gray00"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,8 +93,8 @@
 
         <ImageButton
             android:id="@+id/btn_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:padding="10dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/ic_like"
@@ -101,7 +102,6 @@
             app:layout_constraintTop_toBottomOf="@+id/report_content" />
 
         <TextView
-            android:textColor="@color/gray00"
             android:id="@+id/tv_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,8 +114,8 @@
         <ImageButton
             android:padding="10dp"
             android:id="@+id/btn_reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/ic_reply"
             app:layout_constraintBottom_toBottomOf="@+id/btn_like"
@@ -123,7 +123,6 @@
             app:layout_constraintTop_toTopOf="@+id/btn_like" />
 
         <TextView
-            android:textColor="@color/gray00"
             android:id="@+id/tv_reply_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,7 +149,6 @@
             app:shapeAppearance="@style/Circle50" />
 
         <TextView
-            android:textColor="@color/gray00"
             android:id="@+id/txt_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -183,12 +181,12 @@
 
 
         <include
+            android:layout_margin="10dp"
             android:id="@+id/movie_detail"
-            layout="@layout/fragment_movie_detail"
+            layout="@layout/item_movie_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/txt_user_name"
-            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

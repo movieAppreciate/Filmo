@@ -52,11 +52,10 @@ class BodyMovieReportFragment :
             }
 
             movieDetail.movieDetailShimmer.visibility = View.GONE
-            movieDetail.btnBack.visibility = View.GONE
 
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener {
-                val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false)
+                val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false, isUpdated = true)
                 navController.navigate(action)
             }
 
@@ -90,20 +89,20 @@ class BodyMovieReportFragment :
             btnMeatBall.setOnClickListener {
                 showMeatBallDialog()
             }
-            movieDetail.apply {
-                readMore.setOnClickListener {
-                    readMore.visibility = View.GONE
-                    viewModel.handleEvent(BodyMovieReportEvent.ClickMoreButton)
-                    txtSummary.maxLines = 100
-                }
+
+            movieDetail.readMore.setOnClickListener {
+                movieDetail.readMore.visibility = View.GONE
+                viewModel.handleEvent(BodyMovieReportEvent.ClickMoreButton)
+                movieDetail.txtSummary.maxLines = 100
             }
+
             btnReply.setOnClickListener { navigateToReply(args.reportId) }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.movieContent.collect {
-                    binding.reportContent.text = it
+                    binding.movieDetail.txtSummary.text = it
                 }
             }
 
@@ -221,7 +220,7 @@ class BodyMovieReportFragment :
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         if (viewModel.reportId != null) {
-                            val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false)
+                            val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false, isUpdated = true)
                             navController.navigate(action)
                         }
                     }

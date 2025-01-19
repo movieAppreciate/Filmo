@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?attr/colorSurface"
     android:padding="10dp"
-    android:background="@color/white"
     android:layout_height="match_parent">
 
     <ImageButton
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:backgroundTint="@color/transparent"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,10 +20,11 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="영화를 선택해주세요."
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/btn_back"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_back" />
 
     <androidx.appcompat.widget.Toolbar
@@ -42,7 +42,6 @@
             android:id="@+id/movie_search_view"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/background"
             app:iconifiedByDefault="false"
             app:layout_constraintBottom_toTopOf="@+id/movie_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"

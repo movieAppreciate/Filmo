@@ -103,7 +103,7 @@ class UpdateReportFragment :
 
             txtSelectedMovie.text = args.movieName
 
-            btnBack.setOnClickListener { showCancelModifyReportDialog() }
+            btnBackUpdateReport.setOnClickListener { showCancelModifyReportDialog() }
 
             editReportTag.apply {
                 setOnEditorActionListener { _, actionId, _ ->

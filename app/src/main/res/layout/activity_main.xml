@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main"
+    android:background="?attr/colorSurface"
     android:layout_height="match_parent">
 
     <FrameLayout
@@ -26,13 +27,12 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="?attr/colorSurfaceContainer"
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         app:itemIconSize="40dp"
         app:itemIconTint="@color/nav_item_color"
-        app:itemBackground="@color/white"
         app:labelVisibilityMode="unlabeled"
         app:itemActiveIndicatorStyle="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"

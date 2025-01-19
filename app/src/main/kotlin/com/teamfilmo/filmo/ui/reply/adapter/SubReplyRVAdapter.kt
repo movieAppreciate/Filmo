@@ -143,7 +143,6 @@ class SubReplyRVAdapter : RecyclerView.Adapter<SubReplyRVAdapter.SubReplyViewHol
         init {
             with(binding) {
                 btnMeatBall.setOnClickListener {
-                    Timber.d("더보기 클릭")
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val subReply = subReplyList[position]
