@@ -15,7 +15,6 @@ import com.teamfilmo.filmo.ui.write.adapter.MovieThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ReportThumbnailFragment :
@@ -26,8 +25,8 @@ class ReportThumbnailFragment :
     private val movieThumbnailAdapter by lazy {
         context?.let { MovieThumbnailAdapter(it) }
     }
-    private val navController by lazy { findNavController() }
     val args: ReportThumbnailFragmentArgs by navArgs()
+    private val navController by lazy { findNavController() }
 
     companion object {
         fun newInstance(): ReportThumbnailFragment {
@@ -39,9 +38,6 @@ class ReportThumbnailFragment :
     }
 
     override fun onBindLayout() {
-        val args: ReportThumbnailFragmentArgs by navArgs()
-        Timber.d("args : $args")
-
         // 기본 스팬 적용
         val span = 3
         binding.movieImageGridView.layoutManager = GridLayoutManager(requireContext(), span)
@@ -63,6 +59,7 @@ class ReportThumbnailFragment :
                     setFragmentResult("requestKey", result)
                     // navigate() 로 이동 시에는 기존 프래그먼트가 아니라 새로 생성된 프래그먼트로 이동되어 작성한 감상문 내용이 사라진다.
                     // 따라서 popbackStack을 해준다.
+
                     navController.popBackStack()
                 }
             },
@@ -73,7 +70,7 @@ class ReportThumbnailFragment :
         binding.txtSelectedMovie.text = args.movieName
 
         lifecycleScope.launch {
-            viewModel.handleEvent(ReportThumbnailEvent.SelectPoster(args.movieId.toString()))
+            viewModel.handleEvent(ReportThumbnailEvent.SelectPoster(args.movieId))
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.moviePosterList.collect {

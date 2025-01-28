@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -28,24 +27,24 @@ class BodyMovieReportFragment :
     BaseFragment<FragmentBodyMovieReportBinding, BodyMovieReportViewModel, BodyMovieReportEffect, BodyMovieReportEvent>(
         FragmentBodyMovieReportBinding::inflate,
     ) {
+    private var changedLikeCount = -1
+    private var changedLikeState = false
     private var movieName: String = ""
     override val viewModel: BodyMovieReportViewModel by viewModels()
     private val navController by lazy { findNavController() }
     val args: BodyMovieReportFragmentArgs by navArgs()
     private lateinit var bottomSheet: ModalBottomSheet
 
-    private val destinationChangedListener =
-        NavController.OnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id == R.id.bodyMovieReportFragment) {
-                // Reply에서 Body로 돌아왔을 때 실행할 코드
-                viewModel.handleEvent(BodyMovieReportEvent.ShowReport(args.reportId))
-            }
+    override fun onResume() {
+        super.onResume()
+        if (args.replyChanged != -1) {
+            binding.tvReplyCount.text = args.replyChanged.toString()
         }
+    }
 
     override fun onBindLayout() {
         super.onBindLayout()
 
-        navController.addOnDestinationChangedListener(destinationChangedListener)
         with(binding) {
             btnLike.setOnClickListener {
                 viewModel.handleEvent(BodyMovieReportEvent.ClickLikeButton)
@@ -55,7 +54,16 @@ class BodyMovieReportFragment :
 
             // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener {
-                val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false, isUpdated = true)
+                Timber.d("body 화면에서 args.reportId :${args.reportId}")
+                val action =
+                    BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(
+                        updatedReportId = args.reportId,
+                        isDeleted = false,
+                        changedLikeCount = changedLikeCount,
+                        changedLikeState = changedLikeState,
+                        changedReplyCount = args.replyChanged,
+                        reportChanged = args.reportChanged,
+                    )
                 navController.navigate(action)
             }
 
@@ -118,11 +126,13 @@ class BodyMovieReportFragment :
             launch {
                 viewModel.checkLikeResponse.collectLatest {
                     binding.btnLike.isSelected = it.isLike
+                    changedLikeState = it.isLike
                 }
             }
             launch {
                 viewModel.likeCount.collect {
                     binding.tvLikeCount.text = it.toString()
+                    changedLikeCount = it
                 }
             }
             launch {
@@ -153,7 +163,6 @@ class BodyMovieReportFragment :
             }
             launch {
                 viewModel.movieDetailInfo.collect {
-                    Timber.d("detailMovie :$it")
                     binding.tvMovieTitle.text = it.title
                     movieName = it.title.toString()
                     binding.movieDetail.apply {
@@ -220,7 +229,15 @@ class BodyMovieReportFragment :
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         if (viewModel.reportId != null) {
-                            val action = BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(args.reportId, isDeleted = false, isUpdated = true)
+                            val action =
+                                BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(
+                                    updatedReportId = args.reportId,
+                                    isDeleted = false,
+                                    changedLikeCount = changedLikeCount,
+                                    changedLikeState = changedLikeState,
+                                    changedReplyCount = args.replyChanged, // 댓글 화면에서 변경 결과 댓글 수 , 변경 없을 경우 -1
+                                    reportChanged = false,
+                                )
                             navController.navigate(action)
                         }
                     }
@@ -424,11 +441,6 @@ class BodyMovieReportFragment :
                 else -> "정보 없음"
             }
         return rank
-    }
-
-    override fun onDestroyView() {
-        navController.removeOnDestinationChangedListener(destinationChangedListener)
-        super.onDestroyView()
     }
 
     companion object {

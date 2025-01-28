@@ -15,6 +15,7 @@ import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -25,8 +26,9 @@ class AllMovieReportFragment :
 
     private var clickedReportId: String? = null
     private val navController by lazy { findNavController() }
+
     private val allMovieReportAdapter by lazy {
-        AllMovieReportAdapter()
+        adapter ?: AllMovieReportAdapter().also { adapter = it }
     }
     val movieInfoAdapter by lazy {
         MovieInfoAdapter()
@@ -35,16 +37,23 @@ class AllMovieReportFragment :
 
     override fun onResume() {
         super.onResume()
+        Timber.d("safe args :$args")
+        @Suppress("ktlint:standard:if-else-wrapping")
+        // 댓글 수에 변화가 있는 경우
+        if (args.changedReplyCount != -1) {
+            allMovieReportAdapter.updateReplyCount(args.updatedReportId, args.changedReplyCount)
+        }
+        // 좋아요 수에 변화가 있는 경우
+        if (args.changedLikeCount != -1) {
+            allMovieReportAdapter.updateLikeState(updatedReportId = args.updatedReportId, isLiked = args.changedLikeState, likeCount = args.changedLikeCount)
+        }
         if (args.isDeleted) {
             viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
             binding.swiperefresh.isRefreshing = true
         }
-        lifecycleScope.launch {
-            viewModel.updatedReportId.collectLatest {
-                if (it != null) {
-                    viewModel.handleEvent(AllMovieReportEvent.UpdateReport(it))
-                }
-            }
+        if (args.reportChanged) {
+            viewModel.updateReport(args.updatedReportId)
+            binding.swiperefresh.isRefreshing = true
         }
     }
 
@@ -65,11 +74,10 @@ class AllMovieReportFragment :
         binding.layoutShimmer.startShimmer()
 
         viewLifecycleOwner.lifecycleScope.launch {
+            // 감상문 내용에 변경이 있는 경우
             launch {
                 viewModel.updatedReportStateInfo.collectLatest {
-                    allMovieReportAdapter.updateLikeState(it.reportId, it.isLiked, it.likeCount)
-                    allMovieReportAdapter.updateReplyCount(it.reportId, it.replyCount)
-                    allMovieReportAdapter.updateModifyReport(it.reportId, it.reportTitle, it.reportContent)
+                    adapter?.updateModifyReport(it.reportId, it.reportTitle, it.reportContent, it.posterUri)
                 }
             }
             launch {
@@ -116,7 +124,7 @@ class AllMovieReportFragment :
         with(binding) {
             allMovieReportRecyclerview.adapter = allMovieReportAdapter
             movieRecyclerview.adapter = movieInfoAdapter
-            // 새로고침
+            // 새로 고침
             swiperefresh.setOnRefreshListener {
                 viewModel.handleEvent(AllMovieReportEvent.RefreshReport)
                 binding.layoutShimmer.visibility = View.VISIBLE
@@ -169,11 +177,18 @@ class AllMovieReportFragment :
     }
 
     companion object {
+        private var adapter: AllMovieReportAdapter? = null
+
         fun newInstance(): AllMovieReportFragment {
             val args = Bundle()
             val fragment = AllMovieReportFragment()
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        adapter = null
     }
 }

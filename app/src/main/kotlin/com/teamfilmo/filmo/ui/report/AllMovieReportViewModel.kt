@@ -1,10 +1,12 @@
 package com.teamfilmo.filmo.ui.report
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
 import com.teamfilmo.filmo.data.remote.entity.like.CheckLikeResponse
 import com.teamfilmo.filmo.data.remote.entity.like.SaveLikeRequest
@@ -36,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class AllReportLikeState(
     val reportId: String = "",
@@ -54,15 +55,14 @@ data class ReportState(
     val reportId: String = "",
     val reportTitle: String = "",
     val reportContent: String = "",
-    val isLiked: Boolean = false,
-    val likeCount: Int = 0,
-    val replyCount: Int = 0,
+    val posterUri: String = "",
 )
 
 @HiltViewModel
 class AllMovieReportViewModel
     @Inject
     constructor(
+        private val savedStateHandle: SavedStateHandle,
         private val getReplyUseCase: GetReplyUseCase,
         private val countLikeUseCase: CountLikeUseCase,
         private val getReportUseCase: GetReportUseCase,
@@ -76,10 +76,19 @@ class AllMovieReportViewModel
         private val deleteBookmarkUseCase: DeleteBookmarkUseCase,
         private val getUpcomingMovieUseCase: GetUpcomingMovieUseCase,
     ) : BaseViewModel<AllMovieReportEffect, AllMovieReportEvent>() {
+        companion object {
+            private const val KEY_REPORT_ID = "updatedReportId" // args와 동일한 키 사용!
+        }
+
         init {
             getMovieReports()
             getUpcomingMovieList()
         }
+
+        @Suppress("ktlint:standard:backing-property-naming")
+        private val _localReportItem = MutableStateFlow<List<ReportItem>>(emptyList())
+
+        val reportId: String? = savedStateHandle[KEY_REPORT_ID]
 
         // 본문 페이지에서 업데이트한 감상 정보
         private val _updatedReportStateInfo = MutableStateFlow(ReportState())
@@ -136,7 +145,9 @@ class AllMovieReportViewModel
 
         override fun handleEvent(event: AllMovieReportEvent) {
             when (event) {
-                is AllMovieReportEvent.UpdateReport -> updateReport(event.reportId)
+                is AllMovieReportEvent.UpdateReport -> {
+                    // updateReport(event.reportId)
+                }
                 is AllMovieReportEvent.ClickLike -> toggleLike(event.reportId)
                 is AllMovieReportEvent.ClickBookmark -> toggleBookmark(event.reportId)
                 // 새로 고침
@@ -146,43 +157,16 @@ class AllMovieReportViewModel
         }
 
         // 본문에서 업데이트한 감상문 정보 반영하기
-        private fun updateReport(reportId: String) {
+        fun updateReport(reportId: String) {
             viewModelScope.launch {
-                checkLikeStateUseCase(reportId, "report").collect {
-                    if (it != null) {
-                        _updatedReportStateInfo.value =
-                            _updatedReportStateInfo.value.copy(
-                                reportId = reportId,
-                                isLiked = it.isLike,
-                            )
-                    }
-                }
-
-                countLikeUseCase(reportId).collect {
-                    if (it != null) {
-                        _updatedReportStateInfo.value =
-                            _updatedReportStateInfo.value.copy(
-                                reportId = reportId,
-                                likeCount = it.countLike,
-                            )
-                    }
-                }
-                getReplyUseCase(reportId).collect {
-                    if (it != null) {
-                        Timber.d("댓글 사이즈 :${it.size}")
-                        _updatedReportStateInfo.value =
-                            _updatedReportStateInfo.value.copy(
-                                reportId = reportId,
-                                replyCount = it.size,
-                            )
-                    }
-                }
                 getReportUseCase(reportId).collect {
                     if (it != null) {
                         _updatedReportStateInfo.value =
                             _updatedReportStateInfo.value.copy(
+                                reportId = it.reportId ?: "",
                                 reportContent = it.content ?: "",
                                 reportTitle = it.title ?: "",
+                                posterUri = it.imageUrl ?: "",
                             )
                     }
                 }
@@ -197,7 +181,7 @@ class AllMovieReportViewModel
                         PagingConfig(
                             pageSize = 20,
                             enablePlaceholders = false,
-                            prefetchDistance = 4,
+                            prefetchDistance = 5,
                         ),
                     pagingSourceFactory = {
                         ReportPagingSource(

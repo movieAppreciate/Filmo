@@ -8,7 +8,7 @@ data class ReportItem(
     var title: String,
     var content: String,
     val createDate: String,
-    val imageUrl: String?,
+    var imageUrl: String?,
     val nickname: String?,
     var likeCount: Int,
     var replyCount: Int,
