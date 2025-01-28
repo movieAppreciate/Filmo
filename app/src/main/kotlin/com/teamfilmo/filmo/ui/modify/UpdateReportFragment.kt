@@ -14,7 +14,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.teamfilmo.filmo.R
 import com.teamfilmo.filmo.base.fragment.BaseFragment
 import com.teamfilmo.filmo.data.remote.entity.report.update.UpdateReportRequest
 import com.teamfilmo.filmo.databinding.FragmentModifyReportBinding
@@ -22,6 +21,7 @@ import com.teamfilmo.filmo.ui.widget.CustomDialog
 import com.teamfilmo.filmo.ui.widget.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class UpdateReportFragment :
@@ -34,14 +34,37 @@ class UpdateReportFragment :
     private var tagString: String? = null
     private var uri: String? = null
 
-    override fun handleEffect(effect: UpdateReportEffect) {
+    override fun onResume() {
+        super.onResume()
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("draft_title")?.let {
+            binding.editReportTitle.setText(it)
+        }
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("draft_content")?.let {
+            binding.editReportBody.setText(it)
+        }
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("draft_tag")?.let {
+            binding.editReportTag.setText(it)
+        }
+    }
+
+    override fun handleEffect(effect: UpdateReportEffect) =
         when (effect) {
             is UpdateReportEffect.UpdateSuccess -> {
                 Toast.makeText(context, "감상문을 수정했어요", Toast.LENGTH_SHORT).show()
-                navController.popBackStack(R.id.allMovieReportFragment, false)
+                val action =
+                    UpdateReportFragmentDirections.navigateToBody(
+                        reportId = args.reportId,
+                        reportChanged = true,
+                    )
+                // todo : 문제 발생
+                try {
+                    navController.navigate(action)
+                } catch (e: IllegalArgumentException) {
+                    e.printStackTrace()
+                    Timber.d("failed to navigate to Body :${e.message}")
+                }
             }
         }
-    }
 
     override fun onBindLayout() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -70,6 +93,20 @@ class UpdateReportFragment :
 
         with(binding) {
             btnSelectPoster.setOnClickListener {
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "draft_title",
+                    binding.editReportTitle.text.toString(),
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "draft_content",
+                    binding.editReportBody.text.toString(),
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "draft_tag",
+                    binding.editReportTag.text.toString(),
+                )
                 // 포스터 선택하기
                 val action =
                     UpdateReportFragmentDirections.navigateToReportThumbnail(

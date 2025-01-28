@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@color/transparent"
-            android:textColor="@color/gray00"
+            android:textColorHint="@color/gray00"
             android:hint="@string/tag_hint"
             android:textSize="15sp"
             android:textStyle="bold"

@@ -14,11 +14,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import timber.log.Timber
 
 sealed class ReportPayload {
     data class ModifyReportPayLoad(
         val title: String,
         val content: String,
+        val imageUri: String,
     ) : ReportPayload()
 
     data class LikePayload(
@@ -49,8 +51,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                     oldItem: ReportItem,
                     newItem: ReportItem,
                 ): Boolean =
-                    oldItem.reportId == newItem.reportId &&
-                        oldItem.likeCount == newItem.likeCount &&
+                    oldItem.likeCount == newItem.likeCount &&
                         oldItem.isLiked == newItem.isLiked &&
                         // 상세 내용 비교
                         oldItem.replyCount == newItem.replyCount
@@ -64,11 +65,16 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
     }
 
     fun updateLikeState(
-        reportId: String,
+        updatedReportId: String,
         isLiked: Boolean,
         likeCount: Int,
     ) {
-        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
+        // todo : 스냅샷 : 처음 ALL 화면이 뜰 떄 유지되고, BODY -> ALL로 돌아온 후에는 스냅샷이 유지 X
+//        Timber.d("스냅샷 :${snapshot().items}")
+        val position =
+            snapshot().items.indexOfFirst {
+                it.reportId == updatedReportId
+            }
         if (position != -1) {
             getItem(position)?.let {
                 it.isLiked = isLiked
@@ -82,7 +88,10 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         reportId: String,
         replyCount: Int,
     ) {
-        val position = snapshot().items.indexOfFirst { it.reportId == reportId }
+        Timber.d("어댑터에 전달된 댓글 수 :$replyCount")
+        Timber.d("스냅샷 :${snapshot().items.size}")
+        val position = this@AllMovieReportAdapter.snapshot().items.indexOfFirst { it.reportId == reportId }
+        Timber.d("어댑터에 전달된 댓글 reportId :$reportId")
         if (position != -1) {
             getItem(position)?.let {
                 it.replyCount = replyCount
@@ -95,13 +104,15 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         reportId: String,
         title: String,
         content: String,
+        imageUri: String,
     ) {
         val position = snapshot().items.indexOfFirst { it.reportId == reportId }
         if (position != -1) {
             getItem(position)?.let {
                 it.title = title
                 it.content = content
-                notifyItemChanged(position, ReportPayload.ModifyReportPayLoad(title, content))
+                it.imageUrl = imageUri
+                notifyItemChanged(position, ReportPayload.ModifyReportPayLoad(title, content, imageUri))
             }
         }
     }
@@ -152,7 +163,7 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
                         holder.bindReplyCount(payload.replyCount)
                     }
                     is ReportPayload.ModifyReportPayLoad -> {
-                        holder.bindModifyReport(payload.title, payload.content)
+                        holder.bindModifyReport(payload.title, payload.content, payload.imageUri)
                     }
                     else -> {}
                 }
@@ -239,9 +250,11 @@ class AllMovieReportAdapter : PagingDataAdapter<ReportItem, AllMovieReportAdapte
         fun bindModifyReport(
             title: String,
             content: String,
+            imageUri: String,
         ) {
             binding.tvTitle.text = title
             binding.tvContent.text = content
+            bindMovieImage(imageUri)
         }
 
         fun bindReplyCount(count: Int) {

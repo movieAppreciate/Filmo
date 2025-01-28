@@ -18,15 +18,28 @@
             app:argType="boolean"/>
 
         <argument
-            android:name="isUpdated"
+            android:name="changedLikeCount"
+            android:defaultValue="-1"
+            app:argType="integer"/>
+        <argument
+            android:name="changedLikeState"
             android:defaultValue="false"
             app:argType="boolean"/>
 
+        <argument
+            android:name="changedReplyCount"
+            android:defaultValue="-1"
+            app:argType="integer"/>
+
+        <argument
+            android:name="reportChanged"
+            android:defaultValue="false"
+            app:argType="boolean"/>
+
+
         <action
             android:id="@+id/navigateToBody"
-            app:destination="@id/bodyMovieReportFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"/>
+            app:destination="@id/bodyMovieReportFragment" />
         <action
             android:id="@+id/navigateToMovieDetail"
             app:destination="@id/movieDetailFragment"
@@ -43,9 +56,7 @@
         <action
             android:id="@+id/navigateToReplyFragment"
             app:destination="@id/replyFragment" />
-
     </fragment>
-
 
     <fragment
         android:id="@+id/movieDetailFragment"
@@ -58,23 +69,27 @@
             android:id="@+id/action_movieDetailFragment_to_allMovieReportFragment"
             app:destination="@id/allMovieReportFragment"
             app:exitAnim="@anim/nav_default_exit_anim"/>
-
     </fragment>
 
     <fragment
         android:id="@+id/bodyMovieReportFragment"
         android:name="com.teamfilmo.filmo.ui.body.BodyMovieReportFragment"
         android:label="BodyMovieReportFragment" >
+
+        <argument
+            android:name="reportChanged"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="replyChanged"
+            android:defaultValue="-1"
+            app:argType="integer"/>
         <argument
             android:name="reportId"
             app:argType="string" />
-        <argument
-            android:name="replyCount"
-            android:defaultValue="0"
-            app:argType="integer"/>
+
         <action
             android:id="@+id/updateReportItem"
-            app:popUpToInclusive="true"
             app:popUpToSaveState="true"
             app:destination="@+id/allMovieReportFragment">
             <argument
@@ -113,9 +128,13 @@
             app:destination="@id/userPageFragment" />
         <action
             android:id="@+id/action_bodyMovieReportFragment_to_allMovieReportFragment"
-            app:destination="@id/allMovieReportFragment" />
+            app:destination="@id/allMovieReportFragment"
+            />
         <action
             android:id="@+id/action_bodyMovieReportFragment_to_updateReportFragment"
+            app:destination="@id/updateReportFragment" />
+        <action
+            android:id="@+id/action_bodyMovieReportFragment_to_updateReportFragment2"
             app:destination="@id/updateReportFragment" />
 
     </fragment>
@@ -129,8 +148,8 @@
             app:argType="string" />
         <action
            android:id="@+id/navigateToBodyFromReply"
-            app:popUpToInclusive="false"
-            app:destination="@id/bodyMovieReportFragment" />
+            app:destination="@id/bodyMovieReportFragment" >
+        </action>
     </fragment>
 
 
@@ -165,22 +184,25 @@
         <argument
             android:name="reportId"
             app:argType="string" />
+
+        <argument
+            android:name="uri"
+            android:defaultValue=""
+            app:argType="string"/>
         <action
             android:id="@+id/navigateToReportThumbnail"
-            app:destination="@id/reportThumbnailFragment" />
+            app:destination="@id/reportThumbnailFragment"
+            app:popUpTo="@id/updateReportFragment"
+            app:popUpToSaveState="true"/>
         <argument
             android:name="movieId"
             app:argType="string"/>
 
         <action
             android:id="@+id/navigateToBody"
-            app:destination="@id/bodyMovieReportFragment" />
-        <action
-            android:id="@+id/navigateToAllReport"
-            app:destination="@id/allMovieReportFragment" />
-        <action
-            android:id="@+id/action_updateReportFragment_to_bodyMovieReportFragment"
-            app:destination="@id/bodyMovieReportFragment" />
+            app:popUpTo="@id/bodyMovieReportFragment"
+            app:destination="@id/bodyMovieReportFragment"/>
+
     </fragment>
     <fragment
         android:id="@+id/reportThumbnailFragment"
@@ -201,6 +223,8 @@
             android:id="@+id/action_reportThumbnailFragment_to_writeReportFragment"
             app:destination="@id/writeReportFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.teamfilmo.filmo.ui.mypage.MyPageFragment"

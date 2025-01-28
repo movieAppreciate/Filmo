@@ -32,6 +32,8 @@ class ReplyFragment :
     BaseFragment<FragmentReplyBinding, ReplyViewModel, ReplyEffect, ReplyEvent>(
         FragmentReplyBinding::inflate,
     ) {
+    // 댓글 변화 변수
+    private var changedReplyCount = -1
     private var isSubReplyMode = false
     private var upReplyId: String? = null
     override val viewModel: ReplyViewModel by viewModels()
@@ -201,7 +203,9 @@ class ReplyFragment :
             } else {
                 // popBackStack  1. DestinationId : 이동하려는 화면, 2. inclusive : 이동하려는 화면까지 제거된다.
                 // 이렇게 할 경우 업데이트된 댓글 수가 반영되지 않음
-                navController.popBackStack(R.id.bodyMovieReportFragment, false)
+                val action = ReplyFragmentDirections.navigateToBodyFromReply(reportId = args.reportId, replyChanged = changedReplyCount)
+                navController.navigate(action)
+                // navController.popBackStack(R.id.bodyMovieReportFragment, false)
             }
         }
 
@@ -280,7 +284,6 @@ class ReplyFragment :
                     userId: String,
                 ) {
                     deleteSubReplyId = subReplyId
-                    Timber.d("더보기 버튼 클릭 :$isMyReply")
                     val bottomSheet =
                         if (isMyReply) {
                             ModalBottomSheet.newInstance(
@@ -385,6 +388,8 @@ class ReplyFragment :
                     viewModel.replyListStateFlow.collect {
                         adapter.setReplyList(it)
                         binding.txtReplyCount.text = "${it.size}개의 댓글"
+                        changedReplyCount = it.size
+                        Timber.d("바뀐 댓글 수 :$changedReplyCount")
                         binding.recyclerView.scrollToPosition(viewModel.replyListStateFlow.value.size - 1)
                     }
                 }
@@ -460,7 +465,6 @@ class ReplyFragment :
 
             is ReplyEffect.DeleteReply -> {
                 adapter.removeReplyItem(effect.replyId)
-                Timber.d("삭제하려는 position :${effect.replyId}")
                 binding.txtReplyCount.text = "${(viewModel.replyListStateFlow.value.size - 1)}개의 댓글"
             }
         }
