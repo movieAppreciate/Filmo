@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @HiltViewModel
 class BodyMovieReportViewModel
@@ -72,6 +71,7 @@ class BodyMovieReportViewModel
                     }
                 }
             }
+            // 현재 감상문 유저가 본인인지 확인하기
         }
 
     /*
@@ -314,7 +314,7 @@ class BodyMovieReportViewModel
                             // else 문을 적어주지 않으면 안되는 것이었다. 코드를 잘못 작성해줬음.
                             _isMyPost.value = false
                         }
-                        Timber.d("it.movieId :${it.movieId}")
+
                         movieId = it.movieId
 
                         it.userId?.let {

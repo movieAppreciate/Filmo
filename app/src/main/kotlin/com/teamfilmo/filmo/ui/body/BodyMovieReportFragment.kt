@@ -20,7 +20,6 @@ import com.teamfilmo.filmo.ui.widget.OnButtonSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class BodyMovieReportFragment :
@@ -52,9 +51,7 @@ class BodyMovieReportFragment :
 
             movieDetail.movieDetailShimmer.visibility = View.GONE
 
-            // 뒤로 가기 버튼 클릭 시 이전 프래그먼트 보이도록(새 객체 x, 이전 상태 보존)
             btnBack.setOnClickListener {
-                Timber.d("body 화면에서 args.reportId :${args.reportId}")
                 val action =
                     BodyMovieReportFragmentDirections.actionBodyMovieReportFragmentToAllMovieReportFragment(
                         updatedReportId = args.reportId,

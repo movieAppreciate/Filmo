@@ -42,6 +42,9 @@ class UpdateReportFragment :
         navController.currentBackStackEntry?.savedStateHandle?.get<String>("draft_content")?.let {
             binding.editReportBody.setText(it)
         }
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("draft_tag")?.let {
+            binding.editReportTag.setText(it)
+        }
     }
 
     override fun handleEffect(effect: UpdateReportEffect) =
@@ -98,6 +101,11 @@ class UpdateReportFragment :
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     "draft_content",
                     binding.editReportBody.text.toString(),
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "draft_tag",
+                    binding.editReportTag.text.toString(),
                 )
                 // 포스터 선택하기
                 val action =
