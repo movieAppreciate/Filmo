@@ -94,14 +94,6 @@ class AllMovieReportViewModel
         private val _updatedReportStateInfo = MutableStateFlow(ReportState())
         val updatedReportStateInfo = _updatedReportStateInfo.asStateFlow()
 
-        private val _updatedReportId = MutableStateFlow<String?>(null)
-        val updatedReportId = _updatedReportId.asStateFlow()
-
-        // 최근에 클릭된 감상문
-        fun setClickedReportId(updatedReportId: String) {
-            _updatedReportId.value = updatedReportId
-        }
-
         /*
     영화 상세 정보
          */

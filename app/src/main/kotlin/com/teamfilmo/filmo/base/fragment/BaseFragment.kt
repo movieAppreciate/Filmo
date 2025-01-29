@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.manager.Lifecycle
 import com.teamfilmo.filmo.base.effect.BaseEffect
 import com.teamfilmo.filmo.base.event.BaseEvent
 import com.teamfilmo.filmo.base.util.repeatOnStarted
 import com.teamfilmo.filmo.base.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel<EF, EV>, EF : BaseEffect, EV : BaseEvent>(
     private val inflater: (LayoutInflater, ViewGroup?, Boolean) -> B,
@@ -41,6 +47,17 @@ abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel<EF, EV>, EF : Ba
 
         onBindLayout()
         onBindObserver()
+    }
+
+    protected fun <T> collectLatestStateFlow(
+        flow: Flow<T>,
+        collect: suspend (T) -> Unit,
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                flow.collectLatest(collect)
+            }
+        }
     }
 
     protected open fun onBindLayout() = Unit
