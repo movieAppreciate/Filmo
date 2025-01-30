@@ -349,6 +349,13 @@ class ReplyFragment :
                     }
 
                     override fun afterTextChanged(s: Editable?) {
+                        if (s.toString().isNotEmpty()) {
+                            binding.btnRegistReply.setImageResource(R.drawable.btn_save_reply)
+                            binding.btnRegistReply.isClickable = true
+                        } else {
+                            binding.btnRegistReply.isClickable = false
+                            binding.btnRegistReply.setImageResource(R.drawable.btn_regist_reply)
+                        }
                     }
                 },
             )
@@ -374,6 +381,7 @@ class ReplyFragment :
                     Toast.makeText(context, "댓글이 등록되었어요!", Toast.LENGTH_SHORT).show()
                 }
             }
+
             binding.editReply.apply {
                 clearFocus()
                 clearAnimation()

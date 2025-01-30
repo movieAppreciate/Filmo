@@ -22,7 +22,6 @@ class SaveLikeUseCase
                 }
                 result.onFailure {
                     when (it) {
-                        // todo : 이후 UiState를 통해 HttpError 발생 시 에러 메시지 보이기
                         is HttpException -> Timber.e("Network error: ${it.message}")
                         else -> Timber.e("Unknown error: ${it.message}")
                     }

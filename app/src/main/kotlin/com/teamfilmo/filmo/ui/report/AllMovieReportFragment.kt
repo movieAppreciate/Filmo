@@ -12,7 +12,6 @@ import com.teamfilmo.filmo.domain.model.report.all.ReportItem
 import com.teamfilmo.filmo.ui.report.adapter.AllMovieReportAdapter
 import com.teamfilmo.filmo.ui.report.adapter.MovieInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AllMovieReportFragment :
@@ -33,8 +32,6 @@ class AllMovieReportFragment :
 
     override fun onResume() {
         super.onResume()
-        Timber.d("safe args :$args")
-        @Suppress("ktlint:standard:if-else-wrapping")
         // 댓글 수에 변화가 있는 경우
         if (args.changedReplyCount != -1) {
             allMovieReportAdapter.updateReplyCount(args.updatedReportId, args.changedReplyCount)
