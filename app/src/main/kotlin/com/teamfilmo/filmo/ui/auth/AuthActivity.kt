@@ -15,9 +15,11 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.common.api.Api.Client
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.AuthError
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -30,6 +32,7 @@ import com.teamfilmo.filmo.databinding.ActivityAuthBinding
 import com.teamfilmo.filmo.ui.main.MainActivity
 import com.teamfilmo.filmo.util.click
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.launch
@@ -40,8 +43,9 @@ import timber.log.Timber
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
     private lateinit var credentialManager: CredentialManager
-
     private lateinit var credential: Credential
+
+    private lateinit var callback: (token: OAuthToken?, error: Throwable?) -> Unit
 
     override fun onBindLayout() {
         credentialManager = CredentialManager.create(this)
@@ -201,13 +205,16 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                             .onFailure {
                                 when (it) {
                                     is GetCredentialCancellationException -> {
-                                        Timber.d("GetCredentialCancellationException: $it")
+                                        Timber.d("GetCredentialCancellationException : $it")
                                         showToast("로그인 취소")
                                     }
                                     is NoCredentialException -> {
+                                        Timber.d("NoCredentialException : $it")
+
                                         showToast("기기에 계정을 등록하고 다시 시도해주세요")
                                     }
                                     else -> {
+                                        Timber.d("failed ${it.message}")
                                         showToast("잠시 후에 다시 시도해주세요")
                                     }
                                 }
@@ -263,60 +270,85 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
 
                 viewModel.handleEvent(AuthEvent.RequestNaverLogin)
             } catch (e: Exception) {
+                Timber.e("failed naver login :${e.message}")
                 showToast("로그인 취소")
             }
         }
     }
 
+    // 카카오톡 설치 되어있지만, 로그인이 안되어있는 가능성이 있어서 따로 메소드를 빼줘서 예외처리.
+    private fun loginWithKakaoAccount(
+        callback: (token: OAuthToken?, error: Throwable?) -> Unit,
+    ) {
+        UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = callback)
+    }
+
+    private fun Continuation<OAuthToken>.resumeTokenOrException(
+        token: OAuthToken?,
+        error: Throwable?,
+    ) {
+        if (error != null) {
+            resumeWithException(error)
+        } else if (token != null) {
+            resume(token)
+        } else {
+            resumeWithException(IllegalStateException("Can't receive kakao access token"))
+        }
+    }
+
+    // 카카오톡으로 로그인 시도
+    private suspend fun loginWithKakaotalk(): OAuthToken =
+        suspendCancellableCoroutine { continuation ->
+            continuation.invokeOnCancellation {
+                when (it) {
+                    is ClientError -> {
+                        showToast("로그인 취소")
+                    }
+                }
+            }
+            UserApiClient.instance.loginWithKakaoTalk(this@AuthActivity) { token, error ->
+                continuation.resumeTokenOrException(token, error)
+            }
+        }
+
+    // 카카오 계정으로 로그인 시도
+    private suspend fun loginWithKakaoAccount(): OAuthToken =
+        suspendCancellableCoroutine { continuation ->
+            continuation.invokeOnCancellation {
+                when (it) {
+                    is Client -> {
+                        showToast("로그인 취소")
+                    }
+                }
+            }
+            UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity) { token, error ->
+                continuation.resumeTokenOrException(token, error)
+            }
+        }
+
     private fun onKakaoLogin() {
         lifecycleScope.launch {
             try {
-                val token =
-                    suspendCancellableCoroutine { continuation ->
-                        val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                            if (error != null) {
-                                // 코루틴의 실행 흐름에서 에러 발생 시 해당 에러를 코루틴의 예외로 전파한다.
-                                continuation.resumeWithException(error)
-                            } else if (token != null) {
-                                Timber.i("kakao login success, ${token.accessToken}")
-                                // 성공하면 토큰을 전달한다.
-                                continuation.resume(token)
-                            }
-                        }
-
-                        continuation.invokeOnCancellation {
-                            when (it) {
-                                // todo : 카카오 로그인 창을 닫은 경우 처리
-                                is ClientError -> {
-                                    Timber.d("kakao login canceled, ${it?.message}")
-                                }
-                            }
-                        }
-
-                        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@AuthActivity)) {
-                            try {
-                                UserApiClient.instance.loginWithKakaoTalk(this@AuthActivity, callback = kakaoLoginCallback)
-                            } catch (error: Throwable) {
-                                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                    continuation.resumeWithException(error)
-                                } else {
-                                    Timber.d("kakao login else")
-                                    UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
-                                }
-                            }
-                        } else {
-                            UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = kakaoLoginCallback)
-                        }
+                // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@AuthActivity)) {
+                    try {
+                        loginWithKakaotalk()
+                    } catch (error: Throwable) {
+                        loginWithKakaoAccount()
                     }
-
+                } else {
+                    loginWithKakaoAccount()
+                }
                 viewModel.handleEvent(AuthEvent.RequestKakaoLogin)
             } catch (e: ClientError) {
-                // 이후 전파한 예외를 잡아서 처리해주면 된다
                 when (e.reason) {
-                    ClientErrorCause.Cancelled -> {
-                        showToast("로그인 취소")
-                    }
+                    ClientErrorCause.Cancelled -> showToast("로그인 취소")
+                    ClientErrorCause.Unknown -> showToast("Unknown")
                     else -> {}
+                }
+            } catch (e: AuthError) {
+                when (e.statusCode) {
+                    302 -> loginWithKakaoAccount()
                 }
             }
         }

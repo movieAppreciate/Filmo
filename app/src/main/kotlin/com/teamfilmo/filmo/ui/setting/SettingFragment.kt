@@ -1,6 +1,7 @@
 package com.teamfilmo.filmo.ui.setting
 
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -68,6 +69,11 @@ class SettingFragment :
         binding.txtUserName.text = args.nickName
         binding.btnBack.setOnClickListener {
             navController.popBackStack()
+        }
+
+        binding.btnTest.setOnClickListener {
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/e/1FAIpQLSegGiD6MOPTNubow8cdN6t6PqAdSfl8A_TZoQaMeXGME0zTAA/viewform?usp=header"))
+            startActivity(myIntent)
         }
     }
 }
