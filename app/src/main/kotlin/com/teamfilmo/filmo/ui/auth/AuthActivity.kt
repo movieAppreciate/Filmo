@@ -15,8 +15,9 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.Api.Client
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthError
@@ -42,14 +43,9 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
-    private lateinit var credentialManager: CredentialManager
     private lateinit var credential: Credential
 
-    private lateinit var callback: (token: OAuthToken?, error: Throwable?) -> Unit
-
     override fun onBindLayout() {
-        credentialManager = CredentialManager.create(this)
-
         // 상태바 색깔 처리해주기
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -166,13 +162,28 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
     private fun onGoogleLogin() {
         Timber.d("onGoogleLogin")
         lifecycleScope.launch {
-            val credentialOption =
-                GetGoogleIdOption
-                    .Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setAutoSelectEnabled(false)
-                    .setServerClientId(getString(R.string.google_client_key))
-                    .build()
+            // todo : 구글 api 서비스가 이용가능한지 확인하기
+            val googleApiAbility = GoogleApiAvailability.getInstance()
+            val isAvailable = googleApiAbility.isGooglePlayServicesAvailable(this@AuthActivity)
+
+            if (isAvailable != ConnectionResult.SUCCESS) {
+                if (googleApiAbility.isUserResolvableError(isAvailable)) {
+                    showToast("isUserResolvableError :$isAvailable")
+                    Timber.e("Google Play Service $isAvailable")
+                }
+                Timber.e("GOOGLE PLAY SERVICE ERROR, STATUS: $isAvailable")
+                showToast("servie error :$isAvailable")
+            } else {
+                Timber.d("isAvailable :$isAvailable")
+            }
+
+//            val credentialOption =
+//                GetGoogleIdOption
+//                    .Builder()
+//                    .setFilterByAuthorizedAccounts(false)
+//                    .setAutoSelectEnabled(false)
+//                    .setServerClientId(getString(R.string.google_client_key))
+//                    .build()
 
             val signInWithGoogleOption: GetSignInWithGoogleOption =
                 GetSignInWithGoogleOption
@@ -182,43 +193,45 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             val credentialRequest =
                 GetCredentialRequest
                     .Builder()
-                    .addCredentialOption(credentialOption)
+                    .addCredentialOption(signInWithGoogleOption)
                     .build()
 
+            val credentialManager = CredentialManager.create(this@AuthActivity)
             getCredential(
                 credentialManager,
                 credentialRequest,
             ).onFailure {
+                Timber.e("failed login :$it")
                 when (it) {
                     is GetCredentialCancellationException -> {
                         Timber.d("GetCredentialCancellationException: $it")
-                        showToast("로그인 취소")
+                        showToast("로그인 취소 :$it")
                     }
                     is NoCredentialException -> {
-                        val signInCredentialRequest =
-                            GetCredentialRequest
-                                .Builder()
-                                .addCredentialOption(signInWithGoogleOption)
-                                .build()
-
-                        getCredential(credentialManager, signInCredentialRequest)
-                            .onFailure {
-                                when (it) {
-                                    is GetCredentialCancellationException -> {
-                                        Timber.d("GetCredentialCancellationException : $it")
-                                        showToast("로그인 취소")
-                                    }
-                                    is NoCredentialException -> {
-                                        Timber.d("NoCredentialException : $it")
-
-                                        showToast("기기에 계정을 등록하고 다시 시도해주세요")
-                                    }
-                                    else -> {
-                                        Timber.d("failed ${it.message}")
-                                        showToast("잠시 후에 다시 시도해주세요")
-                                    }
-                                }
-                            }
+                        showToast("계정을 확인 후 다시 시도해주세요")
+//                        val signInCredentialRequest =
+//                            GetCredentialRequest
+//                                .Builder()
+//                                .addCredentialOption(signInWithGoogleOption)
+//                                .build()
+//
+//                        getCredential(credentialManager, signInCredentialRequest)
+//                            .onFailure {
+//                                when (it) {
+//                                    is GetCredentialCancellationException -> {
+//                                        Timber.d("GetCredentialCancellationException : $it")
+//                                        showToast(it.message.toString())
+//                                    }
+//                                    is NoCredentialException -> {
+//                                        Timber.d("NoCredentialException : $it")
+//                                        showToast("기기에 계정을 등록하고 다시 시도해주세요")
+//                                    }
+//                                    else -> {
+//                                        Timber.d("failed ${it.message}")
+//                                        showToast("잠시 후에 다시 시도해주세요")
+//                                    }
+//                                }
+//                            }
                     }
                     else -> {
                         Timber.d("google login failed :$it")
@@ -274,13 +287,6 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 showToast("로그인 취소")
             }
         }
-    }
-
-    // 카카오톡 설치 되어있지만, 로그인이 안되어있는 가능성이 있어서 따로 메소드를 빼줘서 예외처리.
-    private fun loginWithKakaoAccount(
-        callback: (token: OAuthToken?, error: Throwable?) -> Unit,
-    ) {
-        UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = callback)
     }
 
     private fun Continuation<OAuthToken>.resumeTokenOrException(
