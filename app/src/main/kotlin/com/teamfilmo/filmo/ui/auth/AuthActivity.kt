@@ -42,14 +42,9 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect, AuthEvent>(ActivityAuthBinding::inflate) {
     override val viewModel: AuthViewModel by viewModels()
-    private lateinit var credentialManager: CredentialManager
     private lateinit var credential: Credential
 
-    private lateinit var callback: (token: OAuthToken?, error: Throwable?) -> Unit
-
     override fun onBindLayout() {
-        credentialManager = CredentialManager.create(this)
-
         // 상태바 색깔 처리해주기
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -169,7 +164,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
             val credentialOption =
                 GetGoogleIdOption
                     .Builder()
-                    .setFilterByAuthorizedAccounts(false)
+                    .setFilterByAuthorizedAccounts(true)
                     .setAutoSelectEnabled(false)
                     .setServerClientId(getString(R.string.google_client_key))
                     .build()
@@ -185,16 +180,17 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                     .addCredentialOption(credentialOption)
                     .build()
 
+            val credentialManager = CredentialManager.create(this@AuthActivity)
             getCredential(
                 credentialManager,
                 credentialRequest,
             ).onFailure {
                 when (it) {
                     is GetCredentialCancellationException -> {
-                        Timber.d("GetCredentialCancellationException: $it")
                         showToast("로그인 취소")
                     }
                     is NoCredentialException -> {
+                        showToast("계정을 확인 후 다시 시도해주세요")
                         val signInCredentialRequest =
                             GetCredentialRequest
                                 .Builder()
@@ -205,16 +201,12 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                             .onFailure {
                                 when (it) {
                                     is GetCredentialCancellationException -> {
-                                        Timber.d("GetCredentialCancellationException : $it")
-                                        showToast("로그인 취소")
+                                        showToast("계정 확인 후 다시 시도해주세요")
                                     }
                                     is NoCredentialException -> {
-                                        Timber.d("NoCredentialException : $it")
-
                                         showToast("기기에 계정을 등록하고 다시 시도해주세요")
                                     }
                                     else -> {
-                                        Timber.d("failed ${it.message}")
                                         showToast("잠시 후에 다시 시도해주세요")
                                     }
                                 }
@@ -274,13 +266,6 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel, AuthEffect
                 showToast("로그인 취소")
             }
         }
-    }
-
-    // 카카오톡 설치 되어있지만, 로그인이 안되어있는 가능성이 있어서 따로 메소드를 빼줘서 예외처리.
-    private fun loginWithKakaoAccount(
-        callback: (token: OAuthToken?, error: Throwable?) -> Unit,
-    ) {
-        UserApiClient.instance.loginWithKakaoAccount(this@AuthActivity, callback = callback)
     }
 
     private fun Continuation<OAuthToken>.resumeTokenOrException(
